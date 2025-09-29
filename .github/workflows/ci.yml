@@ -28,7 +28,7 @@ jobs:
           open(p,"w").write(json.dumps(d if ok else want,indent=2))
           PY
       - uses: pnpm/action-setup@v4
-        with: { version: 9 }
+        with: { version: 8.15.5 }
       - uses: actions/setup-node@v4
         with: { node-version: 20.18.0, cache: pnpm }
       - run: corepack enable && pnpm i --frozen-lockfile=false
