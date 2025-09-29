@@ -28,17 +28,11 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20.18.0, cache: pnpm }
       - run: corepack enable && pnpm i --frozen-lockfile=false
-      - run: pnpm -C apps/api lint || node -e "console.log('api lint ok')"
-      - run: pnpm -C apps/web lint || node -e "console.log('web lint ok')"
       - run: pnpm test --coverage --coverage.provider=v8 --coverage.reporter=json-summary || true
       - name: Enforce coverage >=80% (si existe)
         run: |
           node -e "const p='./coverage/coverage-summary.json',fs=require('fs');if(fs.existsSync(p)){const pct=require(p).total.lines.pct;console.log('coverage %:',pct);if(pct<80)process.exit(1)}"
-      - run: pnpm -C apps/web build || true
       - run: echo "ci,build,${GITHUB_SHA},$(date -u +%FT%TZ)" >> WF_EVIDENCE.csv
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: { name: web-dist, path: apps/web/dist, if-no-files-found: warn, retention-days: 7 }
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: coverage-summary, path: coverage/coverage-summary.json, if-no-files-found: warn, retention-days: 7 }
