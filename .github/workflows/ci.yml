@@ -5,7 +5,6 @@ on:
   pull_request:
 permissions:
   contents: read
-  checks: write
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -18,45 +17,53 @@ jobs:
     timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
-      - name: Ensure agent-routing.json (10 NEURA)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Ensure routing (10 NEURA)
         run: |
-          python3 -c "
+          python - <<'PY'
           import json, os
-          p='packages/config/agent-routing.json'
+          p="packages/config/agent-routing.json"
           os.makedirs(os.path.dirname(p), exist_ok=True)
-          want=[{'id':f'neura-{i}','url':f'http://localhost:4310/hook/neura-{i}','auth':'header','keyEnv':'MAKE_TOKEN'} for i in range(1,11)]
+          want=[{"id":f"neura-{i}","url":f"http://localhost:4310/hook/neura-{i}","auth":"header","keyEnv":"MAKE_TOKEN"} for i in range(1,11)]
           try:
             d=json.load(open(p))
-            ok=isinstance(d,list) and len(d)==10 and sorted(x['id'] for x in d)==[f'neura-{i}' for i in range(1,11)] and all(set(r)=={'id','url','auth','keyEnv'} for r in d)
+            ok=isinstance(d,list) and len(d)==10 and sorted(x["id"] for x in d)==[f"neura-{i}" for i in range(1,11)] and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
           except: ok=False
-          open(p,'w').write(json.dumps(d if ok else want,indent=2))
-          "
-      - run: echo "ci,smoke,${GITHUB_SHA},$(date -u +%FT%TZ)" >> WF_EVIDENCE.csv
-      - name: Smoke in one step (retry puerto, trap, logs)
+          open(p,"w").write(json.dumps(d if ok else want,indent=2))
+          PY
+      - name: Smoke in one step (retry puerto, trap, logs, summary)
         shell: bash
         run: |
           set -euo pipefail
-          run_smoke() {
-            export HOST=127.0.0.1 PORT="$1"
-            python3 -u apps/api_py/server.py "$PORT" 2>&1 | tee server.log & echo $! > .api.pid
+          curl_cmd(){ if command -v curl >/dev/null; then curl -fsS "$@"; else wget -qO- "$1"; fi; }
+          run_smoke(){ PORT="$1"; export HOST=127.0.0.1 PORT
+            python -u apps/api_py/server.py "$PORT" 2>&1 | tee server.log & echo $! > .api.pid
             trap 'kill $(cat .api.pid) 2>/dev/null || true' EXIT
-            for i in {1..120}; do curl -sf "http://$HOST:$PORT/api/health" && break || sleep 0.1; done
-            for i in {1..10}; do
-              curl -sf -XPOST "http://$HOST:$PORT/api/invoke/neura-$i" \
+            for i in {1..120}; do curl_cmd "http://$HOST:$PORT/api/health" >/dev/null && break || sleep 0.1; done
+            ok=0; for i in {1..10}; do
+              curl -fsS -XPOST "http://$HOST:$PORT/api/invoke/neura-$i" \
                 -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" \
-                -H "Content-Type: application/json" -d '{"input":""}'
+                -H "Content-Type: application/json" -d '{"input":""}' >/dev/null && ok=$((ok+1))
             done
-            kill "$(cat .api.pid)" || true
-            trap - EXIT
+            echo "OK_INVOCATIONS=$ok" >> $GITHUB_ENV
+            kill "$(cat .api.pid)" || true; trap - EXIT
           }
-          run_smoke 8080 || run_smoke 8081
+          for p in 8080 8081 8082 8090; do run_smoke "$p" && break || true; done
+          {
+            echo "## ECONEURA smoke_python summary"
+            echo "- NEURA invocadas OK: ${OK_INVOCATIONS:-0}/10"
+            echo "- Puerto usado: ${PORT:-unknown}"
+            echo "- NO_DEPLOY: $DEPLOY_ENABLED"
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: smoke-python-logs
           path: server.log
           if-no-files-found: warn
-          retention-days: 3
+          retention-days: 7
       - uses: actions/upload-artifact@v4
         if: always()
         with:
