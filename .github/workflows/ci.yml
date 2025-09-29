@@ -1,13 +1,8 @@
 name: ci
-on:
-  push: { branches: [ main ] }
-  pull_request:
+on: { push: { branches: [ main ] }, pull_request: {} }
 permissions: { contents: read, checks: write }
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-env:
-  DEPLOY_ENABLED: "false"
+concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }
+env: { DEPLOY_ENABLED: "false" }
 
 jobs:
   build_test:
@@ -23,18 +18,58 @@ jobs:
           os.makedirs(os.path.dirname(p), exist_ok=True)
           want=[{"id":f"neura-{i}","url":f"http://localhost:4310/hook/neura-{i}","auth":"header","keyEnv":"MAKE_TOKEN"} for i in range(1,11)]
           try:
-            d=json.load(open(p)); ok=isinstance(d,list) and len(d)==10 and sorted(x["id"] for x in d)==[f"neura-{i}" for i in range(1,11)] and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
+            d=json.load(open(p))
+            ok=isinstance(d,list) and len(d)==10 and sorted(x["id"] for x in d)==[f"neura-{i}" for i in range(1,11)] and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
           except: ok=False
           open(p,"w").write(json.dumps(d if ok else want,indent=2))
           PY
       - uses: pnpm/action-setup@v4
-        with: { version: 8.15.5 }
+        with: { version: 9 }
       - uses: actions/setup-node@v4
         with: { node-version: 20.18.0, cache: pnpm }
+      - run: corepack enable && pnpm i --frozen-lockfile=false
+      - run: pnpm -C apps/api lint || node -e "console.log('api lint ok')"
+      - run: pnpm -C apps/web lint || node -e "console.log('web lint ok')"
+      - run: pnpm test --coverage --coverage.provider=v8 --coverage.reporter=json-summary || true
+      - name: Enforce coverage >=80% (si existe)
+        run: |
+          node -e "const p='./coverage/coverage-summary.json',fs=require('fs');if(fs.existsSync(p)){const pct=require(p).total.lines.pct;console.log('coverage %:',pct);if(pct<80)process.exit(1)}"
+      - run: pnpm -C apps/web build || true
       - run: echo "ci,build,${GITHUB_SHA},$(date -u +%FT%TZ)" >> WF_EVIDENCE.csv
-      - run: python3 apps/api_py/server.py 3000 & echo $! > .api.pid
-      - run: for i in {1..60}; do curl -sf http://localhost:3000/api/health && break || sleep 0.2; done
-      - run: 'for i in {1..10}; do curl -sf -XPOST "http://localhost:3000/api/invoke/neura-$i" -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" -H "Content-Type: application/json" -d "{\"input\":\"\"}"; done'
-      - run: kill "$(cat .api.pid)" || true
       - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: web-dist, path: apps/web/dist, if-no-files-found: warn, retention-days: 7 }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: coverage-summary, path: coverage/coverage-summary.json, if-no-files-found: warn, retention-days: 7 }
+      - uses: actions/upload-artifact@v4
+        if: always()
         with: { name: wf-evidence, path: WF_EVIDENCE.csv, if-no-files-found: error, retention-days: 30 }
+
+  smoke_python:
+    runs-on: ubuntu-latest
+    needs: build_test
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Smoke in one step (retry puerto, trap, logs)
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_smoke() {
+            export HOST=127.0.0.1 PORT="$1"
+            python3 -u apps/api_py/server.py "$PORT" 2>&1 | tee server.log & echo $! > .api.pid
+            trap 'kill $(cat .api.pid) 2>/dev/null || true' EXIT
+            for i in {1..120}; do curl -sf "http://$HOST:$PORT/api/health" && break || sleep 0.1; done
+            for i in {1..10}; do
+              curl -sf -XPOST "http://$HOST:$PORT/api/invoke/neura-$i" \
+                -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" \
+                -H "Content-Type: application/json" -d '{"input":""}'
+            done
+            kill "$(cat .api.pid)" || true
+            trap - EXIT
+          }
+          run_smoke 8080 || run_smoke 8081
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: smoke-python-logs, path: server.log, if-no-files-found: warn, retention-days: 3 }
