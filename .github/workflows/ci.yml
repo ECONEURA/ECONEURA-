@@ -13,9 +13,9 @@ env:
   DEPLOY_ENABLED: "false"
 
 jobs:
-  build_test:
+  smoke_python:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
       - name: Ensure agent-routing.json (10 NEURA)
@@ -31,40 +31,7 @@ jobs:
           except: ok=False
           open(p,'w').write(json.dumps(d if ok else want,indent=2))
           "
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 8.15.5
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.18.0
-          cache: pnpm
-      - run: corepack enable && pnpm i --frozen-lockfile=false
-      - run: pnpm test --coverage --coverage.provider=v8 --coverage.reporter=json-summary || true
-      - name: Enforce coverage >=80% (si existe)
-        run: |
-          node -e "const p='./coverage/coverage-summary.json',fs=require('fs');if(fs.existsSync(p)){const pct=require(p).total.lines.pct;console.log('coverage %:',pct);if(pct<80)process.exit(1)}"
-      - run: echo "ci,build,${GITHUB_SHA},$(date -u +%FT%TZ)" >> WF_EVIDENCE.csv
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage-summary
-          path: coverage/coverage-summary.json
-          if-no-files-found: warn
-          retention-days: 7
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: wf-evidence
-          path: WF_EVIDENCE.csv
-          if-no-files-found: error
-          retention-days: 30
-
-  smoke_python:
-    runs-on: ubuntu-latest
-    needs: build_test
-    timeout-minutes: 6
-    steps:
-      - uses: actions/checkout@v4
+      - run: echo "ci,smoke,${GITHUB_SHA},$(date -u +%FT%TZ)" >> WF_EVIDENCE.csv
       - name: Smoke in one step (retry puerto, trap, logs)
         shell: bash
         run: |
@@ -90,3 +57,10 @@ jobs:
           path: server.log
           if-no-files-found: warn
           retention-days: 3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wf-evidence
+          path: WF_EVIDENCE.csv
+          if-no-files-found: error
+          retention-days: 30

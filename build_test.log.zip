@@ -1,0 +1,240 @@
+﻿2025-09-29T11:54:07.6155112Z Current runner version: '2.328.0'
+2025-09-29T11:54:07.6177930Z ##[group]Runner Image Provisioner
+2025-09-29T11:54:07.6178695Z Hosted Compute Agent
+2025-09-29T11:54:07.6179203Z Version: 20250912.392
+2025-09-29T11:54:07.6179913Z Commit: d921fda672a98b64f4f82364647e2f10b2267d0b
+2025-09-29T11:54:07.6180579Z Build Date: 2025-09-12T15:23:14Z
+2025-09-29T11:54:07.6181156Z ##[endgroup]
+2025-09-29T11:54:07.6181792Z ##[group]Operating System
+2025-09-29T11:54:07.6182320Z Ubuntu
+2025-09-29T11:54:07.6183250Z 24.04.3
+2025-09-29T11:54:07.6184167Z LTS
+2025-09-29T11:54:07.6185003Z ##[endgroup]
+2025-09-29T11:54:07.6185795Z ##[group]Runner Image
+2025-09-29T11:54:07.6186940Z Image: ubuntu-24.04
+2025-09-29T11:54:07.6187779Z Version: 20250922.53.1
+2025-09-29T11:54:07.6189648Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250922.53/images/ubuntu/Ubuntu2404-Readme.md
+2025-09-29T11:54:07.6192478Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250922.53
+2025-09-29T11:54:07.6194410Z ##[endgroup]
+2025-09-29T11:54:07.6196288Z ##[group]GITHUB_TOKEN Permissions
+2025-09-29T11:54:07.6198648Z Checks: write
+2025-09-29T11:54:07.6199407Z Contents: read
+2025-09-29T11:54:07.6199960Z Metadata: read
+2025-09-29T11:54:07.6200427Z ##[endgroup]
+2025-09-29T11:54:07.6202631Z Secret source: Actions
+2025-09-29T11:54:07.6203718Z Prepare workflow directory
+2025-09-29T11:54:07.6733438Z Prepare all required actions
+2025-09-29T11:54:07.6787572Z Getting action download info
+2025-09-29T11:54:08.0683520Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-09-29T11:54:08.3717354Z Download action repository 'pnpm/action-setup@v4' (SHA:a7487c7e89a18df4991f7f222e4898a00d66ddda)
+2025-09-29T11:54:08.7710986Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2025-09-29T11:54:08.8604297Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2025-09-29T11:54:09.0803897Z Complete job name: build_test
+2025-09-29T11:54:09.1618349Z ##[group]Run actions/checkout@v4
+2025-09-29T11:54:09.1619672Z with:
+2025-09-29T11:54:09.1620433Z   repository: ECONEURA/ECONEURA-
+2025-09-29T11:54:09.1621610Z   token: ***
+2025-09-29T11:54:09.1622344Z   ssh-strict: true
+2025-09-29T11:54:09.1623278Z   ssh-user: git
+2025-09-29T11:54:09.1624066Z   persist-credentials: true
+2025-09-29T11:54:09.1624944Z   clean: true
+2025-09-29T11:54:09.1625713Z   sparse-checkout-cone-mode: true
+2025-09-29T11:54:09.1626665Z   fetch-depth: 1
+2025-09-29T11:54:09.1627423Z   fetch-tags: false
+2025-09-29T11:54:09.1628197Z   show-progress: true
+2025-09-29T11:54:09.1628988Z   lfs: false
+2025-09-29T11:54:09.1629709Z   submodules: false
+2025-09-29T11:54:09.1630494Z   set-safe-directory: true
+2025-09-29T11:54:09.1631574Z env:
+2025-09-29T11:54:09.1632287Z   DEPLOY_ENABLED: false
+2025-09-29T11:54:09.1633217Z ##[endgroup]
+2025-09-29T11:54:09.2709540Z Syncing repository: ECONEURA/ECONEURA-
+2025-09-29T11:54:09.2712050Z ##[group]Getting Git version info
+2025-09-29T11:54:09.2713739Z Working directory is '/home/runner/work/ECONEURA-/ECONEURA-'
+2025-09-29T11:54:09.2715541Z [command]/usr/bin/git version
+2025-09-29T11:54:09.2766735Z git version 2.51.0
+2025-09-29T11:54:09.2792520Z ##[endgroup]
+2025-09-29T11:54:09.2807450Z Temporarily overriding HOME='/home/runner/work/_temp/387b2375-0d5e-43c8-aba0-5b05ee8296fa' before making global git config changes
+2025-09-29T11:54:09.2810643Z Adding repository directory to the temporary git global config as a safe directory
+2025-09-29T11:54:09.2819064Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/ECONEURA-/ECONEURA-
+2025-09-29T11:54:09.2852877Z Deleting the contents of '/home/runner/work/ECONEURA-/ECONEURA-'
+2025-09-29T11:54:09.2856603Z ##[group]Initializing the repository
+2025-09-29T11:54:09.2860342Z [command]/usr/bin/git init /home/runner/work/ECONEURA-/ECONEURA-
+2025-09-29T11:54:09.2947076Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-09-29T11:54:09.2950379Z hint: is subject to change. To configure the initial branch name to use in all
+2025-09-29T11:54:09.2953499Z hint: of your new repositories, which will suppress this warning, call:
+2025-09-29T11:54:09.2955616Z hint:
+2025-09-29T11:54:09.2956558Z hint: 	git config --global init.defaultBranch <name>
+2025-09-29T11:54:09.2957660Z hint:
+2025-09-29T11:54:09.2958816Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-09-29T11:54:09.2961645Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-09-29T11:54:09.2963468Z hint:
+2025-09-29T11:54:09.2964390Z hint: 	git branch -m <name>
+2025-09-29T11:54:09.2965734Z hint:
+2025-09-29T11:54:09.2967551Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-09-29T11:54:09.2969508Z Initialized empty Git repository in /home/runner/work/ECONEURA-/ECONEURA-/.git/
+2025-09-29T11:54:09.2972427Z [command]/usr/bin/git remote add origin https://github.com/ECONEURA/ECONEURA-
+2025-09-29T11:54:09.3004083Z ##[endgroup]
+2025-09-29T11:54:09.3005546Z ##[group]Disabling automatic garbage collection
+2025-09-29T11:54:09.3007266Z [command]/usr/bin/git config --local gc.auto 0
+2025-09-29T11:54:09.3034921Z ##[endgroup]
+2025-09-29T11:54:09.3036175Z ##[group]Setting up auth
+2025-09-29T11:54:09.3042047Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-09-29T11:54:09.3075046Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-09-29T11:54:09.3384118Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-09-29T11:54:09.3415544Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-09-29T11:54:09.3631329Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-09-29T11:54:09.3673255Z ##[endgroup]
+2025-09-29T11:54:09.3675587Z ##[group]Fetching the repository
+2025-09-29T11:54:09.3684386Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +4da1088736e3e9d892575714aa4ffcbccf88ff93:refs/remotes/origin/main
+2025-09-29T11:54:10.9082443Z From https://github.com/ECONEURA/ECONEURA-
+2025-09-29T11:54:10.9085403Z  * [new ref]         4da1088736e3e9d892575714aa4ffcbccf88ff93 -> origin/main
+2025-09-29T11:54:10.9112857Z ##[endgroup]
+2025-09-29T11:54:10.9113844Z ##[group]Determining the checkout info
+2025-09-29T11:54:10.9115307Z ##[endgroup]
+2025-09-29T11:54:10.9120369Z [command]/usr/bin/git sparse-checkout disable
+2025-09-29T11:54:10.9158683Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-09-29T11:54:10.9185547Z ##[group]Checking out the ref
+2025-09-29T11:54:10.9188712Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-09-29T11:54:11.7566427Z Switched to a new branch 'main'
+2025-09-29T11:54:11.7567188Z branch 'main' set up to track 'origin/main'.
+2025-09-29T11:54:11.8025448Z ##[endgroup]
+2025-09-29T11:54:11.8063225Z [command]/usr/bin/git log -1 --format=%H
+2025-09-29T11:54:11.8085842Z 4da1088736e3e9d892575714aa4ffcbccf88ff93
+2025-09-29T11:54:11.8254884Z ##[group]Run python3 -c "
+2025-09-29T11:54:11.8255281Z [36;1mpython3 -c "[0m
+2025-09-29T11:54:11.8255509Z [36;1mimport json, os[0m
+2025-09-29T11:54:11.8255779Z [36;1mp='packages/config/agent-routing.json'[0m
+2025-09-29T11:54:11.8256119Z [36;1mos.makedirs(os.path.dirname(p), exist_ok=True)[0m
+2025-09-29T11:54:11.8256717Z [36;1mwant=[{'id':f'neura-{i}','url':f'http://localhost:4310/hook/neura-{i}','auth':'header','keyEnv':'MAKE_TOKEN'} for i in range(1,11)][0m
+2025-09-29T11:54:11.8257199Z [36;1mtry:[0m
+2025-09-29T11:54:11.8257396Z [36;1m  d=json.load(open(p))[0m
+2025-09-29T11:54:11.8257893Z [36;1m  ok=isinstance(d,list) and len(d)==10 and sorted(x['id'] for x in d)==[f'neura-{i}' for i in range(1,11)] and all(set(r)=={'id','url','auth','keyEnv'} for r in d)[0m
+2025-09-29T11:54:11.8258657Z [36;1mexcept: ok=False[0m
+2025-09-29T11:54:11.8258951Z [36;1mopen(p,'w').write(json.dumps(d if ok else want,indent=2))[0m
+2025-09-29T11:54:11.8259241Z [36;1m"[0m
+2025-09-29T11:54:11.8296261Z shell: /usr/bin/bash -e {0}
+2025-09-29T11:54:11.8296516Z env:
+2025-09-29T11:54:11.8296716Z   DEPLOY_ENABLED: false
+2025-09-29T11:54:11.8296951Z ##[endgroup]
+2025-09-29T11:54:11.8642230Z ##[group]Run pnpm/action-setup@v4
+2025-09-29T11:54:11.8642520Z with:
+2025-09-29T11:54:11.8642703Z   version: 8.15.5
+2025-09-29T11:54:11.8642907Z   dest: ~/setup-pnpm
+2025-09-29T11:54:11.8643342Z   run_install: null
+2025-09-29T11:54:11.8643567Z   package_json_file: package.json
+2025-09-29T11:54:11.8643802Z   standalone: false
+2025-09-29T11:54:11.8643994Z env:
+2025-09-29T11:54:11.8644163Z   DEPLOY_ENABLED: false
+2025-09-29T11:54:11.8644374Z ##[endgroup]
+2025-09-29T11:54:11.9167887Z ##[group]Running self-installer...
+2025-09-29T11:54:12.4527691Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2025-09-29T11:54:12.4648811Z Packages: +1
+2025-09-29T11:54:12.4649666Z +
+2025-09-29T11:54:12.8281220Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+2025-09-29T11:54:12.8568991Z 
+2025-09-29T11:54:12.8569215Z dependencies:
+2025-09-29T11:54:12.8569586Z + pnpm 8.15.5 (10.17.1 is available)
+2025-09-29T11:54:12.8569870Z 
+2025-09-29T11:54:12.8605796Z Done in 782ms
+2025-09-29T11:54:12.8777348Z ##[endgroup]
+2025-09-29T11:54:12.8782433Z Installation Completed!
+2025-09-29T11:54:12.8909514Z ##[group]Run actions/setup-node@v4
+2025-09-29T11:54:12.8909773Z with:
+2025-09-29T11:54:12.8909969Z   node-version: 20.18.0
+2025-09-29T11:54:12.8910165Z   cache: pnpm
+2025-09-29T11:54:12.8910353Z   always-auth: false
+2025-09-29T11:54:12.8910555Z   check-latest: false
+2025-09-29T11:54:12.8910856Z   token: ***
+2025-09-29T11:54:12.8911034Z env:
+2025-09-29T11:54:12.8911214Z   DEPLOY_ENABLED: false
+2025-09-29T11:54:12.8911479Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2025-09-29T11:54:12.8911754Z ##[endgroup]
+2025-09-29T11:54:13.0590746Z Attempting to download 20.18.0...
+2025-09-29T11:54:13.5293667Z Acquiring 20.18.0 - x64 from https://github.com/actions/node-versions/releases/download/20.18.0-11182621166/node-20.18.0-linux-x64.tar.gz
+2025-09-29T11:54:13.8962695Z Extracting ...
+2025-09-29T11:54:13.9064957Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/b83c42db-431e-41e5-9252-f4eeb823df19 -f /home/runner/work/_temp/14ae7f74-7359-4596-9d68-593431b7fad3
+2025-09-29T11:54:14.8827380Z Adding to the cache ...
+2025-09-29T11:54:16.5090265Z ##[group]Environment details
+2025-09-29T11:54:16.7272455Z node: v20.18.0
+2025-09-29T11:54:16.7273294Z npm: 10.8.2
+2025-09-29T11:54:16.7273588Z yarn: 1.22.22
+2025-09-29T11:54:16.7284321Z ##[endgroup]
+2025-09-29T11:54:16.7300538Z [command]/home/runner/setup-pnpm/node_modules/.bin/pnpm store path --silent
+2025-09-29T11:54:17.1062694Z /home/runner/setup-pnpm/node_modules/.bin/store/v3
+2025-09-29T11:54:17.2260021Z pnpm cache is not found
+2025-09-29T11:54:17.2387130Z ##[group]Run corepack enable && pnpm i --frozen-lockfile=false
+2025-09-29T11:54:17.2387568Z [36;1mcorepack enable && pnpm i --frozen-lockfile=false[0m
+2025-09-29T11:54:17.2420408Z shell: /usr/bin/bash -e {0}
+2025-09-29T11:54:17.2420636Z env:
+2025-09-29T11:54:17.2420811Z   DEPLOY_ENABLED: false
+2025-09-29T11:54:17.2421076Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2025-09-29T11:54:17.2421350Z ##[endgroup]
+2025-09-29T11:54:17.4700037Z /opt/hostedtoolcache/node/20.18.0/x64/lib/node_modules/corepack/dist/lib/corepack.cjs:21535
+2025-09-29T11:54:17.4700882Z   if (key == null || signature == null) throw new Error(`Cannot find matching keyid: ${JSON.stringify({ signatures, keys })}`);
+2025-09-29T11:54:17.4701403Z                                               ^
+2025-09-29T11:54:17.4701598Z 
+2025-09-29T11:54:17.4704299Z Error: Cannot find matching keyid: {"signatures":[{"sig":"MEUCIGL5mD8e7q2srMLSfBaQURvV9FTwi5VFWgy5f9hBhglOAiEAqMbYycQ5j+6SAveEYpWN7uOXz9b8q3plcIVNT0XMBKc=","keyid":"SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"}],"keys":[{"expires":null,"keyid":"SHA256:jl3bwswu80PjjokCgh0o2w5c2U4LhQAE57gj9cz1kzA","keytype":"ecdsa-sha2-nistp256","scheme":"ecdsa-sha2-nistp256","key":"MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE1Olb3zMAFFxXKHiIkQO5cJ3Yhl5i6UPp+IhuteBJbuHcA5UogKo0EWtlWwW6KSaKoTNEYL7JlCQiVnkhBktUgg=="}]}
+2025-09-29T11:54:17.4706916Z     at verifySignature (/opt/hostedtoolcache/node/20.18.0/x64/lib/node_modules/corepack/dist/lib/corepack.cjs:21535:47)
+2025-09-29T11:54:17.4707785Z     at fetchLatestStableVersion (/opt/hostedtoolcache/node/20.18.0/x64/lib/node_modules/corepack/dist/lib/corepack.cjs:21553:5)
+2025-09-29T11:54:17.4708505Z     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+2025-09-29T11:54:17.4709278Z     at async fetchLatestStableVersion2 (/opt/hostedtoolcache/node/20.18.0/x64/lib/node_modules/corepack/dist/lib/corepack.cjs:21672:14)
+2025-09-29T11:54:17.4710208Z     at async Engine.getDefaultVersion (/opt/hostedtoolcache/node/20.18.0/x64/lib/node_modules/corepack/dist/lib/corepack.cjs:22292:23)
+2025-09-29T11:54:17.4711155Z     at async Engine.executePackageManagerRequest (/opt/hostedtoolcache/node/20.18.0/x64/lib/node_modules/corepack/dist/lib/corepack.cjs:22390:47)
+2025-09-29T11:54:17.4712058Z     at async Object.runMain (/opt/hostedtoolcache/node/20.18.0/x64/lib/node_modules/corepack/dist/lib/corepack.cjs:23096:5)
+2025-09-29T11:54:17.4712478Z 
+2025-09-29T11:54:17.4712567Z Node.js v20.18.0
+2025-09-29T11:54:17.5359182Z ##[error]Process completed with exit code 1.
+2025-09-29T11:54:17.5421746Z ##[group]Run actions/upload-artifact@v4
+2025-09-29T11:54:17.5422029Z with:
+2025-09-29T11:54:17.5422212Z   name: coverage-summary
+2025-09-29T11:54:17.5422438Z   path: coverage/coverage-summary.json
+2025-09-29T11:54:17.5422692Z   if-no-files-found: warn
+2025-09-29T11:54:17.5422912Z   retention-days: 7
+2025-09-29T11:54:17.5423344Z   compression-level: 6
+2025-09-29T11:54:17.5423551Z   overwrite: false
+2025-09-29T11:54:17.5423740Z   include-hidden-files: false
+2025-09-29T11:54:17.5423950Z env:
+2025-09-29T11:54:17.5424113Z   DEPLOY_ENABLED: false
+2025-09-29T11:54:17.5424364Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2025-09-29T11:54:17.5424640Z ##[endgroup]
+2025-09-29T11:54:17.7527869Z ##[warning]No files were found with the provided path: coverage/coverage-summary.json. No artifacts will be uploaded.
+2025-09-29T11:54:17.7632577Z ##[group]Run actions/upload-artifact@v4
+2025-09-29T11:54:17.7632875Z with:
+2025-09-29T11:54:17.7633247Z   name: wf-evidence
+2025-09-29T11:54:17.7633566Z   path: WF_EVIDENCE.csv
+2025-09-29T11:54:17.7633914Z   if-no-files-found: error
+2025-09-29T11:54:17.7634260Z   retention-days: 30
+2025-09-29T11:54:17.7634594Z   compression-level: 6
+2025-09-29T11:54:17.7634925Z   overwrite: false
+2025-09-29T11:54:17.7635219Z   include-hidden-files: false
+2025-09-29T11:54:17.7635445Z env:
+2025-09-29T11:54:17.7635614Z   DEPLOY_ENABLED: false
+2025-09-29T11:54:17.7635862Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2025-09-29T11:54:17.7636145Z ##[endgroup]
+2025-09-29T11:54:17.9715209Z With the provided path, there will be 1 file uploaded
+2025-09-29T11:54:17.9719627Z Artifact name is valid!
+2025-09-29T11:54:17.9721042Z Root directory input is valid!
+2025-09-29T11:54:18.1179787Z Beginning upload of artifact content to blob storage
+2025-09-29T11:54:18.2386749Z Uploaded bytes 297
+2025-09-29T11:54:18.2717901Z Finished uploading artifact content to blob storage!
+2025-09-29T11:54:18.2722022Z SHA256 digest of uploaded artifact zip is a0968708ab94e6eff90c92e375dcdfb828b467d4cc1ac842c5de7c63c8ffeeb9
+2025-09-29T11:54:18.2723493Z Finalizing artifact upload
+2025-09-29T11:54:18.3815455Z Artifact wf-evidence.zip successfully finalized. Artifact ID 4131662770
+2025-09-29T11:54:18.3816734Z Artifact wf-evidence has been successfully uploaded! Final size is 297 bytes. Artifact ID is 4131662770
+2025-09-29T11:54:18.3824372Z Artifact download URL: https://github.com/ECONEURA/ECONEURA-/actions/runs/18096052008/artifacts/4131662770
+2025-09-29T11:54:18.3927773Z Post job cleanup.
+2025-09-29T11:54:18.4455290Z Pruning is unnecessary.
+2025-09-29T11:54:18.4539957Z Post job cleanup.
+2025-09-29T11:54:18.5453671Z [command]/usr/bin/git version
+2025-09-29T11:54:18.5489137Z git version 2.51.0
+2025-09-29T11:54:18.5532245Z Temporarily overriding HOME='/home/runner/work/_temp/241d4299-35be-4a5f-ab36-35ec934afb5e' before making global git config changes
+2025-09-29T11:54:18.5533997Z Adding repository directory to the temporary git global config as a safe directory
+2025-09-29T11:54:18.5538830Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/ECONEURA-/ECONEURA-
+2025-09-29T11:54:18.5596454Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-09-29T11:54:18.5608929Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-09-29T11:54:18.5837167Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-09-29T11:54:18.5856688Z http.https://github.com/.extraheader
+2025-09-29T11:54:18.5868784Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-09-29T11:54:18.5903252Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-09-29T11:54:18.6262977Z Cleaning up orphan processes
