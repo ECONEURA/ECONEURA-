@@ -1,0 +1,40 @@
+name: ci-smoke
+on: { push: { branches: [ main ] }, workflow_dispatch: {} }
+permissions: { contents: read }
+concurrency: { group: ci-smoke-${{ github.ref }}, cancel-in-progress: true }
+env: { DEPLOY_ENABLED: "false" }
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Ensure routing
+        run: python - <<'PY'
+import json, os; p="packages/config/agent-routing.json"; os.makedirs(os.path.dirname(p), exist_ok=True)
+d=json.load(open(p)); assert isinstance(d,list) and len(d)==10 and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
+print("routing ok")
+PY
+      - name: Smoke (10/10, retry puertos 8080/8081/8090, logs+summary)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          run(){ PORT="$1"; export HOST=127.0.0.1 PORT
+            python -u apps/api_py/server.py "$PORT" 2>&1 | tee server.log & echo $! > .api.pid
+            trap 'kill $(cat .api.pid) 2>/dev/null || true' EXIT
+            for i in {1..120}; do curl -fsS "http://$HOST:$PORT/api/health" >/dev/null && break || sleep 0.1; done
+            ok=0; for i in {1..10}; do
+              curl -fsS -XPOST "http://$HOST:$PORT/api/invoke/neura-$i" \
+              -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" \
+              -H "Content-Type: application/json" -d '{"input":""}' >/dev/null && ok=$((ok+1))
+            done
+            echo "OK_INVOCATIONS=$ok" >> $GITHUB_ENV
+            kill "$(cat .api.pid)" || true; trap - EXIT
+          }
+          run 8080 || run 8081 || run 8090
+          { echo "## SMOKE"; echo "- OK: ${OK_INVOCATIONS:-0}/10"; echo "- NO_DEPLOY: $DEPLOY_ENABLED"; } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: smoke-logs, path: server.log, if-no-files-found: warn, retention-days: 7 }

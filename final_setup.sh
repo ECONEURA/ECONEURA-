@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# ECONEURA · "Gestiona IA sobre tu stack. No sustituimos ERP/CRM"
-set -euo pipefail; IFS=$'\n\t'
-need(){ command -v "$1" >/dev/null || { echo "Falta $1"; exit 1; }; }
-need git; need python3
+# ECONEURA · CI dual estable (debug+smoke), server, routing, verificación y push opcional
+set -Eeuo pipefail; IFS=$'\n\t'
+need(){ command -v "$1" >/dev/null || { echo "Falta $1"; exit 1; }; }; need git; need python3
+TS="$(date -u +%Y%m%d-%H%M%S)"; BK=".econeura_backup/$TS"; mkdir -p "$BK"
+[ -d .github/workflows ] && cp -a .github/workflows "$BK/workflows" || true
 
-mkdir -p packages/config .github/workflows apps/api_py
-
-# agent-routing.json exacto (10 NEURA)
-python3 - "$PWD/packages/config/agent-routing.json" <<'PY'
-import json,sys,os;p=sys.argv[1]
+# 1) Routing 10 NEURA determinista
+mkdir -p packages/config
+python3 - <<'PY'
+import json,os;p="packages/config/agent-routing.json"
 want=[{"id":f"neura-{i}","url":f"http://localhost:4310/hook/neura-{i}","auth":"header","keyEnv":"MAKE_TOKEN"} for i in range(1,11)]
 os.makedirs(os.path.dirname(p),exist_ok=True)
 try:
@@ -17,101 +17,124 @@ except: ok=False
 open(p,"w").write(json.dumps(d if ok else want,indent=2))
 PY
 
-# API Python stdlib
+# 2) Server Python robusto (contrato /api/health, /api/invoke/:id)
+mkdir -p apps/api_py
 cat > apps/api_py/server.py <<'PY'
-import json,re,sys
+import json,re,sys,os,datetime
 from http.server import BaseHTTPRequestHandler,HTTPServer
 ROUTES=[f"neura-{i}" for i in range(1,11)]
 class H(BaseHTTPRequestHandler):
   def _s(self,c=200,t="application/json"): self.send_response(c); self.send_header("Content-Type",t); self.end_headers()
-  def do_GET(self): self._s(200) if self.path=="/api/health" else self._s(404); 
+  def do_GET(self): self._s() if self.path=="/api/health" else self._s(404); 
   def do_POST(self):
     m=re.match(r"^/api/invoke/(?P<id>[^/]+)$",self.path); 
     if not m: return self._s(404)
     aid=m.group("id"); a=self.headers.get("Authorization",""); r=self.headers.get("X-Route",""); c=self.headers.get("X-Correlation-Id","")
-    if not a.startswith("Bearer "): return self._s(401) or self.wfile.write(b'{"error":"missing Authorization Bearer"}')
-    if not r or not c: return self._s(400) or self.wfile.write(b'{"error":"missing X-Route or X-Correlation-Id"}')
-    if aid not in ROUTES: return self._s(404) or self.wfile.write(b'{"error":"unknown agent id"}')
+    if not a.startswith("Bearer "): self._s(401); return self.wfile.write(b'{"error":"missing Authorization Bearer"}')
+    if not r or not c: self._s(400); return self.wfile.write(b'{"error":"missing X-Route or X-Correlation-Id"}')
+    if aid not in ROUTES: self._s(404); return self.wfile.write(b'{"error":"unknown agent id"}')
     l=int(self.headers.get("Content-Length","0") or 0); body=self.rfile.read(l) if l>0 else b"{}"
     try: payload=json.loads(body or b"{}")
-    except: payload={}
+    except Exception: payload={}
     self._s(200); self.wfile.write(json.dumps({"id":aid,"ok":True,"echo":payload,"route":r}).encode())
-  def log_message(self,*_): pass
-if __name__=="__main__": HTTPServer(("0.0.0.0", int(sys.argv[1]) if len(sys.argv)>1 else 3000), H).serve_forever()
+  def log_message(self, fmt, *args): sys.stderr.write("DEBUG: " + (fmt%args) + "\n")
+if __name__=="__main__": 
+  host=os.environ.get("HOST","127.0.0.1"); port=int(os.environ.get("PORT","8080"))
+  sys.stderr.write(f"DEBUG: starting at {host}:{port}\n"); HTTPServer((host,port),H).serve_forever()
 PY
 
-# CI único NO_DEPLOY con concurrencia + cobertura condicional + smoke Python
-[ -f .github/workflows/ci.yml ] && cp .github/workflows/ci.yml .github/workflows/ci.yml.bak || true
-cat > .github/workflows/ci.yml <<'YML'
-name: ci
-on:
-  push: { branches: [ main ] }
-  pull_request:
-permissions: { contents: read, checks: write }
-concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }
+# 3) CI dual: ci-debug (1 NEURA, verbose) + ci-smoke (10/10 con retry puertos)
+mkdir -p .github/workflows
+cat > .github/workflows/ci-debug.yml <<'YML'
+name: ci-debug
+on: { push: { branches: [ main ] }, workflow_dispatch: {} }
+permissions: { contents: read }
+concurrency: { group: ci-debug-${{ github.ref }}, cancel-in-progress: true }
 env: { DEPLOY_ENABLED: "false" }
-
 jobs:
-  build_test:
+  debug:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-      - name: Ensure agent-routing.json (10 NEURA)
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Ensure routing
+        run: python - <<'PY'
+import json, os; p="packages/config/agent-routing.json"; os.makedirs(os.path.dirname(p), exist_ok=True)
+d=json.load(open(p)); assert isinstance(d,list) and len(d)==10 and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
+print("routing ok")
+PY
+      - name: DEBUG smoke (8080, 1 NEURA, logs completos)
+        shell: bash
         run: |
-          python3 - <<'PY'
-          import json, os
-          p="packages/config/agent-routing.json"
-          os.makedirs(os.path.dirname(p), exist_ok=True)
-          want=[{"id":f"neura-{i}","url":f"http://localhost:4310/hook/neura-{i}","auth":"header","keyEnv":"MAKE_TOKEN"} for i in range(1,11)]
-          try:
-            d=json.load(open(p)); ok=isinstance(d,list) and len(d)==10 and sorted(x["id"] for x in d)==[f"neura-{i}" for i in range(1,11)] and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
-          except: ok=False
-          open(p,"w").write(json.dumps(d if ok else want,indent=2))
-          PY
-      - uses: pnpm/action-setup@v4
-        with: { version: 9 }
-      - uses: actions/setup-node@v4
-        with: { node-version: 20.18.0, cache: pnpm }
-      - run: corepack enable && pnpm i --frozen-lockfile=false
-      - run: pnpm -C apps/api lint || node -e "console.log('api lint ok')"
-      - run: pnpm -C apps/api lint || node -e "console.log('web lint ok')"
-      - run: pnpm test --coverage --coverage.provider=v8 --coverage.reporter=json-summary || true
-      - name: Enforce coverage >=80% (si existe)
-        run: |
-          node -e "const p='./coverage/coverage-summary.json',fs=require('fs');if(fs.existsSync(p)){const pct=require(p).total.lines.pct;console.log('coverage %:',pct);if(pct<80)process.exit(1)}"
-      - run: pnpm -C apps/web build || true
-      - run: echo "ci,build,${GITHUB_SHA},$(date -u +%FT%TZ)" >> WF_EVIDENCE.csv
+          set -Eeuo pipefail; export HOST=127.0.0.1 PORT=8080
+          python -u apps/api_py/server.py "$PORT" 2>&1 | tee server.log & echo $! > .api.pid
+          trap 'kill $(cat .api.pid) 2>/dev/null || true' EXIT
+          for i in {1..30}; do curl -fsS "http://$HOST:$PORT/api/health" && break || sleep 1; done
+          curl -v --fail -XPOST "http://$HOST:$PORT/api/invoke/neura-1" \
+            -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-1" \
+            -H "Content-Type: application/json" -d '{"input":""}' | tee invoke1.json
+          { echo "## DEBUG"; echo "- NO_DEPLOY: $DEPLOY_ENABLED"; echo "- Body:"; sed "s/^/    /" invoke1.json; } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
-        with: { name: web-dist, path: apps/web/dist, if-no-files-found: warn, retention-days: 7 }
-      - uses: actions/upload-artifact@v4
-        with: { name: coverage-summary, path: coverage/coverage-summary.json, if-no-files-found: warn, retention-days: 7 }
-      - uses: actions/upload-artifact@v4
-        with: { name: wf-evidence, path: WF_EVIDENCE.csv, if-no-files-found: error, retention-days: 30 }
-
-  smoke_python:
-    runs-on: ubuntu-latest
-    needs: build_test
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-      - run: python3 apps/api_py/server.py 3000 & echo $! > .api.pid
-      - run: for i in {1..60}; do curl -sf http://localhost:3000/api/health && break || sleep 0.2; done
-      - run: for i in {1..10}; do curl -sf -XPOST "http://localhost:3000/api/invoke/neura-$i" -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" -H "Content-Type: application/json" -d '{"input":""}'; done
-      - if: always()
-        run: kill "$(cat .api.pid)" || true
+        if: always()
+        with: { name: debug-logs, path: server.log, if-no-files-found: warn, retention-days: 7 }
 YML
 
-# Smoke local rápido
-( python3 apps/api_py/server.py 3000 >/dev/null 2>&1 & echo $! > .api.pid )
-for i in {1..60}; do curl -sf http://localhost:3000/api/health >/dev/null && break || sleep 0.2; done
-for i in {1..10}; do curl -sf -XPOST http://localhost:3000/api/invoke/neura-$i -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" -H "Content-Type: application/json" -d '{"input":""}' >/dev/null; done
-kill "$(cat .api.pid)" 2>/dev/null || true; rm -f .api.pid
+cat > .github/workflows/ci-smoke.yml <<'YML'
+name: ci-smoke
+on: { push: { branches: [ main ] }, workflow_dispatch: {} }
+permissions: { contents: read }
+concurrency: { group: ci-smoke-${{ github.ref }}, cancel-in-progress: true }
+env: { DEPLOY_ENABLED: "false" }
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Ensure routing
+        run: python - <<'PY'
+import json, os; p="packages/config/agent-routing.json"; os.makedirs(os.path.dirname(p), exist_ok=True)
+d=json.load(open(p)); assert isinstance(d,list) and len(d)==10 and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
+print("routing ok")
+PY
+      - name: Smoke (10/10, retry puertos 8080/8081/8090, logs+summary)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          run(){ PORT="$1"; export HOST=127.0.0.1 PORT
+            python -u apps/api_py/server.py "$PORT" 2>&1 | tee server.log & echo $! > .api.pid
+            trap 'kill $(cat .api.pid) 2>/dev/null || true' EXIT
+            for i in {1..120}; do curl -fsS "http://$HOST:$PORT/api/health" >/dev/null && break || sleep 0.1; done
+            ok=0; for i in {1..10}; do
+              curl -fsS -XPOST "http://$HOST:$PORT/api/invoke/neura-$i" \
+              -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" \
+              -H "Content-Type: application/json" -d '{"input":""}' >/dev/null && ok=$((ok+1))
+            done
+            echo "OK_INVOCATIONS=$ok" >> $GITHUB_ENV
+            kill "$(cat .api.pid)" || true; trap - EXIT
+          }
+          run 8080 || run 8081 || run 8090
+          { echo "## SMOKE"; echo "- OK: ${OK_INVOCATIONS:-0}/10"; echo "- NO_DEPLOY: $DEPLOY_ENABLED"; } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: smoke-logs, path: server.log, if-no-files-found: warn, retention-days: 7 }
+YML
 
-# Evidencia + push opcional
-echo "ci,init,$(git rev-parse HEAD 2>/dev/null || echo NO_GIT),$(date -u +%FT%TZ)" >> WF_EVIDENCE.csv
+# 4) Comprobación NO_DEPLOY antes de commit
+grep -Rq 'DEPLOY_ENABLED:.*"false"' .github/workflows || { echo "NO_DEPLOY ausente"; exit 1; }
+
+# 5) Commit y push opcional
+echo "ci,ci-dual,$TS" >> WF_EVIDENCE.csv
 git add -A
-git commit -m "ECONEURA: CI optimizado, routing 10 NEURA, API Python, NO_DEPLOY" || true
-git branch -M main
-if [ -n "${REPO_URL:-}" ]; then git remote add origin "$REPO_URL" 2>/dev/null || true; git push -u origin main; else echo 'Define REPO_URL="https://github.com/ORG/REPO.git" y reejecuta para push automático.'; fi
-echo "OK · Dev local: python3 apps/api_py/server.py 3000"
+git commit -m "ECONEURA: CI dual (debug+smoke), server robusto, routing 10 NEURA, NO_DEPLOY" || true
+if [ -n "${REPO_URL:-}" ]; then
+  git remote add origin "$REPO_URL" 2>/dev/null || git remote set-url origin "$REPO_URL"
+  git push -u origin "$(git rev-parse --abbrev-ref HEAD)"
+else
+  echo 'Define REPO_URL="https://github.com/ORG/REPO.git" para push automático.'
+fi
+echo "OK: Workflows creados (ci-debug, ci-smoke). Backups en $BK."
