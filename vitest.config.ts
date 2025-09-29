@@ -38,7 +38,8 @@ export default defineConfig({
       'coverage/',
       'test-results/',
       '**/*.config.{js,ts}',
-      '**/*.d.ts'
+      '**/*.d.ts',
+      'packages/shared/src/__auto_tests__/**'
     ],
     coverage: {
       provider: 'v8',
