@@ -1,45 +1,11 @@
 {
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "typescript.suggest.autoImports": true,
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.organizeImports": "explicit"
-  },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "prettier.configPath": ".prettierrc",
-  "eslint.workingDirectories": ["."],
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
+  "livePreview.defaultPreviewPath": "/apps/web/dist/index.html",
+  "livePreview.portNumber": 5500,
+  "livePreview.host": "127.0.0.1",
+  "livePreview.openPreviewTarget": "embeddedPreview",
+  "livePreview.serverRoot": "/workspaces/ECONEURA-",
   "files.associations": {
-    "*.md": "markdown",
-    "*.json": "jsonc",
-    "Dockerfile*": "dockerfile"
-  },
-  "emmet.includeLanguages": {
-    "typescript": "html",
-    "typescriptreact": "html"
-  },
-  "editor.tabSize": 2,
-  "editor.insertSpaces": true,
-  "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true,
-  "search.exclude": {
-    "**/node_modules": true,
-    "**/dist": true,
-    "**/.git": true,
-    "**/.vscode": true
-  },
-  "git.autofetch": true,
-  "git.enableSmartCommit": true,
-  "terminal.integrated.shell.linux": "/bin/bash",
-  "python.defaultInterpreterPath": "python3",
-  "docker.containers.groupBy": "composeProject",
-  "vitest.enable": true,
-  "vitest.commandLine": "npx vitest"
+    "*.tsx": "typescriptreact",
+    "*.jsx": "javascriptreact"
+  }
 }
