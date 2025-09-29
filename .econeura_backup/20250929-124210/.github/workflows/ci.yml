@@ -1,0 +1,118 @@
+name: ci
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  DEPLOY_ENABLED: "false"
+
+jobs:
+  smoke_python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      MAKE_TOKEN: ${{ secrets.MAKE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Ensure routing (10 NEURA)
+        run: |
+          python - <<'PY'
+          import json, os
+          p="packages/config/agent-routing.json"
+          os.makedirs(os.path.dirname(p), exist_ok=True)
+          want=[{"id":f"neura-{i}","url":f"http://localhost:4310/hook/neura-{i}","auth":"header","keyEnv":"MAKE_TOKEN"} for i in range(1,11)]
+          try:
+            d=json.load(open(p))
+            ok=isinstance(d,list) and len(d)==10 and sorted(x["id"] for x in d)==[f"neura-{i}" for i in range(1,11)] and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
+          except: ok=False
+          open(p,"w").write(json.dumps(d if ok else want,indent=2))
+          PY
+      - name: Simple smoke test (debug version)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Install jq
+          sudo apt-get update && sudo apt-get install -y jq
+
+          PORT=8080
+          HOST=127.0.0.1
+          echo "Starting server on port $PORT..."
+
+          # Start server
+          python -u apps/api_py/server.py "$PORT" 2>&1 | tee server.log &
+          SERVER_PID=$!
+          trap 'echo "Killing server..."; kill $SERVER_PID 2>/dev/null || true' EXIT
+
+          echo "Waiting for server to start..."
+          sleep 5
+
+          echo "Testing health check..."
+          HEALTH_RESPONSE=$(curl -s --max-time 10 "http://$HOST:$PORT/api/health" || echo "CURL_FAILED")
+          echo "Health response: $HEALTH_RESPONSE"
+
+          if [ "$HEALTH_RESPONSE" = "CURL_FAILED" ]; then
+            echo "ERROR: Health check failed - server not responding"
+            exit 1
+          fi
+
+          # Validate JSON
+          if echo "$HEALTH_RESPONSE" | jq -e '.ok == true' >/dev/null 2>&1; then
+            echo "✅ Health check passed"
+          else
+            echo "❌ Health check JSON validation failed"
+            echo "Response: $HEALTH_RESPONSE"
+            exit 1
+          fi
+
+          echo "Testing one neura invoke..."
+          INVOKE_RESPONSE=$(curl -s -X POST --max-time 10 "http://$HOST:$PORT/api/invoke/neura-1" \
+            -H "Authorization: Bearer test-token" \
+            -H "X-Route: azure" \
+            -H "X-Correlation-Id: smoke-1" \
+            -H "Content-Type: application/json" \
+            -d '{"input":"smoke-test"}' || echo "CURL_FAILED")
+
+          echo "Invoke response: $INVOKE_RESPONSE"
+
+          if [ "$INVOKE_RESPONSE" = "CURL_FAILED" ]; then
+            echo "ERROR: Invoke failed - server not responding"
+            exit 1
+          fi
+
+          # Validate JSON
+          if echo "$INVOKE_RESPONSE" | jq -e '.ok == true' >/dev/null 2>&1; then
+            echo "✅ Invoke check passed"
+          else
+            echo "❌ Invoke JSON validation failed"
+            echo "Response: $INVOKE_RESPONSE"
+            exit 1
+          fi
+
+          echo "✅ All tests passed!"
+          echo "OK_INVOCATIONS=1" >> $GITHUB_ENV
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-python-logs
+          path: server.log
+          if-no-files-found: warn
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wf-evidence
+          path: WF_EVIDENCE.csv
+          if-no-files-found: error
+          retention-days: 30

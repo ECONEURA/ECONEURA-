@@ -20,6 +20,7 @@ class H(BaseHTTPRequestHandler):
     self._s(200); self.wfile.write(json.dumps({"id":aid,"ok":True,"echo":payload,"route":r}).encode())
   def log_message(self, fmt, *args): sys.stderr.write("DEBUG: " + (fmt%args) + "\n")
 if __name__=="__main__":
-  host=os.environ.get("HOST","127.0.0.1"); port=int(os.environ.get("PORT","8080"))
+  host=os.environ.get("HOST","127.0.0.1")
+  port=int(os.environ.get("PORT") or (sys.argv[1] if len(sys.argv)>1 else 8080))
   sys.stderr.write(f"DEBUG: starting at {host}:{port}\n"); sys.stderr.flush()
   HTTPServer((host,port),H).serve_forever()
