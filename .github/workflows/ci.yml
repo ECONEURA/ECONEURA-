@@ -38,34 +38,13 @@ jobs:
           node -e "const p='./coverage/coverage-summary.json',fs=require('fs');if(fs.existsSync(p)){const pct=require(p).total.lines.pct;console.log('coverage %:',pct);if(pct<80)process.exit(1)}"
       - run: pnpm -C apps/web build || true
       - run: echo "ci,build,${GITHUB_SHA},$(date -u +%FT%TZ)" >> WF_EVIDENCE.csv
+      - run: python3 apps/api_py/server.py 3000 & echo $! > .api.pid
+      - run: for i in {1..60}; do curl -sf http://localhost:3000/api/health && break || sleep 0.2; done
+      - run: 'for i in {1..10}; do curl -sf -XPOST "http://localhost:3000/api/invoke/neura-$i" -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" -H "Content-Type: application/json" -d "{\"input\":\"\"}"; done'
+      - run: kill "$(cat .api.pid)" || true
       - uses: actions/upload-artifact@v4
         with: { name: web-dist, path: apps/web/dist, if-no-files-found: warn, retention-days: 7 }
       - uses: actions/upload-artifact@v4
         with: { name: coverage-summary, path: coverage/coverage-summary.json, if-no-files-found: warn, retention-days: 7 }
       - uses: actions/upload-artifact@v4
         with: { name: wf-evidence, path: WF_EVIDENCE.csv, if-no-files-found: error, retention-days: 30 }
-
-  smoke_python:
-    runs-on: ubuntu-latest
-    needs: build_test
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-      - run: python3 apps/api_py/server.py 3000 & echo $! > .api.pid
-      - run: for i in {1..60}; do curl -sf http://localhost:3000/api/health && break || sleep 0.2; done
-      - run: 'for i in {1..10}; do curl -sf -XPOST "http://localhost:3000/api/invoke/neura-$i" -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" -H "Content-Type: application/json" -d "{\"input\":\"\"}"; done'
-      - if: always()
-        run: kill "$(cat .api.pid)" || true
-
-  deploy_api:
-    runs-on: ubuntu-latest
-    needs: smoke_python
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-      - uses: azure/webapps-deploy@v3
-        with:
-          app-name: econeura-api-dev
-          publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
-          package: apps/api_py
-          startup-command: 'python server.py'
