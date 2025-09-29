@@ -1,8 +1,15 @@
 name: ci-debug
-on: { push: { branches: [ main ] }, pull_request: {} }
-permissions: { contents: read }
-concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }
-env: { DEPLOY_ENABLED: "false" }
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  DEPLOY_ENABLED: "false"
 jobs:
   smoke_python_debug:
     runs-on: ubuntu-latest
