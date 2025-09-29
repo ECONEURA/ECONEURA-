@@ -32,8 +32,6 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20.18.0, cache: pnpm }
       - run: corepack enable && pnpm i --frozen-lockfile=false
-      - run: pnpm -C apps/api lint || node -e "console.log('api lint ok')" || true
-      - run: pnpm -C apps/web lint || node -e "console.log('web lint ok')" || true
       - run: pnpm test --coverage --coverage.provider=v8 --coverage.reporter=json-summary || true
       - name: Enforce coverage >=80% (si existe)
         run: |
