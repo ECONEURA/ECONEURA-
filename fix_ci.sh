@@ -1,139 +1,103 @@
 #!/usr/bin/env bash
-# ECONEURA · FIX: CI debug estable + server + routing en 1 paso
 set -Eeuo pipefail; IFS=$'\n\t'
-need(){ command -v "$1" >/dev/null 2>&1 || { echo "Falta $1"; exit 1; }; }
-curlx(){ if command -v curl >/dev/null; then curl -fsS "$@"; else wget -qO- "$1"; fi; }
-say(){ printf "\n== %s\n" "$*"; }
+need(){ command -v "$1" >/dev/null || { echo "Falta $1"; exit 1; }; }; need python3; need git
+mkdir -p apps/api_py packages/config apps/web .github/workflows
 
-need python3; need git
+# 1) .env.example (cliente y servidor, sin secretos)
+cat > apps/web/.env.example <<'ENV'
+VITE_NEURA_GW_URL=/api
+# Copia sin secretos. El token va en window.__ECONEURA_BEARER desde la UI.
+ENV
+cat > apps/api_py/.env.example <<'ENV'
+# Activa reenvío real a Make. Si "0" o vacío -> simulación segura.
+MAKE_FORWARD=0
+# Timeout de Make en segundos
+MAKE_TIMEOUT=4
+# Cabecera x-make-token si agent-routing.json.auth="header"
+MAKE_TOKEN=__REEMPLAZA_EN_LOCAL__
+ENV
 
-# Backups
-TS="$(date -u +%Y%m%d-%H%M%S)"; BK=".econeura_backup/$TS"; mkdir -p "$BK"
-for p in ".github/workflows" "apps/api_py/server.py" "packages/config/agent-routing.json"; do
-  [ -e "$p" ] && mkdir -p "$BK/$(dirname "$p")" && cp -a "$p" "$BK/$p"
-done
-
-# Routing 10 NEURA determinista
-mkdir -p packages/config
-python3 - "$PWD/packages/config/agent-routing.json" <<'PY'
-import json,sys,os;p=sys.argv[1]
-want=[{"id":f"neura-{i}","url":f"http://localhost:4310/hook/neura-{i}","auth":"header","keyEnv":"MAKE_TOKEN"} for i in range(1,11)]
-os.makedirs(os.path.dirname(p),exist_ok=True)
-try:
- d=json.load(open(p)); ok=isinstance(d,list) and len(d)==10 and sorted(x["id"] for x in d)==[f"neura-{i}" for i in range(1,11)] and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
-except: ok=False
-open(p,"w").write(json.dumps(d if ok else want,indent=2))
-PY
-
-# Server Python robusto (logs claros)
-mkdir -p apps/api_py
+# 2) Server Python con FORWARD opcional a Make (urllib, timeout->502)
 cat > apps/api_py/server.py <<'PY'
-import json,re,sys,os,datetime
+import json,re,sys,os,datetime,urllib.request,urllib.error
 from http.server import BaseHTTPRequestHandler,HTTPServer
+
 ROUTES=[f"neura-{i}" for i in range(1,11)]
+ROUTING_PATH=os.path.join("packages","config","agent-routing.json")
+def load_routing():
+  try:
+    with open(ROUTING_PATH,"r",encoding="utf-8") as f: return {r["id"]:r for r in json.load(f)}
+  except Exception: return {}
+ROUTING=load_routing()
+
+def fwd_to_make(aid, body:bytes, headers, timeout_s:float):
+  route=ROUTING.get(aid); 
+  if not route or "url" not in route: raise RuntimeError("routing-missing")
+  req=urllib.request.Request(route["url"], data=body, method="POST")
+  req.add_header("Content-Type","application/json")
+  # Propaga correlación mínima
+  if headers.get("X-Correlation-Id"): req.add_header("X-Correlation-Id", headers["X-Correlation-Id"])
+  # Auth header si procede
+  if route.get("auth")=="header":
+    mt=os.environ.get("MAKE_TOKEN","")
+    if mt: req.add_header("x-make-token", mt)
+  try:
+    with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+      data=resp.read()
+      try: return resp.getcode(), json.loads(data or b"{}")
+      except Exception: return resp.getcode(), {"ok":True,"raw":data.decode("utf-8","ignore")}
+  except urllib.error.HTTPError as e:
+    try: body=e.read().decode("utf-8","ignore")
+    except Exception: body=""
+    return 502, {"ok":False,"error":"make_http_error","status":getattr(e,'code',None),"body":body}
+  except urllib.error.URLError as e:
+    return 502, {"ok":False,"error":"make_unreachable","reason":str(e)}
+  except Exception as e:
+    return 502, {"ok":False,"error":"make_unknown","reason":str(e)}
+
 class H(BaseHTTPRequestHandler):
   def _s(self,c=200,t="application/json"): self.send_response(c); self.send_header("Content-Type",t); self.end_headers()
   def do_GET(self):
     if self.path=="/api/health":
-      self._s(); self.wfile.write(json.dumps({"ok":True,"ts":datetime.datetime.utcnow().isoformat()}).encode())
+      self._s(); self.wfile.write(json.dumps({"ok":True,"mode":"forward" if os.environ.get("MAKE_FORWARD")=="1" else "sim","ts":datetime.datetime.utcnow().isoformat()}).encode())
     else: self._s(404)
   def do_POST(self):
     m=re.match(r"^/api/invoke/(?P<id>[^/]+)$",self.path)
-    if not m: return self._s(404)
+    if not m: self._s(404); return
     aid=m.group("id"); a=self.headers.get("Authorization",""); r=self.headers.get("X-Route",""); c=self.headers.get("X-Correlation-Id","")
-    if not a.startswith("Bearer "): self._s(401); return self.wfile.write(b'{"error":"missing Authorization Bearer"}')
-    if not r or not c: self._s(400); return self.wfile.write(b'{"error":"missing X-Route or X-Correlation-Id"}')
-    if aid not in ROUTES: self._s(404); return self.wfile.write(b'{"error":"unknown agent id"}')
+    if not a or not a.startswith("Bearer "): self._s(401); self.wfile.write(b'{"error":"missing Authorization Bearer"}'); return
+    if not r or not c: self._s(400); self.wfile.write(b'{"error":"missing X-Route or X-Correlation-Id"}'); return
+    if aid not in ROUTES: self._s(404); self.wfile.write(b'{"error":"unknown agent id"}'); return
     l=int(self.headers.get("Content-Length","0") or 0); body=self.rfile.read(l) if l>0 else b"{}"
     try: payload=json.loads(body or b"{}")
     except Exception: payload={}
-    self._s(200); self.wfile.write(json.dumps({"id":aid,"ok":True,"echo":payload,"route":r}).encode())
+    forward = os.environ.get("MAKE_FORWARD")=="1"
+    if forward:
+      code, out = fwd_to_make(aid, body, {"X-Correlation-Id":c}, float(os.environ.get("MAKE_TIMEOUT","4") or 4))
+      self._s(code); self.wfile.write(json.dumps({"id":aid,"route":r,"forward":True,"resp":out}).encode()); return
+    # simulación segura
+    self._s(200); self.wfile.write(json.dumps({"id":aid,"ok":True,"forward":False,"echo":payload,"route":r}).encode())
   def log_message(self, fmt, *args): sys.stderr.write("DEBUG: " + (fmt%args) + "\n")
+
 if __name__=="__main__":
   host=os.environ.get("HOST","127.0.0.1"); port=int(os.environ.get("PORT","8080"))
-  sys.stderr.write(f"DEBUG: starting at {host}:{port}\n"); sys.stderr.flush()
+  sys.stderr.write(f"DEBUG: starting at {host}:{port} | forward={os.environ.get('MAKE_FORWARD')=='1'}\n"); sys.stderr.flush()
   HTTPServer((host,port),H).serve_forever()
 PY
 
-# CI Debug mínimo y verboso (1 NEURA, puerto fijo 8080, sin Node)
-mkdir -p .github/workflows .github/workflows_disabled
-for f in .github/workflows/*; do
-  if [ "$(basename "$f")" != "ci.yml" ]; then
-    mv "$f" .github/workflows_disabled/ 2>/dev/null || true
-  fi
-done
-cat > .github/workflows/ci.yml <<'YML'
-name: ci-debug
-on: { push: { branches: [ main ] }, pull_request: {} }
-permissions: { contents: read }
-concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }
-env: { DEPLOY_ENABLED: "false" }
-jobs:
-  smoke_python_debug:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: '3.11' }
-      - name: Ensure routing (10 NEURA)
-        run: |
-          python - <<'PY'
-          import json, os
-          p="packages/config/agent-routing.json"
-          os.makedirs(os.path.dirname(p), exist_ok=True)
-          want=[{"id":f"neura-{i}","url":f"http://localhost:4310/hook/neura-{i}","auth":"header","keyEnv":"MAKE_TOKEN"} for i in range(1,11)]
-          try:
-            d=json.load(open(p)); ok=isinstance(d,list) and len(d)==10 and sorted(x["id"] for x in d)==[f"neura-{i}" for i in range(1,11)] and all(set(r)=={"id","url","auth","keyEnv"} for r in d)
-          except: ok=False
-          open(p,"w").write(json.dumps(d if ok else want,indent=2))
-          PY
-      - name: DEBUG smoke (8080, 1 NEURA, logs completos)
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          export HOST=127.0.0.1 PORT=8080
-          echo "# start server" | tee server.log
-          python -u apps/api_py/server.py "$PORT" 2>&1 | tee -a server.log & echo $! > .api.pid
-          trap 'kill $(cat .api.pid) 2>/dev/null || true' EXIT
-          echo "# health probe" | tee curl_health.log
-          ok=0
-          for i in {1..30}; do
-            echo "## attempt $i" | tee -a curl_health.log
-            if curl -v --show-error --fail "http://$HOST:$PORT/api/health" | tee health.json; then ok=1; break; fi
-            sleep 1
-          done
-          [ "$ok" = "1" ] || { echo "ERROR: health no respondió" | tee -a curl_health.log; exit 1; }
-          echo "# invoke neura-1 (verbose)" | tee curl_invoke1.log
-          curl -v --show-error --fail -XPOST "http://$HOST:$PORT/api/invoke/neura-1" \
-            -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-1" \
-            -H "Content-Type: application/json" -d '{"input":""}' | tee invoke1.json
-          {
-            echo "## ECONEURA DEBUG summary"
-            echo "- Puerto: $PORT"
-            echo "- Health body:"; sed 's/^/    /' health.json || true
-            echo "- Invoke body:"; sed 's/^/    /' invoke1.json || true
-          } >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: debug-logs
-          path: |
-            server.log
-            curl_health.log
-            curl_invoke1.log
-            health.json
-            invoke1.json
-          if-no-files-found: warn
-          retention-days: 7
-YML
+# 3) Verificación local rápida (modo sim por defecto)
+HOST=127.0.0.1
+PORT=8080
+python3 -u apps/api_py/server.py "$PORT" > .local_server.log 2>&1 & pid=$!
+trap 'kill $pid 2>/dev/null || true' EXIT
+for i in {1..30}; do curl -fsS "http://$HOST:$PORT/api/health" >/dev/null && break || sleep 0.2; done
+curl -fsS -XPOST "http://$HOST:$PORT/api/invoke/neura-1" \
+ -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-1" \
+ -H "Content-Type: application/json" -d '{"input":""}' >/dev/null
+kill $pid || true; trap - EXIT
 
-# Commit seguro (no falla si no hay cambios)
-echo "ci,fix,$(date -u +%FT%TZ)" >> WF_EVIDENCE.csv
+# 4) Commit y push opcional
 git add -A
-git diff --cached --quiet || git commit -m "ECONEURA: CI DEBUG mínimo estable; server robusto; routing determinista; NO_DEPLOY"
-
-# Push opcional
-if [ -n "${REPO_URL:-}" ]; then git remote add origin "$REPO_URL" 2>/dev/null || git remote set-url origin "$REPO_URL"; git push -u origin main; else echo 'Define REPO_URL="https://github.com/ORG/REPO.git" y reejecuta para push.'; fi
-
-echo "OK · Backups: $BK · Acciones: ci-debug/smoke_python_debug"
+git commit -m "API: forward opcional a Make (MAKE_FORWARD=1), timeout->502; env examples; contrato estable" || true
+[ -n "${REPO_URL:-}" ] && { git remote add origin "$REPO_URL" 2>/dev/null || git remote set-url origin "$REPO_URL"; git push -u origin "$(git rev-parse --abbrev-ref HEAD)"; } || echo 'Define REPO_URL para push automático.'
+echo "OK: proxy listo. Activar forward real con: MAKE_FORWARD=1 MAKE_TOKEN=xxx python3 apps/api_py/server.py 8080"
