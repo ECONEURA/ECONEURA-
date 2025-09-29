@@ -60,7 +60,7 @@ jobs:
             # Wait for health check with timeout
             HEALTH_OK=false
             for i in {1..60}; do
-              if curl -fsS "http://$HOST:$PORT/api/health" | jq -e '.status == "ok"' >/dev/null 2>&1; then
+              if curl -fsS "http://$HOST:$PORT/api/health" | jq -e '.ok == true' >/dev/null 2>&1; then
                 HEALTH_OK=true
                 break
               fi
@@ -95,7 +95,7 @@ jobs:
               RESPONSE_TIME=$((END_TIME - START_TIME))
 
               # Validate response
-              if [ "$HTTP_CODE" = "200" ] && echo "$BODY" | jq -e '.result != null' >/dev/null 2>&1; then
+              if [ "$HTTP_CODE" = "200" ] && echo "$BODY" | jq -e '.ok == true' >/dev/null 2>&1; then
                 SUCCESS=true
                 OK_COUNT=$((OK_COUNT + 1))
               else
