@@ -14,12 +14,18 @@ env:
 jobs:
   smoke_python:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 3
+    env:
+      MAKE_TOKEN: ${{ secrets.MAKE_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
       - name: Ensure routing (10 NEURA)
         run: |
           python - <<'PY'
@@ -33,29 +39,106 @@ jobs:
           except: ok=False
           open(p,"w").write(json.dumps(d if ok else want,indent=2))
           PY
-      - name: Smoke in one step (retry puerto, trap, logs, summary)
+      - name: Robust smoke test with validation
         shell: bash
         run: |
           set -euo pipefail
-          curl_cmd(){ if command -v curl >/dev/null; then curl -fsS "$@"; else wget -qO- "$1"; fi; }
-          run_smoke(){ PORT="$1"; export HOST=127.0.0.1 PORT
-            python -u apps/api_py/server.py "$PORT" 2>&1 | tee server.log & echo $! > .api.pid
-            trap 'kill $(cat .api.pid) 2>/dev/null || true' EXIT
-            for i in {1..120}; do curl_cmd "http://$HOST:$PORT/api/health" >/dev/null && break || sleep 0.1; done
-            ok=0; for i in {1..10}; do
-              curl -fsS -XPOST "http://$HOST:$PORT/api/invoke/neura-$i" \
-                -H "Authorization: Bearer X" -H "X-Route: azure" -H "X-Correlation-Id: cid-$i" \
-                -H "Content-Type: application/json" -d '{"input":""}' >/dev/null && ok=$((ok+1))
+          # Install jq for JSON validation
+          sudo apt-get update && sudo apt-get install -y jq
+
+          # Function to run smoke test
+          run_smoke() {
+            PORT="$1"
+            export HOST=127.0.0.1 PORT
+            echo "Testing on port $PORT..."
+
+            # Start server with error capture
+            python -u apps/api_py/server.py "$PORT" 2>&1 | tee server.log &
+            SERVER_PID=$!
+            trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+
+            # Wait for health check with timeout
+            HEALTH_OK=false
+            for i in {1..60}; do
+              if curl -fsS "http://$HOST:$PORT/api/health" | jq -e '.status == "ok"' >/dev/null 2>&1; then
+                HEALTH_OK=true
+                break
+              fi
+              sleep 0.5
             done
-            echo "OK_INVOCATIONS=$ok" >> $GITHUB_ENV
-            kill "$(cat .api.pid)" || true; trap - EXIT
+
+            if [ "$HEALTH_OK" = false ]; then
+              echo "Health check failed on port $PORT"
+              return 1
+            fi
+
+            # Test all 10 neuras with validation
+            OK_COUNT=0
+            TOTAL_TIME=0
+            echo "timestamp,status,response_time,success,neura_id" > WF_EVIDENCE.csv
+
+            # Set token
+            TOKEN="${MAKE_TOKEN:-test-token}"
+
+            for i in {1..10}; do
+              START_TIME=$(date +%s%3N)
+              RESPONSE=$(curl -s -w "%{http_code}" -X POST "http://$HOST:$PORT/api/invoke/neura-$i" \
+                -H "Authorization: Bearer $TOKEN" \
+                -H "X-Route: azure" \
+                -H "X-Correlation-Id: smoke-$i" \
+                -H "Content-Type: application/json" \
+                -d '{"input":"smoke-test"}' \
+                --max-time 10)
+              HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+              BODY=$(echo "$RESPONSE" | head -n -1)
+              END_TIME=$(date +%s%3N)
+              RESPONSE_TIME=$((END_TIME - START_TIME))
+
+              # Validate response
+              if [ "$HTTP_CODE" = "200" ] && echo "$BODY" | jq -e '.result != null' >/dev/null 2>&1; then
+                SUCCESS=true
+                OK_COUNT=$((OK_COUNT + 1))
+              else
+                SUCCESS=false
+              fi
+
+              # Log to evidence
+              echo "$(date -Iseconds),$HTTP_CODE,${RESPONSE_TIME}ms,$SUCCESS,neura-$i" >> WF_EVIDENCE.csv
+              TOTAL_TIME=$((TOTAL_TIME + RESPONSE_TIME))
+            done
+
+            # Cleanup
+            kill $SERVER_PID || true
+            trap - EXIT
+
+            # Set environment variables for summary
+            echo "OK_INVOCATIONS=$OK_COUNT" >> $GITHUB_ENV
+            echo "AVG_RESPONSE_TIME=$((TOTAL_TIME / 10))ms" >> $GITHUB_ENV
+            echo "PORT_USED=$PORT" >> $GITHUB_ENV
+
+            # Require at least 8/10 successful
+            if [ "$OK_COUNT" -lt 8 ]; then
+              echo "FAILED: Only $OK_COUNT/10 neuras successful"
+              return 1
+            fi
+
+            return 0
           }
-          for p in 8080 8081 8082 8090; do run_smoke "$p" && break || true; done
+
+          # Try ports with retries
+          for p in 8080 8081 8082 8090; do
+            if run_smoke "$p"; then
+              break
+            fi
+          done
+
+          # Summary
           {
             echo "## ECONEURA smoke_python summary"
-            echo "- NEURA invocadas OK: ${OK_INVOCATIONS:-0}/10"
-            echo "- Puerto usado: ${PORT:-unknown}"
-            echo "- NO_DEPLOY: $DEPLOY_ENABLED"
+            echo "- ✅ NEURA invocadas OK: ${OK_INVOCATIONS:-0}/10"
+            echo "- ⏱️ Tiempo respuesta promedio: ${AVG_RESPONSE_TIME:-unknown}"
+            echo "- 🔌 Puerto usado: ${PORT_USED:-unknown}"
+            echo "- 🚫 NO_DEPLOY: $DEPLOY_ENABLED"
           } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: always()
