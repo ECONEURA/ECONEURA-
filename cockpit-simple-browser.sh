@@ -3,8 +3,8 @@ set -Eeuo pipefail; IFS=$'\n\t'
 ROOT="apps/web/dist"; API="apps/api_server.py"; mkdir -p "$ROOT"
 
 # 1) Localiza tu componente TSX exacto
-COCKPIT_SRC="$(git ls-files | grep -E 'EconeuraCockpit(\.repo)?\.tsx$' | head -n1 || true)"
-[ -n "$COCKPIT_SRC" ] || { echo "ERROR: No encuentro EconeuraCockpit*.tsx en el repo"; exit 1; }
+COCKPIT_SRC="apps/web/src/EconeuraCockpit.tsx"
+[ -f "$COCKPIT_SRC" ] || { echo "ERROR: No encuentro $COCKPIT_SRC"; exit 1; }
 
 # 2) Index con Tailwind, Import Map y Babel (transpila TSX en el navegador)
 cat > "$ROOT/index.html" <<'HTML'
