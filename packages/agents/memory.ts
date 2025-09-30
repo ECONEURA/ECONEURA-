@@ -28,7 +28,7 @@ export const MemoryEntrySchema = z.object({
   /** Timestamp de expiración calculado */
   expiresAt: z.date().optional(),
   /** Metadatos adicionales */
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type MemoryEntry = z.infer<typeof MemoryEntrySchema>;

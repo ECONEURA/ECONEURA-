@@ -19,7 +19,7 @@ export const MemoryPutRequestSchema = z.object({
   vector: z.array(z.number()).optional(),
   text: z.string().optional(),
   ttlSec: z.number().optional(),
-  meta: z.record(z.any()).optional(),
+  meta: z.record(z.string(), z.any()).optional(),
 });
 
 export const MemoryPutResponseSchema = z.object({
@@ -42,7 +42,7 @@ export const MemoryQueryResponseSchema = z.object({
     id: z.string(),
     score: z.number(),
     text: z.string().optional(),
-    meta: z.record(z.any()).optional(),
+    meta: z.record(z.string(), z.any()).optional(),
   })),
   query: z.string(),
   namespace: z.string(),

@@ -19,6 +19,11 @@ import {
 // Utilidades básicas
 const cx = (...cls: (string | boolean | undefined)[]) => cls.filter(Boolean).join(" ");
 
+// Utilidad para verificar si un valor es un componente React válido
+function isReactComponent(x: any): x is React.ElementType {
+  return !!x && (typeof x === 'function' || typeof x === 'object');
+}
+
 // Tipos
 export type Agent = { id: string; title: string; desc: string; pills?: string[] };
 export interface Department { id: string; name: string; chips: string[]; neura: { title: string; subtitle: string; tags: string[] }; agents: Agent[] }
@@ -128,8 +133,7 @@ const DeptIcon: Record<string, React.ElementType> = {
   CDO: Database,
 };
 
-const isComponent = (x: any): x is React.ElementType => !!x && (typeof x === 'function' || typeof x === 'object');
-function getDeptIcon(id: string): React.ElementType { const Icon = (DeptIcon as any)[id]; return isComponent(Icon) ? Icon : Crown; }
+function getDeptIcon(id: string): React.ElementType { const Icon = (DeptIcon as any)[id]; return isReactComponent(Icon) ? Icon : Crown; }
 
 // Colores
 function hexToRgb(hex: string){ const h = hex.replace('#',''); const bigint = parseInt(h.length===3? h.split('').map(x=>x+x).join('') : h, 16); const r=(bigint>>16)&255,g=(bigint>>8)&255,b=bigint&255; return {r,g,b}; }
@@ -256,17 +260,16 @@ function iconForAgent(title: string): React.ElementType {
   else if (t.includes('phishing')) Icon = Inbox;
   else if (t.includes('email')) Icon = Mail;
   else if (t.includes('tendencias')) Icon = TrendingUp;
-  return isComponent(Icon) ? Icon : ClipboardList;
+  return isReactComponent(Icon) ? Icon : ClipboardList;
 }
 
 function TagIcon({ text }: { text: string }) {
   const s = text.toLowerCase();
   const Maybe: any = s.includes('riesgo') ? Shield : s.includes('consumo') ? Gauge : s.includes('errores') ? Bug : s.includes('m&a') ? Target : s.includes('tendencias') ? TrendingUp : FileText;
-  const I = isComponent(Maybe) ? Maybe : FileText;
+  const I = isReactComponent(Maybe) ? Maybe : FileText;
   return <I className="w-3 h-3" />;
 }
 
-const isComponent = (x: any): x is React.ElementType => !!x && (typeof x === 'function' || typeof x === 'object');
 
 export default function EconeuraCockpit() {
   const [activeDept, setActiveDept] = useState(DATA[0].id);
@@ -523,9 +526,9 @@ function OrgChart() {
   const failures: string[] = [];
   try {
     ['Agente: Agenda Consejo','Agente: Resumen','Agente: OKR','Agente: Phishing Triage','Agente: X'].forEach(s=>{
-      const I = iconForAgent(s); if (!isComponent(I)) failures.push(`iconForAgent inválido: ${s}`);
+      const I = iconForAgent(s); if (!isReactComponent(I)) failures.push(`iconForAgent inválido: ${s}`);
     });
-    ['CEO','IA','CTO','CISO','UNKNOWN'].forEach(id=>{ const I=getDeptIcon(id); if(!isComponent(I)) failures.push(`dept icon inválido: ${id}`); const pal=getPalette(id); if(!pal?.accentText) failures.push(`palette inválido: ${id}`); });
+  ['CEO','IA','CTO','CISO','UNKNOWN'].forEach(id=>{ const I=getDeptIcon(id); if(!isReactComponent(I)) failures.push(`dept icon inválido: ${id}`); const pal=getPalette(id); if(!pal?.accentText) failures.push(`palette inválido: ${id}`); });
     const el = LogoEconeura(); if(!(el as any)?.props?.dangerouslySetInnerHTML?.__html) failures.push('Logo vacío');
   } catch (e: any) { failures.push(`self-test: ${e?.message||e}`);} finally { if (failures.length) console.warn('[ECONEURA self-test]', failures); }
 })();

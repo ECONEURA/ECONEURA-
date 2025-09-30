@@ -27,10 +27,10 @@ export function validateNonEmptyString(str: unknown): boolean {
 }
 
 // Generic validation wrapper
-export function validateData<T>(schema: z.ZodSchema<T>, data: unknown): { success: true; data: T } | { success: false; errors: z.ZodError['errors'] } {
+export function validateData<T>(schema: z.ZodSchema<T>, data: unknown): { success: true; data: T } | { success: false; errors: z.ZodIssue[] } {
   const result = schema.safeParse(data);
   if (result.success) {
     return { success: true, data: result.data };
   }
-  return { success: false, errors: result.error.errors };
+  return { success: false, errors: result.error.issues };
 }

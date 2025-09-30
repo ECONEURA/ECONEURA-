@@ -7,7 +7,7 @@
 
 import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Pool, type PoolConfig } from 'pg';
-import { logger } from '@econeura/shared/utils/logger.js';
+import { logger } from '@econeura/shared/logging';
 import { 
   organizations, 
   users, 
@@ -54,8 +54,8 @@ export interface DatabaseHealth {
 // ============================================================================
 
 export class DatabaseService {
-  private pool: Pool;
-  private db: NodePgDatabase;
+  private pool!: Pool;
+  private db!: NodePgDatabase<any>;
   private config: DatabaseConfig;
   private isConnected: boolean = false;
   private healthCheckInterval?: NodeJS.Timeout;
@@ -376,5 +376,4 @@ export async function shutdownDatabase(): Promise<void> {
 // EXPORTS
 // ============================================================================
 
-export { DatabaseService };
 export type { DatabaseConfig, DatabaseHealth };

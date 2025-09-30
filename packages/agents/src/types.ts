@@ -18,7 +18,7 @@ export const AgentContextSchema = z.object({
   userId: z.string(),
   correlationId: z.string(),
   idempotencyKey: z.string().optional(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type AgentContext = z.infer<typeof AgentContextSchema>;
@@ -30,7 +30,7 @@ export const AgentResultSchema = z.object({
   error: z.string().optional(),
   costEur: z.number().min(0).optional(),
   executionTimeMs: z.number().positive(),
-  metadata: z.record(z.unknown()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 export type AgentResult = z.infer<typeof AgentResultSchema>;

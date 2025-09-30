@@ -3,7 +3,7 @@
  * Provides real-time communication with AI services
  */
 
-import { logger } from '@econeura/shared/src/logging/index';
+import { logger } from '@econeura/shared/logging';
 
 export interface AIRequest {
   orgId: string;
