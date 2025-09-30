@@ -3,3 +3,8 @@ dist
 .vite
 .vscode/*.log
 apps/web/.vite.pid
+
+# Ignore dev cockpit artifacts
+.dev/cockpit/*.pid
+.dev/cockpit/package-lock.json
+.dev/cockpit/server.*
