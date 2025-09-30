@@ -122,6 +122,7 @@ $p.Id | Out-File ".watch.pid" -Encoding ascii
 # Servidor estático: probar puertos candidatos secuencialmente (python -> npx)
 $distPath = Join-Path $cwd $DIST
 $pythonCmd = if(Get-Command py -ErrorAction SilentlyContinue){ 'py' } elseif (Get-Command python -ErrorAction SilentlyContinue){ 'python' } else { $null }
+$npxAvailable = (Get-Command npx -ErrorAction SilentlyContinue) -ne $null
 
 function Wait-PortOpen($hostname,$port,$timeoutMs){
   $maxWait = $timeoutMs; $interval=300; $elapsed=0; $open=$false
@@ -137,26 +138,24 @@ Write-Host "[cockpit] Intentando arrancar servidor estático en ${COCKPIT_HOST} 
 $sp = $null; $PORT = $null
 foreach($candidate in $CANDIDATE_PORTS){
   Write-Host "[cockpit] Probando puerto candidato: $candidate" -ForegroundColor Cyan
-  # Intento con python primero
-  if($pythonCmd){
-    try{
-      $tmp = Start-Process -PassThru -FilePath $pythonCmd -ArgumentList "-m","http.server","$candidate","--bind","$COCKPIT_HOST" -WorkingDirectory $distPath -WindowStyle Minimized
-      Write-Host "[cockpit] python pid=$($tmp.Id)" -ForegroundColor Cyan
-      $tmp.Id | Out-File ".server.pid" -Encoding ascii
-      if(Wait-PortOpen $COCKPIT_HOST $candidate 5000){ $sp=$tmp; $PORT=$candidate; Write-Host "[cockpit] python escuchando en $candidate" -ForegroundColor Green; break } else { Write-Host "[cockpit] python no abrió puerto $candidate, matando proceso" -ForegroundColor Yellow; try{ Stop-Process -Id $tmp.Id -Force -ErrorAction SilentlyContinue }catch{} }
-  } catch { Write-Host ("[cockpit] fallo al iniciar python en {0}: {1}" -f $candidate, $_) -ForegroundColor Yellow }
-  }
-
-  # Fallback a npx http-server para este puerto
-  if(Get-Command npx -ErrorAction SilentlyContinue){
+  # Intento preferente: npx http-server (más rápido en entornos Node-first)
+  if($npxAvailable){
     try{
       $tmp = Start-Process -PassThru -FilePath 'npx' -ArgumentList @('--yes','http-server',$distPath,'-p',$candidate,'-a',$COCKPIT_HOST,'-c','-1') -WorkingDirectory $cwd -WindowStyle Minimized
       Write-Host "[cockpit] npx server pid=$($tmp.Id) (intentando puerto $candidate)" -ForegroundColor Cyan
       $tmp.Id | Out-File ".server.pid" -Encoding ascii
       if(Wait-PortOpen $COCKPIT_HOST $candidate 5000){ $sp=$tmp; $PORT=$candidate; Write-Host "[cockpit] npx escuchando en $candidate" -ForegroundColor Green; break } else { Write-Host "[cockpit] npx no abrió puerto $candidate, matando proceso" -ForegroundColor Yellow; try{ Stop-Process -Id $tmp.Id -Force -ErrorAction SilentlyContinue }catch{} }
-  } catch { Write-Host ("[cockpit] No se pudo iniciar npx en {0}: {1}" -f $candidate, $_) -ForegroundColor Yellow }
-  } else {
-    Write-Host "[cockpit] npx no disponible, saltando fallback en puerto $candidate" -ForegroundColor Yellow
+    } catch { Write-Host ("[cockpit] No se pudo iniciar npx en {0}: {1}" -f $candidate, $_) -ForegroundColor Yellow }
+  }
+
+  # Si npx no está disponible o falló, intentamos python si está instalado
+  if(-not $sp -and $pythonCmd){
+    try{
+      $tmp = Start-Process -PassThru -FilePath $pythonCmd -ArgumentList "-m","http.server","$candidate","--bind","$COCKPIT_HOST" -WorkingDirectory $distPath -WindowStyle Minimized
+      Write-Host "[cockpit] python pid=$($tmp.Id)" -ForegroundColor Cyan
+      $tmp.Id | Out-File ".server.pid" -Encoding ascii
+      if(Wait-PortOpen $COCKPIT_HOST $candidate 5000){ $sp=$tmp; $PORT=$candidate; Write-Host "[cockpit] python escuchando en $candidate" -ForegroundColor Green; break } else { Write-Host "[cockpit] python no abrió puerto $candidate, matando proceso" -ForegroundColor Yellow; try{ Stop-Process -Id $tmp.Id -Force -ErrorAction SilentlyContinue }catch{} }
+    } catch { Write-Host ("[cockpit] fallo al iniciar python en {0}: {1}" -f $candidate, $_) -ForegroundColor Yellow }
   }
 }
 

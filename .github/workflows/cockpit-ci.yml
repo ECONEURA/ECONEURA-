@@ -1,0 +1,30 @@
+name: cockpit-ci
+
+on:
+  push:
+    branches: [ feature/cockpit-dev-setup, main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install deps for cockpit
+        working-directory: ./.dev/cockpit
+        run: |
+          npm ci --no-audit --no-fund
+      - name: Build cockpit
+        working-directory: ./.dev/cockpit
+        run: |
+          npm run build
+      - name: Archive build
+        uses: actions/upload-artifact@v4
+        with:
+          name: cockpit-dist
+          path: ./.dev/cockpit/dist
