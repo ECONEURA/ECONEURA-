@@ -1,3 +1,13 @@
+name: ci-web
+
+on:
+  push:
+    paths:
+      - 'apps/web/**'
+  pull_request:
+    paths:
+      - 'apps/web/**'
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -6,17 +16,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm ci
+      - name: Install
+        run: npm ci
         working-directory: apps/web
-      - run: npm run lint
+      - name: Lint
+        run: npm run lint
         working-directory: apps/web
-      - run: npm run test:coverage
+      - name: Test coverage
+        run: npm run test:coverage
         working-directory: apps/web
-      - uses: codecov/codecov-action@v3
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
         with:
           directory: ./apps/web/coverage
           flags: web
           name: web-coverage
           fail_ci_if_error: false
-      - run: npm run build
+      - name: Build
+        run: npm run build
         working-directory: apps/web
