@@ -1,0 +1,7 @@
+{
+  "livePreview.defaultPreviewPath": "apps/web/preview/preview.html",
+  "livePreview.openPreviewTarget": "Embedded Preview",
+  "livePreview.serverKeepAliveAfterEmbeddedPreviewClose": true,
+  "livePreview.theme": "dark",
+  "editor.inlineSuggest.enabled": true
+}

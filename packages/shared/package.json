@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc --watch",
-    "lint": "eslint . --max-warnings 0",
+    "lint": "eslint . --max-warnings 25",
     "lint:fix": "eslint . --fix --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest --run",

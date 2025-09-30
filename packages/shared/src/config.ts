@@ -1,6 +1,12 @@
+import { z } from 'zod';
 
-  PORT: z.string().default(
-  NODE_ENV: z.enum(['development', 'test', 'production']).default(
+// Esquema de validación de configuración usando Zod
+export const configSchema = z.object({
+  // Puerto del servidor
+  PORT: z.string().default('3000'),
+
+  // Entorno de ejecución
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 
   // Seguridad
   JWT_SECRET: z.string().min(32),
@@ -17,58 +23,79 @@
   AZURE_OPENAI_API_KEY: z.string(),
   AZURE_OPENAI_API_ENDPOINT: z.string().url(),
   AZURE_OPENAI_API_VERSION: z.string(),
-  AZURE_OPENAI_DEFAULT_MODEL: z.string().default(
+  AZURE_OPENAI_DEFAULT_MODEL: z.string().default('gpt-4'),
 
   // Observabilidad
-  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default(
+  LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   OTEL_EXPORTER_OTLP_ENDPOINT: z.string().url().optional(),
 
   // Límites y cuotas
-  RATE_LIMIT_WINDOW_MS: z.string().transform(Number).default(
-  RATE_LIMIT_MAX_REQUESTS: z.string().transform(Number).default(
-  AI_BUDGET_LIMIT_EUR: z.string().transform(Number).default(
-  AI_BUDGET_ALERT_THRESHOLD: z.string().transform(Number).default(
+  RATE_LIMIT_WINDOW_MS: z.string().transform(Number).default('900000'),
+  RATE_LIMIT_MAX_REQUESTS: z.string().transform(Number).default('100'),
+  AI_BUDGET_LIMIT_EUR: z.string().transform(Number).default('100'),
+  AI_BUDGET_ALERT_THRESHOLD: z.string().transform(Number).default('0.8'),
 });
 
 // Función para cargar y validar la configuración
+// Lazy-loaded configuration
+let cachedConfig: z.infer<typeof configSchema> | null = null;
+
 export function loadConfig() {
+  if (cachedConfig) {
+    return cachedConfig;
+  }
+
   try {
-    const config = configSchema.parse(process.env);
-    return config;
+    cachedConfig = configSchema.parse(process.env);
+    return cachedConfig;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      console.error(
+      console.error('Configuration validation errors:');
       error.errors.forEach((err) => {
-        console.error(
+        console.error(`- ${err.path.join('.')}: ${err.message}`);
       });
     }
-    throw new Error(
+    throw new Error('Failed to load configuration');
   }
 }
 
-// Exportar la configuración validada
-export const config = loadConfig();
+// Reset cache for testing
+export function resetConfigCache() {
+  cachedConfig = null;
+  realConfig = null;
+}
 
-// Tipos derivados del esquema
+// Exportar la configuración validada como getter lazy
+let realConfig: z.infer<typeof configSchema> | null = null;
+
+export const config: z.infer<typeof configSchema> = new Proxy({} as z.infer<typeof configSchema>, {
+  get(target, prop) {
+    if (!realConfig) {
+      realConfig = loadConfig();
+    }
+    return realConfig[prop as keyof typeof realConfig];
+  }
+});
+
+// Exportar el tipo de configuración
 export type Config = z.infer<typeof configSchema>;
 
 // Exportar constantes comunes
 export const ENV = {
-  isDev: config.NODE_ENV 
-  isProd: config.NODE_ENV 
-  isTest: config.NODE_ENV 
+  isDev: config.NODE_ENV === 'development',
+  isProd: config.NODE_ENV === 'production',
+  isTest: config.NODE_ENV === 'test',
 } as const;
 
 // Exportar helpers de configuración
-export function getRequiredConfig<T>(key: keyof Config): T {
+export function getRequiredConfig<T extends keyof Config>(key: T): Config[T] {
   const value = config[key];
   if (value === undefined) {
-    throw new Error(
+    throw new Error(`Required configuration key "${key}" is not set`);
   }
-  return value as T;
+  return value;
 }
 
-export function getOptionalConfig<T>(key: keyof Config, defaultValue: T): T {
-  const value = config[key];
-  return (value === undefined ? defaultValue : value) as T;
+export function getOptionalConfig<T extends keyof Config>(key: T, defaultValue: Config[T]): Config[T] {
+  return config[key] ?? defaultValue;
 }

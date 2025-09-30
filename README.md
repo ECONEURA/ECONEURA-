@@ -21,7 +21,7 @@ Operamos IA en empresas existentes sin cambiar ERP/CRM/HRIS. Unificamos **agente
 - Sin sustituir sistemas existentes.
 
 ## Producto (MVP)
-- **Cockpit web** con inicio de sesión simulado; actividad por NEURA.  
+- **Cockpit web** (React + TypeScript + Tailwind CSS) con inicio de sesión simulado; actividad por NEURA. Incluye sidebar por departamento, grid de agentes, logs de actividad y chat integrado.
 - **API** `GET /api/health`, `POST /api/invoke/:id` (headers: Bearer, X-Route, X-Correlation-Id).  
 - **Routing** declarativo `packages/config/agent-routing.json` (10 filas).  
 - **NO_DEPLOY** forzado en CI. Cliente sin secretos.

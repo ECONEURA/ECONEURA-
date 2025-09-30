@@ -1,0 +1,18 @@
+DEBUG: starting at 127.0.0.1:8080 | forward=False
+DEBUG: "GET /api/health HTTP/1.1" 200 -
+/workspaces/ECONEURA-/apps/api_py/server.py:41: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  self._s(); self.wfile.write(json.dumps({"ok":True,"mode":"forward" if os.environ.get("MAKE_FORWARD")=="1" else "sim","ts":datetime.datetime.utcnow().isoformat()}).encode())
+DEBUG: "GET /api/health HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-1 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-2 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-3 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-4 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-5 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-6 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-7 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-8 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-9 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-10 HTTP/1.1" 200 -
+DEBUG: "POST /api/invoke/neura-1 HTTP/1.1" 401 -
+DEBUG: "POST /api/invoke/neura-404 HTTP/1.1" 404 -
+DEBUG: "POST /api/invoke/neura-1 HTTP/1.1" 400 -

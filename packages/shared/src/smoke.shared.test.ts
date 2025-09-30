@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { createApiResponse, createErrorResponse, type User, type ApiResponse } from './minimal';
 import { fetchSafe, type FetchLike } from './utils/fetch-safe';
 

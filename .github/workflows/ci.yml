@@ -8,7 +8,7 @@ on:
       - opened
       - synchronize
       - reopened
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -24,12 +24,44 @@ env:
   NODE_VERSION: '20'
   PYTHON_VERSION: '3.11'
   PNPM_VERSION: '8.15.5'
+
 jobs:
-  # 🔍 CODE QUALITY & TESTING
+  # � FAST QUALITY CHECK (runs first, fails fast)
+  fast-check:
+    name: "Fast Quality Check"
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node.js Setup & Fast Lint
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - name: Install dependencies (fast)
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Fast typecheck
+        run: pnpm typecheck
+      - name: Fast lint
+        run: pnpm lint --max-warnings 0
+
+      # Python Fast Check
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Python syntax check
+        run: python -m py_compile apps/api_py/server.py
+
+  # �🔍 CODE QUALITY & TESTING (PARALLEL)
   quality:
     name: "Quality & Tests"
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
 
@@ -74,11 +106,11 @@ jobs:
           file: ./coverage/lcov.info
           fail_ci_if_error: false
 
-  # 🔒 SECURITY SCANNING
+  # 🔒 SECURITY SCANNING (PARALLEL)
   security:
     name: "Security Scan"
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
@@ -103,11 +135,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # 🐳 DOCKER BUILD & TEST
+  # 🐳 DOCKER BUILD & TEST (PARALLEL)
   docker:
     name: "Docker Build"
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
 
@@ -129,7 +161,7 @@ jobs:
           docker run --rm econeura:test python --version || echo "Python available in container"
           docker run --rm econeura:test node --version || echo "Node.js available in container"
 
-  # 🚀 DEPLOY PREVIEW (solo PRs)
+  # 🚀 DEPLOY PREVIEW (PARALLEL, solo PRs)
   deploy-preview:
     name: "Deploy Preview"
     runs-on: ubuntu-latest
@@ -172,7 +204,7 @@ jobs:
     name: "Smoke Tests"
     runs-on: ubuntu-latest
     needs: quality
-    timeout-minutes: 12
+    timeout-minutes: 10
     strategy:
       matrix:
         mode: [debug, smoke]
