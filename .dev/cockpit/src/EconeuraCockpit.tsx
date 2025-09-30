@@ -4,6 +4,7 @@ import {
   ShieldCheck, UserCheck, MessageCircle, ClipboardList, Megaphone, FileText, Radar,
   Bug, Gauge, Activity, Inbox, Mail, TrendingUp, FileBarChart2, ListChecks, CalendarDays
 } from "lucide-react";
+import AgentCard from "./components/AgentCard";
 
 /**
  * ECONEURA — Cockpit Completo 1:1
@@ -445,48 +446,7 @@ export default function EconeuraCockpit() {
   );
 }
 
-// Tarjeta de agente
-type AgentCardProps = { a: Agent; busy?: boolean; onRun: () => Promise<any> | void };
-function AgentCard({ a, busy, onRun }: AgentCardProps) {
-  const I: any = iconForAgent(a.title);
-  return (
-    <div className="bg-white rounded-xl border p-4 flex flex-col">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2">
-          {React.createElement(I, { className: "w-4 h-4 mt-0.5 text-[#4b5563]" })}
-          <div>
-            <div className="font-semibold">{a.title}</div>
-            <div className="text-sm text-gray-600">{a.desc}</div>
-          </div>
-        </div>
-        <span className="text-xs px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border">Activo</span>
-      </div>
-
-      {a.pills && (
-        <div className="mt-2 text-[11px] text-gray-600 flex gap-2 flex-wrap">
-          {a.pills.map((p, i) => (
-            <span key={i} className="px-2 py-0.5 rounded-md bg-gray-100 border">{p}</span>
-          ))}
-        </div>
-      )}
-
-      {/* Barra fija 11% (paridad visual) */}
-      <div className="mt-3">
-        <div className="h-2 rounded bg-gray-100 overflow-hidden">
-          <div className="h-2 bg-gray-300" style={{ width: '11%' }} />
-        </div>
-        <div className="mt-1 text-[11px] text-gray-500">11%</div>
-      </div>
-
-      <div className="mt-3 flex gap-2">
-        <button onClick={() => onRun()} disabled={!!busy}
-          className={cx("h-9 px-3 rounded-md border text-sm",
-            busy ? "opacity-60 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-200 flex items-center gap-1")}>Ejecutar</button>
-        <button className="h-9 px-3 rounded-md border text-sm">Pausar</button>
-      </div>
-    </div>
-  );
-}
+// AgentCard moved to ./components/AgentCard.tsx
 
 // Organigrama
 function OrgChart() {
