@@ -9,6 +9,11 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+    // Ensure lucide-react is mocked consistently across workspace tests
+    // by aliasing to the shared mock in .dev/cockpit
+    alias: {
+      'lucide-react': '../../.dev/cockpit/__mocks__/lucide-react.ts'
+    },
     coverage: {
       reporter: ['text', 'json', 'html'],
       exclude: [
