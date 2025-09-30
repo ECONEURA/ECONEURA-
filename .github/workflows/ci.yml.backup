@@ -24,16 +24,14 @@ env:
   NODE_VERSION: '20'
   PYTHON_VERSION: '3.11'
   PNPM_VERSION: '8.15.5'
+
 jobs:
-  # 🔍 CODE QUALITY & TESTING
   quality:
     name: "Quality & Tests"
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-
-      # Python Setup & Lint
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -42,8 +40,6 @@ jobs:
         run: |
           python -m pip install flake8
           flake8 apps/api_py/server.py --max-line-length=120 --ignore=E501,W503 || true
-
-      # Node.js Setup & Tests
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
