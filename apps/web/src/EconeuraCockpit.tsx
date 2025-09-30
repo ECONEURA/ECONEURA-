@@ -88,7 +88,7 @@ function correlationId() {
     throw new Error('no crypto');
   } catch {
     const r = () => Math.floor(Math.random() * 1e9).toString(16);
-    return `${Date.now().toString(16)}${r()}${r()}${r()}`;
+    return `${Date.now().toString(16)}${r()}${r()}`;
   }
 }
 
@@ -137,16 +137,16 @@ function rgba(hex:string, a:number){ const {r,g,b}=hexToRgb(hex); return `rgba($
 
 const DEFAULTS_HEX: Record<string,string> = (typeof window!== 'undefined' && (window as any).__ECONEURA_COLORS) || {
   // Paleta mediterránea exacta por departamento
-  CEO: '#2C3E50',       // Azul Noche Mediterránea
-  IA:  '#3498DB',       // Azul Índigo Sereno
-  CISO:'#7E8B89',       // Verde Salvia Estratégico
-  CTO: '#6DADE9',       // Azul Celeste Sofisticado
-  COO: '#B39B83',       // Marrón Arena Versátil
-  MKT: '#E67E22',       // Naranja Sunset
-  CFO: '#D96D5C',       // Terracota Refinado
-  CHRO:'#E76F51',       // Coral Suave
-  CDO: '#F5E5DC',       // Beige Luminoso
-  CSO: '#3D5A80'        // Azul Profundo
+  CEO: '#2C3E50',
+  IA:  '#3498DB',
+  CISO:'#7E8B89',
+  CTO: '#6DADE9',
+  COO: '#B39B83',
+  MKT: '#E67E22',
+  CFO: '#D96D5C',
+  CHRO:'#E76F51',
+  CDO: '#F5E5DC',
+  CSO: '#3D5A80'
 };
 
 type Pal = { accentText:string; accentBg:string; accentBorder:string; textHex:string; bgCss:string; borderCss:string };
@@ -265,6 +265,8 @@ function TagIcon({ text }: { text: string }) {
   const I = isComponent(Maybe) ? Maybe : FileText;
   return <I className="w-3 h-3" />;
 }
+
+const isComponent = (x: any): x is React.ElementType => !!x && (typeof x === 'function' || typeof x === 'object');
 
 export default function EconeuraCockpit() {
   const [activeDept, setActiveDept] = useState(DATA[0].id);

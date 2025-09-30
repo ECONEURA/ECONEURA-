@@ -1,11 +1,7 @@
 {
-  "livePreview.defaultPreviewPath": "/apps/web/dist/index.html",
-  "livePreview.portNumber": 5500,
-  "livePreview.host": "127.0.0.1",
-  "livePreview.openPreviewTarget": "embeddedPreview",
-  "livePreview.serverRoot": "/workspaces/ECONEURA-",
-  "files.associations": {
-    "*.tsx": "typescriptreact",
-    "*.jsx": "javascriptreact"
-  }
+  "livePreview.defaultPreviewPath": "apps/web/preview/preview.html",
+  "livePreview.openPreviewTarget": "Embedded Preview",
+  "livePreview.serverKeepAliveAfterEmbeddedPreviewClose": true,
+  "livePreview.theme": "dark",
+  "editor.inlineSuggest.enabled": true
 }

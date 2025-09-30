@@ -1,39 +1,23 @@
 {
-  "name": "econeura-web",
-  "version": "1.0.0",
-  "description": "ECONEURA Web Application",
+  "name": "econeura-cockpit",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "dev": "vite --host 127.0.0.1 --port 8080",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 8080"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "lucide-react": "0.441.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "@vitejs/plugin-react": "^4.0.3",
-    "@vitest/coverage-v8": "^1.0.4",
-    "@vitest/ui": "^1.0.4",
-    "eslint": "^8.45.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
-    "jsdom": "^24.0.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5",
-    "vitest": "^1.0.4"
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@vitejs/plugin-react": "4.3.1",
+    "typescript": "5.4.5",
+    "vite": "5.3.3"
   }
 }

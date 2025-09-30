@@ -2,96 +2,47 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "dev",
+      "label": "web:dev",
       "type": "shell",
-      "command": "npm",
-      "args": [
-        "run",
-        "dev"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "shared"
-      },
+      "command": "npm run dev -- --host 127.0.0.1 --port 5173",
+      "options": { "cwd": "apps/web" },
       "isBackground": true,
-      "problemMatcher": []
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": [{ "regexp": "." }],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Local:.*127.0.0.1:5173",
+          "endsPattern": "ready in .*"
+        }
+      }
     },
     {
-      "label": "build",
+      "label": "livePreview:start",
       "type": "shell",
-      "command": "npm",
-      "args": [
-        "run",
-        "build"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "shared"
-      },
-      "problemMatcher": [
-        "$tsc"
-      ]
+      "command": "echo start",
+      "problemMatcher": [],
+      "options": { "env": {} },
+      "inputs": []
     },
     {
-      "label": "test",
+      "label": "livePreview:open",
       "type": "shell",
-      "command": "npm",
-      "args": [
-        "run",
-        "test"
-      ],
-      "group": "test",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "shared"
-      },
-      "problemMatcher": []
+      "command": "echo open",
+      "problemMatcher": [],
+      "options": { "env": {} }
     },
     {
-      "label": "lint",
-      "type": "shell",
-      "command": "npm",
-      "args": [
-        "run",
-        "lint"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "shared"
-      },
-      "problemMatcher": [
-        "$eslint-stylish"
-      ]
-    },
-    {
-      "label": "typecheck",
-      "type": "shell",
-      "command": "npm",
-      "args": [
-        "run",
-        "typecheck"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "shared"
-      },
-      "problemMatcher": [
-        "$tsc"
+      "label": "ECONEURA: Dev + LivePreview",
+      "dependsOn": [
+        "web:dev",
+        "livePreview:open"
       ]
     }
+  ],
+  "inputs": [
+    { "id": "lpStart", "type": "command", "command": "livePreview.startServer" },
+    { "id": "lpOpen",  "type": "command", "command": "livePreview.openPreview",
+      "args": { "path": "/preview/preview.html" } }
   ]
 }

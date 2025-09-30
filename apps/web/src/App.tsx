@@ -1,3 +1,3 @@
-import React from 'react'
-import EconeuraCockpit from './EconeuraCockpit.repo'
-export default function App(){ return <EconeuraCockpit/> }
+import React from "react";
+import EconeuraCockpit from "./EconeuraCockpit";
+export default function App(){ return <EconeuraCockpit />; }
