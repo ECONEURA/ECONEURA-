@@ -22,6 +22,7 @@ jobs:
   fast-check:
     name: Fast checks
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -30,6 +31,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Install deps (fast)
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
       - name: Install deps (fast)
         run: |
           pnpm install --frozen-lockfile --ignore-scripts || npm ci --no-audit --no-fund
@@ -43,6 +48,7 @@ jobs:
   quality:
     name: Quality & Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: fast-check
     steps:
       - uses: actions/checkout@v4
@@ -56,10 +62,33 @@ jobs:
         run: pnpm install --frozen-lockfile || npm ci --no-audit --no-fund
 
       - name: Build
-        run: pnpm run build --if-present || echo "No build step"
+        run: pnpm run build --if-present
 
-      - name: Run tests
-        run: pnpm run test --if-present || echo "No tests or tests failed"
+      - name: Run tests (strict)
+        run: pnpm run test --if-present -- --run || (echo "Tests failed" && exit 1)
+
+  cockpit-integration:
+    name: Cockpit Integration
+    runs-on: ubuntu-latest
+    needs: quality
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Run cockpit CI locally
+        run: |
+          cd .dev/cockpit
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+            pnpm run build
+            pnpm run test:ci
+          else
+            npm ci --no-audit --no-fund
+            npm run build
+            npm run test:ci
+          fi
 
   summary:
     name: Summary

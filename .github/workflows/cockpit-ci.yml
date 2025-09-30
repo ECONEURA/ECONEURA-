@@ -7,10 +7,6 @@ on:
   pull_request:
     paths:
       - '.dev/cockpit/**'
-
-env:
-  DEPLOY_ENABLED: 'false'
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,9 +15,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install
-        run: npm install --no-audit --no-fund
-        working-directory: ./.dev/cockpit
+      - name: Display Node & npm
+        run: |
+          node --version
+          npm --version
+      - name: Install (dev dependencies included)
+        run: |
+          if [ -f ./.dev/cockpit/pnpm-lock.yaml ]; then
+            pnpm install --workspace-root=false --dir ./.dev/cockpit --frozen-lockfile
+          else
+            (cd ./.dev/cockpit && npm ci --no-audit --no-fund)
+          fi
       - name: Build
         run: npm run build
         working-directory: ./.dev/cockpit
@@ -34,9 +38,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install
-        run: npm install --no-audit --no-fund
-        working-directory: ./.dev/cockpit
-      - name: Run vitest
-        run: npx vitest run --reporter=dot || echo "Test completed with issues"
-        working-directory: ./.dev/cockpit
+      - name: Install (dev dependencies included)
+        run: |
+          if [ -f ./.dev/cockpit/pnpm-lock.yaml ]; then
+            pnpm install --workspace-root=false --dir ./.dev/cockpit --frozen-lockfile
+          else
+            (cd ./.dev/cockpit && npm ci --no-audit --no-fund)
+          fi
+
+      - name: Run vitest (CI)
+        run: |
+          set -e
+          cd ./.dev/cockpit
+          npx vitest run --reporter=dot --run
