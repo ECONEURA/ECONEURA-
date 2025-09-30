@@ -1,3 +1,14 @@
+name: cockpit-ci
+on:
+  push:
+    paths:
+      - '.dev/cockpit/**'
+  pull_request:
+    paths:
+      - '.dev/cockpit/**'
+
+env
+  DEPLOY_ENABLED: 'false'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,3 +34,19 @@ jobs:
         working-directory: ./.dev/cockpit
       - run: npx vitest run --reporter=dot || echo "Test completed with issues"
         working-directory: ./.dev/cockpit
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".dev/cockpit/**"
+      - "apps/web/**"
+      - "types/**"
+      - "tsconfig.cockpit.dev.json"
+  push:
+    branches: [ "feature/**", "fix/**" ]
+    paths:
+      - ".dev/cockpit/**"
+      - "apps/web/**"
+      - "types/**"
+      - "tsconfig.cockpit.dev.json"
