@@ -12,6 +12,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+void __dirname;
 
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
 const backupDir = `backups/${new Date().toISOString().slice(0, 10).replace(/-/g, '')}_${new Date().toTimeString().slice(0, 8).replace(/:/g, '')}`;
@@ -50,6 +51,7 @@ try {
   analysis.system.arch = process.arch;
   console.log('✅ System info collected');
 } catch (error) {
+  void error;
   console.log('⚠️  Some system info not available');
 }
 
@@ -62,6 +64,7 @@ try {
   analysis.git.remotes = execSync('git remote -v', { encoding: 'utf8' }).trim();
   console.log('✅ Git info collected');
 } catch (error) {
+  void error;
   console.log('⚠️  Git info not available');
 }
 
@@ -80,9 +83,10 @@ try {
 
   analysis.structure = structure;
   console.log('✅ Project structure analyzed');
-} catch (error) {
-  console.log('⚠️  Structure analysis failed');
-}
+  } catch (error) {
+    void error;
+    console.log('⚠️  Structure analysis failed');
+  }
 
 // 4. Dependencias
 console.log('📦 Analyzing Dependencies...');
@@ -92,9 +96,10 @@ try {
   analysis.dependencies.runtime = Object.keys(pkg.dependencies || {});
   analysis.dependencies.dev = Object.keys(pkg.devDependencies || {});
   console.log('✅ Dependencies analyzed');
-} catch (error) {
-  console.log('⚠️  Dependencies analysis failed');
-}
+  } catch (error) {
+    void error;
+    console.log('⚠️  Dependencies analysis failed');
+  }
 
 // 5. Configuración
 console.log('⚙️  Analyzing Configuration...');
@@ -124,9 +129,10 @@ try {
 
   analysis.configuration = config;
   console.log('✅ Configuration analyzed');
-} catch (error) {
-  console.log('⚠️  Configuration analysis failed');
-}
+  } catch (error) {
+    void error;
+    console.log('⚠️  Configuration analysis failed');
+  }
 
 // 6. Health Check
 console.log('🏥 Running Health Checks...');
@@ -159,9 +165,10 @@ try {
 
   analysis.health = health;
   console.log('✅ Health checks completed');
-} catch (error) {
-  console.log('⚠️  Health checks failed');
-}
+  } catch (error) {
+    void error;
+    console.log('⚠️  Health checks failed');
+  }
 
 // 7. Backup de archivos críticos
 console.log('💾 Creating Backup...');
@@ -195,9 +202,10 @@ try {
   }
 
   console.log('✅ Critical files backed up');
-} catch (error) {
-  console.log('⚠️  Backup failed');
-}
+  } catch (error) {
+    void error;
+    console.log('⚠️  Backup failed');
+  }
 
 // 8. Generar reporte
 console.log('📊 Generating Analysis Report...');

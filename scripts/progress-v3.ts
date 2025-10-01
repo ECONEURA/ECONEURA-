@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from "node:fs";
 import path from "node:path";
 import fg from "fast-glob";
@@ -60,11 +61,12 @@ async function checkOpenApiRoute(p: string, route: string, method: string) {
   if (!exists(p)) return false;
   try {
     const api = await SwaggerParser.parse(p);
-    const paths = (api as any).paths || {};
-    const entry = paths[route];
+    const apiAny = api as unknown as Record<string, any>;
+    const paths = apiAny.paths || {};
+    const entry = (paths as Record<string, any>)[route];
     if (!entry) return false;
     return !!entry[method.toLowerCase()];
-  } catch { return false; }
+  } catch (e) { void e; return false; }
 }
 
 async function evalCheck(ch: Check): Promise<{ok:boolean; reason?:string}> {

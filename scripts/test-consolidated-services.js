@@ -4,7 +4,6 @@
 // Verifica que todos los servicios consolidados funcionen correctamente
 
 import fs from 'fs';
-import path from 'path';
 
 // Colores para output
 const colors = {
@@ -34,7 +33,7 @@ function warning(message) {
 // Verificar que los archivos de servicios consolidados existen
 function verifyConsolidatedServices() {
   log('Verificando servicios consolidados...');
-  
+
   const services = [
     {
       name: 'FinOps Consolidated Service',
@@ -68,15 +67,15 @@ function verifyConsolidatedServices() {
   for (const service of services) {
     if (fs.existsSync(service.path)) {
       success(`${service.name} encontrado`);
-      
+
       // Verificar que el archivo tiene contenido
       const content = fs.readFileSync(service.path, 'utf8');
       if (content.length < 1000) {
         warning(`${service.name} parece tener poco contenido (${content.length} caracteres)`);
       }
-      
+
       // Verificar que tiene la exportación correcta
-      if (content.includes(`export const ${service.exportName}`) || 
+      if (content.includes(`export const ${service.exportName}`) ||
           content.includes(`export { ${service.exportName}`)) {
         success(`${service.name} tiene exportación correcta`);
       } else {
@@ -95,7 +94,7 @@ function verifyConsolidatedServices() {
 // Verificar configuración optimizada
 function verifyOptimizedConfiguration() {
   log('Verificando configuración optimizada...');
-  
+
   const configs = [
     {
       name: 'TypeScript Config',
@@ -124,7 +123,7 @@ function verifyOptimizedConfiguration() {
   for (const config of configs) {
     if (fs.existsSync(config.path)) {
       success(`${config.name} encontrado`);
-      
+
       const content = fs.readFileSync(config.path, 'utf8');
       for (const required of config.required) {
         if (content.includes(required)) {
@@ -145,7 +144,7 @@ function verifyOptimizedConfiguration() {
 // Verificar scripts de optimización
 function verifyOptimizationScripts() {
   log('Verificando scripts de optimización...');
-  
+
   const scripts = [
     'scripts/optimize-consolidated-services.sh',
     'scripts/monitor-performance.js',
@@ -157,7 +156,7 @@ function verifyOptimizationScripts() {
   for (const script of scripts) {
     if (fs.existsSync(script)) {
       success(`Script encontrado: ${script}`);
-      
+
       // Verificar que es ejecutable
       const stats = fs.statSync(script);
       if (stats.mode & parseInt('111', 8)) {
@@ -177,16 +176,16 @@ function verifyOptimizationScripts() {
 // Verificar integración en index.ts
 function verifyIndexIntegration() {
   log('Verificando integración en index.ts...');
-  
+
   const indexPath = 'apps/api/src/index.ts';
-  
+
   if (!fs.existsSync(indexPath)) {
     error('index.ts no encontrado');
     return false;
   }
 
   const content = fs.readFileSync(indexPath, 'utf8');
-  
+
   const requiredImports = [
     'finOpsConsolidatedService',
     'analyticsConsolidated',
@@ -236,16 +235,16 @@ function generateTestReport(results) {
   };
 
   fs.writeFileSync('consolidated-services-test-report.json', JSON.stringify(report, null, 2));
-  
+
   log('📊 Reporte de prueba generado: consolidated-services-test-report.json');
-  
+
   return report;
 }
 
 // Función principal
 async function main() {
   log('🚀 Iniciando pruebas de servicios consolidados...');
-  
+
   const results = {
     services: verifyConsolidatedServices(),
     configs: verifyOptimizedConfiguration(),
@@ -259,11 +258,11 @@ async function main() {
   console.log('\n' + '='.repeat(60));
   console.log('📊 RESUMEN DE PRUEBAS');
   console.log('='.repeat(60));
-  
+
   console.log(`✅ Pruebas pasadas: ${report.summary.passedTests}/${report.summary.totalTests}`);
   console.log(`❌ Pruebas fallidas: ${report.summary.failedTests}/${report.summary.totalTests}`);
   console.log(`📈 Estado general: ${report.status}`);
-  
+
   console.log('\n📋 Detalles:');
   console.log(`   • Servicios consolidados: ${results.services ? '✅' : '❌'}`);
   console.log(`   • Configuración optimizada: ${results.configs ? '✅' : '❌'}`);

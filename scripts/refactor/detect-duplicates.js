@@ -6,15 +6,15 @@
 
 import { execSync } from 'child_process';
 import { writeFileSync, readFileSync } from 'fs';
-import { join } from 'path';
 
 function findSourceFiles() {
   try {
     const cmd = `find apps/ packages/ -name "*.ts" -o -name "*.tsx" | grep -v node_modules | grep -v .next | grep -v dist | grep -v build | grep -v coverage`;
     const files = execSync(cmd, { encoding: 'utf8' }).trim().split('\n');
     return files.filter(f => f.length > 0);
-  } catch (error) {
-    console.error('Error finding source files:', error.message);
+  } catch (err) {
+    void err;
+    console.error('Error finding source files');
     return [];
   }
 }
@@ -22,7 +22,8 @@ function findSourceFiles() {
 function getFileContent(filePath) {
   try {
     return readFileSync(filePath, 'utf8');
-  } catch (error) {
+  } catch (err) {
+    void err;
     return '';
   }
 }

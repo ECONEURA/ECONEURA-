@@ -37,12 +37,15 @@ const named: Record<string, unknown> = {
 
 const proxy = new Proxy(named, {
   get(target, prop: string) {
-    if (prop in target) return (target as any)[prop];
+    if (prop in target) {
+      const t = target as unknown as Record<string, unknown>;
+      return t[prop as string];
+    }
     return Icon;
   }
 });
 
-export default proxy as any;
+export default proxy as unknown as Record<string, unknown>;
 export const __esModule = true;
 // Named exports for icons used across the app/tests
 export const ArrowRight = Icon;

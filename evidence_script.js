@@ -17,9 +17,9 @@ function walk(dir) {
         } else if (stat.isFile() && (fullPath.endsWith('.ts') || fullPath.endsWith('.tsx') || fullPath.endsWith('.js') || fullPath.endsWith('.sh') || fullPath.endsWith('.yml') || fullPath.endsWith('.yaml') || fullPath.endsWith('.json') || fullPath.endsWith('.md'))) {
           files.push(fullPath);
         }
-      } catch (e) {}
+      } catch (e) { void e; }
     }
-  } catch (e) {}
+  } catch (e) { void e; }
 }
 walk('.');
 
@@ -31,7 +31,7 @@ for (const f of files) {
       if (danger.test(ln)) hits.push({ f, i: i + 1, ln: ln.trim() });
       if (secrets.test(ln)) leaks.push({ f, i: i + 1, ln: ln.trim() });
     });
-  } catch (e) {}
+  } catch (e) { void e; }
 }
 
 let md = "# NO_DEPLOY_EVIDENCE (F0R)\n\n## Peligros\n";

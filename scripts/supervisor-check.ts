@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'node:fs';
 import cp from 'node:child_process';
-import path from 'node:path';
 import fg from 'fast-glob';
 
 const read = (p: string) => { try { return fs.readFileSync(p, 'utf8'); } catch { return ''; } };
@@ -12,11 +12,11 @@ const b = (v: boolean) => v ? 'PASS' : 'FAIL';
 try { cp.execSync('pnpm -s progress', { stdio: 'ignore' }); } catch {}
 
 const statusPathCandidates = ['dist/progress.json', 'status/progress.json'];
-let status: any = null;
+let status: unknown = null;
 for (const p of statusPathCandidates) {
   if (exists(p)) { try { status = JSON.parse(read(p)); break; } catch {} }
 }
-const pct = status?.global_percent ?? status?.progress_percent ?? 0;
+const pct = (status as any)?.global_percent ?? (status as any)?.progress_percent ?? 0;
 const ts = new Date().toISOString();
 
 const openapi = exists('.openapi.checksum');
