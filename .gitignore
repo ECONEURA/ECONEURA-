@@ -8,3 +8,14 @@ apps/web/.vite.pid
 .dev/cockpit/*.pid
 .dev/cockpit/package-lock.json
 .dev/cockpit/server.*
+
+# Generated and workspace artifacts
+coverage
+**/coverage
+**/dist
+**/node_modules
+*.tsbuildinfo
+.disabled-packages/
+packages/*/coverage
+packages/*/dist
+apps/*/dist

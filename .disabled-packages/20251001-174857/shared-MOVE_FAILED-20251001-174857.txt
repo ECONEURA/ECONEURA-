@@ -1,1 +1,0 @@
-Move failed for packages/shared on 20251001-174857. typeErr=True testErr=True. Error: The process cannot access the file 'C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core' because it is being used by another process.
