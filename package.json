@@ -1,3 +1,4 @@
+
 {
   "name": "econeura-ia",
   "private": true,
@@ -39,3 +40,6 @@
     "vitest": "^2.1.9"
   }
 }
+
+{"name": "econeura-ia","private": true,"packageManager": "pnpm@8.15.5","scripts": {"dev": "pnpm run --parallel dev","dev:web": "pnpm --filter @econeura/web dev","dev:api": "pnpm --filter @econeura/api dev","build": "pnpm run --parallel build","build:web": "pnpm --filter @econeura/web build","build:api": "pnpm --filter @econeura/api build","test": "vitest run --coverage","test:watch": "vitest --watch","test:ui": "vitest --ui","lint": "eslint .","lint:fix": "eslint . --fix","typecheck": "tsc --noEmit","typecheck:watch": "tsc --noEmit --watch","clean": "pnpm run --parallel clean && rm -rf node_modules/.cache","prepare": "husky install"},"devDependencies": {"@commitlint/cli": "^20.1.0","@commitlint/config-conventional": "^20.0.0","@eslint/js": "^9.36.0","@typescript-eslint/eslint-plugin": "^8.45.0","@typescript-eslint/parser": "^8.45.0","@vitejs/coverage-v8": "^2.1.9","@vitejs/ui": "^2.1.9","eslint": "^9.36.0","globals": "^16.4.0","husky": "^9.1.6","jsdom": "^27.0.0","lint-staged": "^15.2.10","typescript": "^5.9.2","typescript-eslint": "^8.44.1","undici": "^7.16.0","vitest": "^2.1.9"}}
+
