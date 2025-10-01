@@ -36,7 +36,7 @@ foreach ($t in $targets) {
   if (Test-Path $t) {
     Write-Host "Ejecutando ESLint --fix en $t ..."
     try {
-      pnpm -w -r exec eslint $t --ext .ts,.tsx,.js,.jsx --fix --ignore-path .eslintignore 2>&1 | Tee-Object -FilePath $eslintReport -Append
+  pnpm -w -r exec eslint $t --ext .ts,.tsx,.js,.jsx --fix 2>&1 | Tee-Object -FilePath $eslintReport -Append
     } catch {
       Write-Host "ESLint retornó errores en $t (capturado). Continúo. Revisa $eslintReport para detalles."
     }
@@ -113,7 +113,16 @@ $report = @()
 foreach ($t in $targets) {
   if (Test-Path $t) {
     $res = Run-Typecheck-And-Tests $t
-    if ($res.typeErr -or $res.testErr) {
+    # Normalize result to a hashtable with typeErr/testErr keys
+    if ($null -eq $res) { $res = @{ typeErr = $true; testErr = $true } }
+    if ($res -is [System.Collections.IDictionary]) {
+      $typeErr = $res['typeErr'] -eq $true
+      $testErr = $res['testErr'] -eq $true
+    } else {
+      # try to coerce
+      try { $co = [pscustomobject]$res; $typeErr = $co.typeErr -eq $true; $testErr = $co.testErr -eq $true } catch { $typeErr = $true; $testErr = $true }
+    }
+    if ($typeErr -or $testErr) {
       Write-Host "FALLA en $t -> moviendo a $disabledDir ..."
       $name = Split-Path $t -Leaf
       $dest = Join-Path $disabledDir $name
