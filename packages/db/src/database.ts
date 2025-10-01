@@ -376,4 +376,4 @@ export async function shutdownDatabase(): Promise<void> {
 // EXPORTS
 // ============================================================================
 
-export type { DatabaseConfig, DatabaseHealth };
+// Interfaces DatabaseConfig and DatabaseHealth are exported above via `export interface`.

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 const dir='.github/workflows'; const DANG=/\b(az|azd|terraform|kubectl|helm|docker\s+(build|push))\b/i; const ND=/DEPLOY_ENABLED\s*:\s*['"]?false['"]?/i;
-let flags=[], dang=[];
+const flags=[], dang=[];
 if (fs.existsSync(dir)) for(const f of fs.readdirSync(dir)){ if(!/\.(ya?ml)$/i.test(f)) continue;
   const q=path.join(dir,f), t=fs.readFileSync(q,'utf8');
   if (ND.test(t)) flags.push(q);

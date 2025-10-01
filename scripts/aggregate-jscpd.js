@@ -29,7 +29,7 @@ if (reportFiles.length === 0) {
 
 let totalTokens = 0;
 let totalDuplicatedTokens = 0;
-let files = {};
+const files = {};
 let clones = [];
 
 for (const rf of reportFiles) {

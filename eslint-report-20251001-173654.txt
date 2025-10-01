@@ -1,0 +1,864 @@
+(node:5028) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\EconeuraCockpit.e2e.test.tsx
+    2:26  error    'fireEvent' is defined but never used     no-unused-vars
+    2:26  warning  'fireEvent' is defined but never used     @typescript-eslint/no-unused-vars
+  105:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  163:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\EconeuraCockpit.repo.tsx
+  27:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\EconeuraCockpit.tsx
+   23:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   34:26  error    'JSX' is not defined                      no-undef
+   75:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   76:75  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   77:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   91:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  100:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  116:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  118:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  118:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  119:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  120:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  122:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  126:28  error    '_row' is defined but never used          no-unused-vars
+  126:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  142:81  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  148:89  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  256:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  275:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  282:86  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  325:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  355:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  486:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  488:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  529:10  error    'OrgChart' is defined but never used      no-unused-vars
+  529:10  warning  'OrgChart' is defined but never used      @typescript-eslint/no-unused-vars
+  569:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  570:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Ô£û 35 problems (4 errors, 31 warnings)
+
+undefined
+ÔÇëERR_PNPM_RECURSIVE_EXEC_FIRST_FAILÔÇë Command failed with exit code 1: eslint apps/web --ext .ts .tsx .js .jsx --fix
+(node:25284) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\__mocks__\lucide-react.ts
+   5:15  error    '_props' is defined but never used        no-unused-vars
+  40:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  45:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\dist\app.js
+     31:9    error    Unexpected constant condition                                                                           no-constant-condition
+     34:77   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+     35:11   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+    129:20   error    Unexpected var, use let or const instead                                                                no-var
+    139:20   error    Unexpected var, use let or const instead                                                                no-var
+    158:43   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+    182:31   error    'publicInstance' is defined but never used                                                              no-unused-vars
+    182:31   warning  'publicInstance' is defined but never used. Allowed unused args must match /^_/u                        @typescript-eslint/no-unused-vars
+    200:56   error    'callback' is defined but never used                                                                    no-unused-vars
+    200:56   warning  'callback' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+    200:66   error    'callerName' is defined but never used                                                                  no-unused-vars
+    200:66   warning  'callerName' is defined but never used. Allowed unused args must match /^_/u                            @typescript-eslint/no-unused-vars
+    216:57   error    'completeState' is defined but never used                                                               no-unused-vars
+    216:57   warning  'completeState' is defined but never used. Allowed unused args must match /^_/u                         @typescript-eslint/no-unused-vars
+    216:72   error    'callback' is defined but never used                                                                    no-unused-vars
+    216:72   warning  'callback' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+    216:82   error    'callerName' is defined but never used                                                                  no-unused-vars
+    216:82   warning  'callerName' is defined but never used. Allowed unused args must match /^_/u                            @typescript-eslint/no-unused-vars
+    231:53   error    'partialState' is defined but never used                                                                no-unused-vars
+    231:53   warning  'partialState' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+    231:67   error    'callback' is defined but never used                                                                    no-unused-vars
+    231:67   warning  'callback' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+    231:77   error    'callerName' is defined but never used                                                                  no-unused-vars
+    231:77   warning  'callerName' is defined but never used. Allowed unused args must match /^_/u                            @typescript-eslint/no-unused-vars
+    270:32   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+    313:22   error    'e' is defined but never used                                                                           no-unused-vars
+    372:17   error    Unexpected var, use let or const instead                                                                no-var
+    375:17   error    Unexpected var, use let or const instead                                                                no-var
+    380:17   error    Unexpected var, use let or const instead                                                                no-var
+    391:26   error    'x' is defined but never used                                                                           no-unused-vars
+    535:76   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+    607:76   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+    706:21   error    Definition for rule 'react-internal/safe-string-coercion' was not found                                 react-internal/safe-string-coercion
+   1159:26   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+   1162:27   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+   1163:36   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+   1164:30   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+   1224:54   error    'source' is defined but never used                                                                      no-unused-vars
+   1224:54   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+   1224:62   error    'ownerFn' is defined but never used                                                                     no-unused-vars
+   1224:62   warning  'ownerFn' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+   1346:53   error    'source' is defined but never used                                                                      no-unused-vars
+   1346:53   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+   1346:61   error    'ownerFn' is defined but never used                                                                     no-unused-vars
+   1346:61   warning  'ownerFn' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+   1385:26   error    'x' is defined but never used                                                                           no-unused-vars
+   1385:29   error    Empty block statement                                                                                   no-empty
+   1462:61   error    Unnecessary escape character: \/                                                                        no-useless-escape
+   1583:59   error    'children' is defined but never used                                                                    no-unused-vars
+   1583:59   warning  'children' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+   1649:45   error    'element' is defined but never used                                                                     no-unused-vars
+   1649:45   warning  'element' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+   1649:54   error    'props' is defined but never used                                                                       no-unused-vars
+   1649:54   warning  'props' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+   1649:61   error    'children' is defined but never used                                                                    no-unused-vars
+   1649:61   warning  'children' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+   1657:41   error    'options' is defined but never used                                                                     no-unused-vars
+   1657:41   warning  'options' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+   1687:22   error    '_err' is defined but never used                                                                        no-unused-vars
+   1785:43   error    'reject' is defined but never used                                                                      no-unused-vars
+   1785:43   warning  'reject' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+   1893:77   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+   1894:11   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+   1905:9    error    Unexpected constant condition                                                                           no-constant-condition
+   1917:9    error    Unexpected constant condition                                                                           no-constant-condition
+   1920:77   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+   1921:11   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+   1997:34   error    'task' is defined but never used                                                                        no-unused-vars
+   1997:34   warning  'task' is defined but never used. Allowed unused args must match /^_/u                                  @typescript-eslint/no-unused-vars
+   1997:40   error    'ms' is defined but never used                                                                          no-unused-vars
+   1997:40   warning  'ms' is defined but never used. Allowed unused args must match /^_/u                                    @typescript-eslint/no-unused-vars
+   2029:15   error    'isInputPending' is assigned a value but never used                                                     no-unused-vars
+   2029:15   warning  'isInputPending' is assigned a value but never used                                                     @typescript-eslint/no-unused-vars
+   2355:77   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+   2356:11   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+   2367:9    error    Unexpected constant condition                                                                           no-constant-condition
+   2379:9    error    Unexpected constant condition                                                                           no-constant-condition
+   2382:77   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+   2383:11   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+   2397:20   error    Unexpected var, use let or const instead                                                                no-var
+   2407:20   error    Unexpected var, use let or const instead                                                                no-var
+   2426:43   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+   2504:22   error    'e' is defined but never used                                                                           no-unused-vars
+   2569:55   error    Unexpected combined character in character class                                                        no-misleading-character-class
+   2649:29   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   2661:9    error    Unexpected var, use let or const instead                                                                no-var
+   2862:28   error    Unnecessary escape character: \-                                                                        no-useless-escape
+   2862:30   error    Unnecessary escape character: \:                                                                        no-useless-escape
+   3045:38   error    Unexpected control character(s) in regular expression: \x00, \x1f                                       no-control-regex
+   3045:157  error    Unnecessary escape character: \:                                                                        no-useless-escape
+   3102:61   error    'isCustomComponentTag' is defined but never used                                                        no-unused-vars
+   3102:61   warning  'isCustomComponentTag' is defined but never used. Allowed unused args must match /^_/u                  @typescript-eslint/no-unused-vars
+   3225:26   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+   3228:27   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+   3229:36   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+   3230:30   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+   3290:54   error    'source' is defined but never used                                                                      no-unused-vars
+   3290:54   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+   3290:62   error    'ownerFn' is defined but never used                                                                     no-unused-vars
+   3290:62   warning  'ownerFn' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+   3412:52   error    'source' is defined but never used                                                                      no-unused-vars
+   3412:52   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+   3412:60   error    'ownerFn' is defined but never used                                                                     no-unused-vars
+   3412:60   warning  'ownerFn' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+   3417:53   error    'source' is defined but never used                                                                      no-unused-vars
+   3417:53   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+   3417:61   error    'ownerFn' is defined but never used                                                                     no-unused-vars
+   3417:61   warning  'ownerFn' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+   3456:26   error    'x' is defined but never used                                                                           no-unused-vars
+   3456:29   error    Empty block statement                                                                                   no-empty
+   3464:17   error    'owner' is assigned a value but never used                                                              no-unused-vars
+   3464:17   warning  'owner' is assigned a value but never used                                                              @typescript-eslint/no-unused-vars
+   3465:17   error    'source' is assigned a value but never used                                                             no-unused-vars
+   3465:17   warning  'source' is assigned a value but never used                                                             @typescript-eslint/no-unused-vars
+   3543:17   error    Unexpected var, use let or const instead                                                                no-var
+   3546:17   error    Unexpected var, use let or const instead                                                                no-var
+   3551:17   error    Unexpected var, use let or const instead                                                                no-var
+   3562:26   error    'x' is defined but never used                                                                           no-unused-vars
+   3583:15   error    Unexpected var, use let or const instead                                                                no-var
+   3586:15   error    Unexpected var, use let or const instead                                                                no-var
+   3752:20   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   3818:20   error    'e' is defined but never used                                                                           no-unused-vars
+   3899:23   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   3901:30   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   3913:21   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   3913:54   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   4064:46   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   4212:46   error    'props' is defined but never used                                                                       no-unused-vars
+   4212:46   warning  'props' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+   4247:47   error    'MSApp' is not defined                                                                                  no-undef
+   4249:15   error    'MSApp' is not defined                                                                                  no-undef
+   4399:99   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   4429:34   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   4443:34   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   4450:35   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   4456:54   error    'value' is defined but never used                                                                       no-unused-vars
+   4456:54   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+   4463:59   error    'value' is defined but never used                                                                       no-unused-vars
+   4463:59   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+   4493:27   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   4510:25   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   5180:34   error    Unexpected combined character in character class                                                        no-misleading-character-class
+   5181:39   error    Unexpected combined character in character class                                                        no-misleading-character-class
+   5189:50   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   5203:51   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   5264:38   error    Unexpected combined character in character class                                                        no-misleading-character-class
+   5265:43   error    Unexpected combined character in character class                                                        no-misleading-character-class
+   5278:49   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   5281:67   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   5324:39   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   5538:15   error    Expected to return a value in method 'get'                                                              getter-return
+   5544:20   error    'e' is defined but never used                                                                           no-unused-vars
+   5548:65   error    'a' is defined but never used                                                                           no-unused-vars
+   5548:65   warning  'a' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5548:68   error    'b' is defined but never used                                                                           no-unused-vars
+   5548:68   warning  'b' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5548:71   error    'c' is defined but never used                                                                           no-unused-vars
+   5548:71   warning  'c' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5548:74   error    'd' is defined but never used                                                                           no-unused-vars
+   5548:74   warning  'd' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5548:77   error    'e' is defined but never used                                                                           no-unused-vars
+   5548:77   warning  'e' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5548:80   error    'f' is defined but never used                                                                           no-unused-vars
+   5548:80   warning  'f' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5560:96   error    'a' is defined but never used                                                                           no-unused-vars
+   5560:96   warning  'a' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5560:99   error    'b' is defined but never used                                                                           no-unused-vars
+   5560:99   warning  'b' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5560:102  error    'c' is defined but never used                                                                           no-unused-vars
+   5560:102  warning  'c' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5560:105  error    'd' is defined but never used                                                                           no-unused-vars
+   5560:105  warning  'd' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5560:108  error    'e' is defined but never used                                                                           no-unused-vars
+   5560:108  warning  'e' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5560:111  error    'f' is defined but never used                                                                           no-unused-vars
+   5560:111  warning  'f' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5571:67   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   5595:30   error    'inner' is defined but never used                                                                       no-unused-vars
+   5595:37   error    Empty block statement                                                                                   no-empty
+   5600:15   error    Unexpected var, use let or const instead                                                                no-var
+   5635:40   error    'name' is defined but never used                                                                        no-unused-vars
+   5635:40   warning  'name' is defined but never used. Allowed unused args must match /^_/u                                  @typescript-eslint/no-unused-vars
+   5635:46   error    'func' is defined but never used                                                                        no-unused-vars
+   5635:46   warning  'func' is defined but never used. Allowed unused args must match /^_/u                                  @typescript-eslint/no-unused-vars
+   5635:52   error    'context' is defined but never used                                                                     no-unused-vars
+   5635:52   warning  'context' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+   5635:61   error    'a' is defined but never used                                                                           no-unused-vars
+   5635:61   warning  'a' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5635:64   error    'b' is defined but never used                                                                           no-unused-vars
+   5635:64   warning  'b' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5635:67   error    'c' is defined but never used                                                                           no-unused-vars
+   5635:67   warning  'c' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5635:70   error    'd' is defined but never used                                                                           no-unused-vars
+   5635:70   warning  'd' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5635:73   error    'e' is defined but never used                                                                           no-unused-vars
+   5635:73   warning  'e' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5635:76   error    'f' is defined but never used                                                                           no-unused-vars
+   5635:76   warning  'f' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5640:58   error    'name' is defined but never used                                                                        no-unused-vars
+   5640:58   warning  'name' is defined but never used. Allowed unused args must match /^_/u                                  @typescript-eslint/no-unused-vars
+   5640:64   error    'func' is defined but never used                                                                        no-unused-vars
+   5640:64   warning  'func' is defined but never used. Allowed unused args must match /^_/u                                  @typescript-eslint/no-unused-vars
+   5640:70   error    'context' is defined but never used                                                                     no-unused-vars
+   5640:70   warning  'context' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+   5640:79   error    'a' is defined but never used                                                                           no-unused-vars
+   5640:79   warning  'a' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5640:82   error    'b' is defined but never used                                                                           no-unused-vars
+   5640:82   warning  'b' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5640:85   error    'c' is defined but never used                                                                           no-unused-vars
+   5640:85   warning  'c' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5640:88   error    'd' is defined but never used                                                                           no-unused-vars
+   5640:88   warning  'd' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5640:91   error    'e' is defined but never used                                                                           no-unused-vars
+   5640:91   warning  'e' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   5640:94   error    'f' is defined but never used                                                                           no-unused-vars
+   5640:94   warning  'f' is defined but never used. Allowed unused args must match /^_/u                                     @typescript-eslint/no-unused-vars
+   6015:24   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+   6357:9    error    Unexpected var, use let or const instead                                                                no-var
+   6857:53   error    'eventTime' is defined but never used                                                                   no-unused-vars
+   6857:53   warning  'eventTime' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+   6978:41   error    'root2' is defined but never used                                                                       no-unused-vars
+   6978:41   warning  'root2' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+   6978:48   error    'lanes' is defined but never used                                                                       no-unused-vars
+   6978:48   warning  'lanes' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+   6983:9    error    Unexpected var, use let or const instead                                                                no-var
+   6984:9    error    Unexpected var, use let or const instead                                                                no-var
+   6985:9    error    Unexpected var, use let or const instead                                                                no-var
+   6986:9    error    Unexpected var, use let or const instead                                                                no-var
+   7414:9    error    Unexpected var, use let or const instead                                                                no-var
+   7638:30   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   7666:55   error    Invalid typeof comparison value                                                                         valid-typeof
+   7678:56   error    Invalid typeof comparison value                                                                         valid-typeof
+   7871:40   error    'nativeEvent' is defined but never used                                                                 no-unused-vars
+   7871:40   warning  'nativeEvent' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+   8069:15   error    Unexpected var, use let or const instead                                                                no-var
+   8076:15   error    Unexpected var, use let or const instead                                                                no-var
+   8133:105  error    'eventSystemFlags' is defined but never used                                                            no-unused-vars
+   8133:105  warning  'eventSystemFlags' is defined but never used. Allowed unused args must match /^_/u                      @typescript-eslint/no-unused-vars
+   8133:123  error    'targetContainer' is defined but never used                                                             no-unused-vars
+   8133:123  warning  'targetContainer' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+   8249:67   error    'targetInst' is defined but never used                                                                  no-unused-vars
+   8249:67   warning  'targetInst' is defined but never used. Allowed unused args must match /^_/u                            @typescript-eslint/no-unused-vars
+   8277:107  error    'eventSystemFlags' is defined but never used                                                            no-unused-vars
+   8277:107  warning  'eventSystemFlags' is defined but never used. Allowed unused args must match /^_/u                      @typescript-eslint/no-unused-vars
+   8277:125  error    'targetContainer' is defined but never used                                                             no-unused-vars
+   8277:125  warning  'targetContainer' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+   8312:107  error    'eventSystemFlags' is defined but never used                                                            no-unused-vars
+   8312:107  warning  'eventSystemFlags' is defined but never used. Allowed unused args must match /^_/u                      @typescript-eslint/no-unused-vars
+   8312:125  error    'targetContainer' is defined but never used                                                             no-unused-vars
+   8312:125  warning  'targetContainer' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+   8448:20   error    'e' is defined but never used                                                                           no-unused-vars
+   8564:20   error    'err' is defined but never used                                                                         no-unused-vars
+   8602:20   error    Expected a conditional expression and instead saw an assignment                                         no-cond-assign
+   8696:107  error    'eventSystemFlags' is defined but never used                                                            no-unused-vars
+   8696:107  warning  'eventSystemFlags' is defined but never used. Allowed unused args must match /^_/u                      @typescript-eslint/no-unused-vars
+   8696:125  error    'targetContainer' is defined but never used                                                             no-unused-vars
+   8696:125  warning  'targetContainer' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+   8724:13   error    Expected a 'break' statement before 'case'                                                              no-fallthrough
+   8763:27   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   8794:125  error    'targetContainer' is defined but never used                                                             no-unused-vars
+   8794:125  warning  'targetContainer' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+   8806:13   error    Expected a 'break' statement before 'case'                                                              no-fallthrough
+   8826:13   error    Expected a 'break' statement before 'case'                                                              no-fallthrough
+   8904:125  error    'targetContainer' is defined but never used                                                             no-unused-vars
+   8904:125  warning  'targetContainer' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+   8952:100  error    'targetContainer' is defined but never used                                                             no-unused-vars
+   8952:100  warning  'targetContainer' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+   9005:115  error    'isDeferredListenerForLegacyFBSupport' is defined but never used                                        no-unused-vars
+   9005:115  warning  'isDeferredListenerForLegacyFBSupport' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   9013:29   error    'targetContainer' is assigned to itself                                                                 no-self-assign
+   9025:15   error    'unsubscribeListener' is assigned a value but never used                                                no-unused-vars
+   9025:15   warning  'unsubscribeListener' is assigned a value but never used                                                @typescript-eslint/no-unused-vars
+   9089:128  error    'nativeEvent' is defined but never used                                                                 no-unused-vars
+   9089:128  warning  'nativeEvent' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+   9294:54   error    Unexpected control character(s) in regular expression: \x00                                             no-control-regex
+   9330:28   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9357:51   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9403:41   error    Unnecessary escape character: \/                                                                        no-useless-escape
+   9523:78   error    'rootContainerElement' is defined but never used                                                        no-unused-vars
+   9523:78   warning  'rootContainerElement' is defined but never used. Allowed unused args must match /^_/u                  @typescript-eslint/no-unused-vars
+   9559:27   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9559:65   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9565:31   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9575:51   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9586:28   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9597:32   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9597:85   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9605:32   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9634:51   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9680:40   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9757:27   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9777:53   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+   9877:51   error    'isConcurrentMode' is defined but never used                                                            no-unused-vars
+   9877:51   warning  'isConcurrentMode' is defined but never used. Allowed unused args must match /^_/u                      @typescript-eslint/no-unused-vars
+   9899:66   error    'props' is defined but never used                                                                       no-unused-vars
+   9899:66   warning  'props' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  10202:63   error    'rootContainerInstance' is defined but never used                                                       no-unused-vars
+  10202:63   warning  'rootContainerInstance' is defined but never used. Allowed unused args must match /^_/u                 @typescript-eslint/no-unused-vars
+  10216:35   error    'containerInfo' is defined but never used                                                               no-unused-vars
+  10216:35   warning  'containerInfo' is defined but never used. Allowed unused args must match /^_/u                         @typescript-eslint/no-unused-vars
+  10223:35   error    'containerInfo' is defined but never used                                                               no-unused-vars
+  10223:35   warning  'containerInfo' is defined but never used. Allowed unused args must match /^_/u                         @typescript-eslint/no-unused-vars
+  10249:90   error    'hostContext' is defined but never used                                                                 no-unused-vars
+  10249:90   warning  'hostContext' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  10305:58   error    'internalInstanceHandle' is defined but never used                                                      no-unused-vars
+  10305:58   warning  'internalInstanceHandle' is defined but never used. Allowed unused args must match /^_/u                @typescript-eslint/no-unused-vars
+  10323:84   error    'internalInstanceHandle' is defined but never used                                                      no-unused-vars
+  10323:84   warning  'internalInstanceHandle' is defined but never used. Allowed unused args must match /^_/u                @typescript-eslint/no-unused-vars
+  10403:22   error    'instance' is assigned to itself                                                                        no-self-assign
+  10415:22   error    'instance' is assigned to itself                                                                        no-self-assign
+  10417:83   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+  10432:53   error    'props' is defined but never used                                                                       no-unused-vars
+  10432:53   warning  'props' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  10518:82   error    'shouldWarnDev' is defined but never used                                                               no-unused-vars
+  10518:82   warning  'shouldWarnDev' is defined but never used. Allowed unused args must match /^_/u                         @typescript-eslint/no-unused-vars
+  10520:17   error    'isConcurrentMode' is assigned a value but never used                                                   no-unused-vars
+  10520:17   warning  'isConcurrentMode' is assigned a value but never used                                                   @typescript-eslint/no-unused-vars
+  10620:85   error    'props' is defined but never used                                                                       no-unused-vars
+  10620:85   warning  'props' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  10630:91   error    'props' is defined but never used                                                                       no-unused-vars
+  10630:91   warning  'props' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  11055:34   error    'workInProgress2' is defined but never used                                                             no-unused-vars
+  11055:34   warning  'workInProgress2' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+  11255:21   error    Unexpected var, use let or const instead                                                                no-var
+  11256:21   error    Unexpected var, use let or const instead                                                                no-var
+  11256:25   error    'props' is assigned a value but never used                                                              no-unused-vars
+  11256:25   warning  'props' is assigned a value but never used                                                              @typescript-eslint/no-unused-vars
+  11260:21   error    Unexpected var, use let or const instead                                                                no-var
+  11307:21   error    Unexpected var, use let or const instead                                                                no-var
+  11308:21   error    Unexpected var, use let or const instead                                                                no-var
+  11308:25   error    '_props2' is assigned a value but never used                                                            no-unused-vars
+  11308:25   warning  '_props2' is assigned a value but never used                                                            @typescript-eslint/no-unused-vars
+  11312:21   error    Unexpected var, use let or const instead                                                                no-var
+  11331:21   error    'props' is assigned a value but never used                                                              no-unused-vars
+  11331:21   warning  'props' is assigned a value but never used                                                              @typescript-eslint/no-unused-vars
+  11377:43   error    'fiber' is defined but never used                                                                       no-unused-vars
+  11377:43   warning  'fiber' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  11555:51   error    'fiber' is defined but never used                                                                       no-unused-vars
+  11555:51   warning  'fiber' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  11555:58   error    'instance' is defined but never used                                                                    no-unused-vars
+  11555:58   warning  'instance' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+  11559:48   error    'fiber' is defined but never used                                                                       no-unused-vars
+  11559:48   warning  'fiber' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  11559:55   error    'instance' is defined but never used                                                                    no-unused-vars
+  11559:55   warning  'instance' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+  11711:70   error    'strictRoot' is defined but never used                                                                  no-unused-vars
+  11711:70   warning  'strictRoot' is defined but never used. Allowed unused args must match /^_/u                            @typescript-eslint/no-unused-vars
+  11745:42   error    'child' is defined but never used                                                                       no-unused-vars
+  11745:42   warning  'child' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  11745:49   error    'returnFiber' is defined but never used                                                                 no-unused-vars
+  11745:49   warning  'returnFiber' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  12085:19   error    Unexpected var, use let or const instead                                                                no-var
+  12086:19   error    Unexpected var, use let or const instead                                                                no-var
+  12111:19   error    Unexpected var, use let or const instead                                                                no-var
+  12127:19   error    Unexpected var, use let or const instead                                                                no-var
+  12128:19   error    Unexpected var, use let or const instead                                                                no-var
+  12459:19   error    Unexpected var, use let or const instead                                                                no-var
+  12460:19   error    Unexpected var, use let or const instead                                                                no-var
+  12752:85   error    'lane' is defined but never used                                                                        no-unused-vars
+  12752:85   warning  'lane' is defined but never used. Allowed unused args must match /^_/u                                  @typescript-eslint/no-unused-vars
+  12816:9    error    Unexpected var, use let or const instead                                                                no-var
+  12987:13   error    Expected a 'break' statement before 'case'                                                              no-fallthrough
+  13124:22   error    Unexpected constant condition                                                                           no-constant-condition
+  13207:17   error    'rootInstance' is assigned a value but never used                                                       no-unused-vars
+  13207:17   warning  'rootInstance' is assigned a value but never used                                                       @typescript-eslint/no-unused-vars
+  13246:57   error    'hasInvisibleParent' is defined but never used                                                          no-unused-vars
+  13246:57   warning  'hasInvisibleParent' is defined but never used. Allowed unused args must match /^_/u                    @typescript-eslint/no-unused-vars
+  13254:17   error    'props' is assigned a value but never used                                                              no-unused-vars
+  13254:17   warning  'props' is assigned a value but never used                                                              @typescript-eslint/no-unused-vars
+  13631:41   error    'initialArg' is defined but never used                                                                  no-unused-vars
+  13631:41   warning  'initialArg' is defined but never used. Allowed unused args must match /^_/u                            @typescript-eslint/no-unused-vars
+  13631:53   error    'init' is defined but never used                                                                        no-unused-vars
+  13631:53   warning  'init' is defined but never used. Allowed unused args must match /^_/u                                  @typescript-eslint/no-unused-vars
+  13732:43   error    'initialArg' is defined but never used                                                                  no-unused-vars
+  13732:43   warning  'initialArg' is defined but never used. Allowed unused args must match /^_/u                            @typescript-eslint/no-unused-vars
+  13732:55   error    'init' is defined but never used                                                                        no-unused-vars
+  13732:55   warning  'init' is defined but never used. Allowed unused args must match /^_/u                                  @typescript-eslint/no-unused-vars
+  13762:37   error    'source' is defined but never used                                                                      no-unused-vars
+  13762:37   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  13762:45   error    'getSnapshot' is defined but never used                                                                 no-unused-vars
+  13762:45   warning  'getSnapshot' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  13762:58   error    'subscribe' is defined but never used                                                                   no-unused-vars
+  13762:58   warning  'subscribe' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  13767:38   error    'source' is defined but never used                                                                      no-unused-vars
+  13767:38   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  13767:46   error    'getSnapshot' is defined but never used                                                                 no-unused-vars
+  13767:46   warning  'getSnapshot' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  13767:59   error    'subscribe' is defined but never used                                                                   no-unused-vars
+  13767:59   warning  'subscribe' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  13820:66   error    'getServerSnapshot' is defined but never used                                                           no-unused-vars
+  13820:66   warning  'getServerSnapshot' is defined but never used. Allowed unused args must match /^_/u                     @typescript-eslint/no-unused-vars
+  13897:20   error    'error2' is defined but never used                                                                      no-unused-vars
+  13925:30   error    'initialState' is defined but never used                                                                no-unused-vars
+  13925:30   warning  'initialState' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  13928:32   error    'initialState' is defined but never used                                                                no-unused-vars
+  13928:32   warning  'initialState' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  13968:28   error    'initialValue' is defined but never used                                                                no-unused-vars
+  13968:28   warning  'initialValue' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  14036:30   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+  14072:34   error    'value' is defined but never used                                                                       no-unused-vars
+  14072:34   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  14072:41   error    'formatterFn' is defined but never used                                                                 no-unused-vars
+  14072:41   warning  'formatterFn' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14159:56   error    'options2' is defined but never used                                                                    no-unused-vars
+  14159:56   warning  'options2' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+  14205:9    error    Unexpected var, use let or const instead                                                                no-var
+  14297:26   error    'error2' is defined but never used                                                                      no-unused-vars
+  14297:34   error    Empty block statement                                                                                   no-empty
+  14338:52   error    'action' is defined but never used                                                                      no-unused-vars
+  14338:52   warning  'action' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  14343:9    error    Unexpected var, use let or const instead                                                                no-var
+  14363:9    error    Unexpected var, use let or const instead                                                                no-var
+  14364:9    error    Unexpected var, use let or const instead                                                                no-var
+  14365:9    error    Unexpected var, use let or const instead                                                                no-var
+  14366:9    error    Unexpected var, use let or const instead                                                                no-var
+  14368:9    error    Unexpected var, use let or const instead                                                                no-var
+  14455:37   error    'value' is defined but never used                                                                       no-unused-vars
+  14455:37   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  14455:44   error    'formatterFn' is defined but never used                                                                 no-unused-vars
+  14455:44   warning  'formatterFn' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14470:40   error    'source' is defined but never used                                                                      no-unused-vars
+  14470:40   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  14470:48   error    'getSnapshot' is defined but never used                                                                 no-unused-vars
+  14470:48   warning  'getSnapshot' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14470:61   error    'subscribe' is defined but never used                                                                   no-unused-vars
+  14470:61   warning  'subscribe' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  14559:37   error    'value' is defined but never used                                                                       no-unused-vars
+  14559:37   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  14559:44   error    'formatterFn' is defined but never used                                                                 no-unused-vars
+  14559:44   warning  'formatterFn' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14574:40   error    'source' is defined but never used                                                                      no-unused-vars
+  14574:40   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  14574:48   error    'getSnapshot' is defined but never used                                                                 no-unused-vars
+  14574:48   warning  'getSnapshot' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14574:61   error    'subscribe' is defined but never used                                                                   no-unused-vars
+  14574:61   warning  'subscribe' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  14647:30   error    'initialValue' is defined but never used                                                                no-unused-vars
+  14647:30   warning  'initialValue' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  14663:37   error    'value' is defined but never used                                                                       no-unused-vars
+  14663:37   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  14663:44   error    'formatterFn' is defined but never used                                                                 no-unused-vars
+  14663:44   warning  'formatterFn' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14678:40   error    'source' is defined but never used                                                                      no-unused-vars
+  14678:40   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  14678:48   error    'getSnapshot' is defined but never used                                                                 no-unused-vars
+  14678:48   warning  'getSnapshot' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14678:61   error    'subscribe' is defined but never used                                                                   no-unused-vars
+  14678:61   warning  'subscribe' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  14683:68   error    'getServerSnapshot' is defined but never used                                                           no-unused-vars
+  14683:68   warning  'getServerSnapshot' is defined but never used. Allowed unused args must match /^_/u                     @typescript-eslint/no-unused-vars
+  14751:30   error    'initialValue' is defined but never used                                                                no-unused-vars
+  14751:30   warning  'initialValue' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  14767:37   error    'value' is defined but never used                                                                       no-unused-vars
+  14767:37   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  14767:44   error    'formatterFn' is defined but never used                                                                 no-unused-vars
+  14767:44   warning  'formatterFn' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14782:40   error    'source' is defined but never used                                                                      no-unused-vars
+  14782:40   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  14782:48   error    'getSnapshot' is defined but never used                                                                 no-unused-vars
+  14782:48   warning  'getSnapshot' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14782:61   error    'subscribe' is defined but never used                                                                   no-unused-vars
+  14782:61   warning  'subscribe' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  14787:68   error    'getServerSnapshot' is defined but never used                                                           no-unused-vars
+  14787:68   warning  'getServerSnapshot' is defined but never used. Allowed unused args must match /^_/u                     @typescript-eslint/no-unused-vars
+  14882:37   error    'value' is defined but never used                                                                       no-unused-vars
+  14882:37   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  14882:44   error    'formatterFn' is defined but never used                                                                 no-unused-vars
+  14882:44   warning  'formatterFn' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14900:40   error    'source' is defined but never used                                                                      no-unused-vars
+  14900:40   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  14900:48   error    'getSnapshot' is defined but never used                                                                 no-unused-vars
+  14900:48   warning  'getSnapshot' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  14900:61   error    'subscribe' is defined but never used                                                                   no-unused-vars
+  14900:61   warning  'subscribe' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  14985:30   error    'initialValue' is defined but never used                                                                no-unused-vars
+  14985:30   warning  'initialValue' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  15003:37   error    'value' is defined but never used                                                                       no-unused-vars
+  15003:37   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  15003:44   error    'formatterFn' is defined but never used                                                                 no-unused-vars
+  15003:44   warning  'formatterFn' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  15021:40   error    'source' is defined but never used                                                                      no-unused-vars
+  15021:40   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  15021:48   error    'getSnapshot' is defined but never used                                                                 no-unused-vars
+  15021:48   warning  'getSnapshot' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  15021:61   error    'subscribe' is defined but never used                                                                   no-unused-vars
+  15021:61   warning  'subscribe' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  15027:68   error    'getServerSnapshot' is defined but never used                                                           no-unused-vars
+  15027:68   warning  'getServerSnapshot' is defined but never used. Allowed unused args must match /^_/u                     @typescript-eslint/no-unused-vars
+  15106:30   error    'initialValue' is defined but never used                                                                no-unused-vars
+  15106:30   warning  'initialValue' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  15124:37   error    'value' is defined but never used                                                                       no-unused-vars
+  15124:37   warning  'value' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  15124:44   error    'formatterFn' is defined but never used                                                                 no-unused-vars
+  15124:44   warning  'formatterFn' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  15142:40   error    'source' is defined but never used                                                                      no-unused-vars
+  15142:40   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  15142:48   error    'getSnapshot' is defined but never used                                                                 no-unused-vars
+  15142:48   warning  'getSnapshot' is defined but never used. Allowed unused args must match /^_/u                           @typescript-eslint/no-unused-vars
+  15142:61   error    'subscribe' is defined but never used                                                                   no-unused-vars
+  15142:61   warning  'subscribe' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  15148:68   error    'getServerSnapshot' is defined but never used                                                           no-unused-vars
+  15148:68   warning  'getServerSnapshot' is defined but never used. Allowed unused args must match /^_/u                     @typescript-eslint/no-unused-vars
+  15202:45   error    'fiber' is defined but never used                                                                       no-unused-vars
+  15202:45   warning  'fiber' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  15223:19   error    Unexpected var, use let or const instead                                                                no-var
+  15227:19   error    Unexpected var, use let or const instead                                                                no-var
+  15243:19   error    Unexpected var, use let or const instead                                                                no-var
+  15249:19   error    Unexpected var, use let or const instead                                                                no-var
+  15907:34   error    'boundary' is defined but never used                                                                    no-unused-vars
+  15907:34   warning  'boundary' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+  15907:44   error    'errorInfo' is defined but never used                                                                   no-unused-vars
+  15907:44   warning  'errorInfo' is defined but never used. Allowed unused args must match /^_/u                             @typescript-eslint/no-unused-vars
+  15917:17   error    Unexpected constant condition                                                                           no-constant-condition
+  16028:73   error    'lanes' is defined but never used                                                                       no-unused-vars
+  16028:73   warning  'lanes' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  16038:55   error    'rootRenderLanes' is defined but never used                                                             no-unused-vars
+  16038:55   warning  'rootRenderLanes' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+  16150:17   error    Unexpected var, use let or const instead                                                                no-var
+  16151:17   error    Unexpected var, use let or const instead                                                                no-var
+  16152:17   error    Unexpected var, use let or const instead                                                                no-var
+  16338:26   error    'x' is defined but never used                                                                           no-unused-vars
+  16651:17   error    'root2' is assigned a value but never used                                                              no-unused-vars
+  16651:17   warning  'root2' is assigned a value but never used                                                              @typescript-eslint/no-unused-vars
+  16964:68   error    'workInProgress2' is defined but never used                                                             no-unused-vars
+  16964:68   warning  'workInProgress2' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+  16964:85   error    'renderLanes2' is defined but never used                                                                no-unused-vars
+  16964:85   warning  'renderLanes2' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  17044:81   error    'renderLanes2' is defined but never used                                                                no-unused-vars
+  17044:81   warning  'renderLanes2' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  17085:74   error    'renderLanes2' is defined but never used                                                                no-unused-vars
+  17085:74   warning  'renderLanes2' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  17193:86   error    'renderLanes2' is defined but never used                                                                no-unused-vars
+  17193:86   warning  'renderLanes2' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  17691:15   error    Unexpected var, use let or const instead                                                                no-var
+  17691:19   error    'root2' is assigned a value but never used                                                              no-unused-vars
+  17691:19   warning  'root2' is assigned a value but never used                                                              @typescript-eslint/no-unused-vars
+  17919:65   error    'needsVisibilityToggle' is defined but never used                                                       no-unused-vars
+  17919:65   warning  'needsVisibilityToggle' is defined but never used. Allowed unused args must match /^_/u                 @typescript-eslint/no-unused-vars
+  17919:88   error    'isHidden' is defined but never used                                                                    no-unused-vars
+  17919:88   warning  'isHidden' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+  17943:42   error    'current2' is defined but never used                                                                    no-unused-vars
+  17943:42   warning  'current2' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+  17943:52   error    'workInProgress2' is defined but never used                                                             no-unused-vars
+  17943:52   warning  'workInProgress2' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+  18296:15   error    Unexpected var, use let or const instead                                                                no-var
+  18448:56   error    'renderLanes2' is defined but never used                                                                no-unused-vars
+  18448:56   warning  'renderLanes2' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  18467:21   error    'root2' is assigned a value but never used                                                              no-unused-vars
+  18467:21   warning  'root2' is assigned a value but never used                                                              @typescript-eslint/no-unused-vars
+  18509:15   error    Unexpected var, use let or const instead                                                                no-var
+  18522:67   error    'renderLanes2' is defined but never used                                                                no-unused-vars
+  18522:67   warning  'renderLanes2' is defined but never used. Allowed unused args must match /^_/u                          @typescript-eslint/no-unused-vars
+  18533:21   error    'root2' is assigned a value but never used                                                              no-unused-vars
+  18533:21   warning  'root2' is assigned a value but never used                                                              @typescript-eslint/no-unused-vars
+  18553:15   error    Unexpected var, use let or const instead                                                                no-var
+  18658:13   error    'focusedInstanceHandle' is assigned a value but never used                                              no-unused-vars
+  18658:13   warning  'focusedInstanceHandle' is assigned a value but never used                                              @typescript-eslint/no-unused-vars
+  18881:25   error    Unexpected var, use let or const instead                                                                no-var
+  18885:25   error    Unexpected var, use let or const instead                                                                no-var
+  18897:82   error    'committedLanes' is defined but never used                                                              no-unused-vars
+  18897:82   warning  'committedLanes' is defined but never used. Allowed unused args must match /^_/u                        @typescript-eslint/no-unused-vars
+  19040:27   error    Unexpected var, use let or const instead                                                                no-var
+  19044:27   error    Unexpected var, use let or const instead                                                                no-var
+  19198:26   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+  19403:13   error    Expected a 'break' statement before 'case'                                                              no-fallthrough
+  19521:17   error    'newState' is assigned a value but never used                                                           no-unused-vars
+  19521:17   warning  'newState' is assigned a value but never used                                                           @typescript-eslint/no-unused-vars
+  19573:73   error    'lanes' is defined but never used                                                                       no-unused-vars
+  19573:73   warning  'lanes' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  19596:68   error    'lanes' is defined but never used                                                                       no-unused-vars
+  19596:68   warning  'lanes' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  20053:72   error    'committedLanes' is defined but never used                                                              no-unused-vars
+  20053:72   warning  'committedLanes' is defined but never used. Allowed unused args must match /^_/u                        @typescript-eslint/no-unused-vars
+  20053:88   error    'committedTransitions' is defined but never used                                                        no-unused-vars
+  20053:88   warning  'committedTransitions' is defined but never used. Allowed unused args must match /^_/u                  @typescript-eslint/no-unused-vars
+  20283:11   error    'COMPONENT_TYPE' is assigned a value but never used                                                     no-unused-vars
+  20283:11   warning  'COMPONENT_TYPE' is assigned a value but never used                                                     @typescript-eslint/no-unused-vars
+  20284:11   error    'HAS_PSEUDO_CLASS_TYPE' is assigned a value but never used                                              no-unused-vars
+  20284:11   warning  'HAS_PSEUDO_CLASS_TYPE' is assigned a value but never used                                              @typescript-eslint/no-unused-vars
+  20285:11   error    'ROLE_TYPE' is assigned a value but never used                                                          no-unused-vars
+  20285:11   warning  'ROLE_TYPE' is assigned a value but never used                                                          @typescript-eslint/no-unused-vars
+  20286:11   error    'TEST_NAME_TYPE' is assigned a value but never used                                                     no-unused-vars
+  20286:11   warning  'TEST_NAME_TYPE' is assigned a value but never used                                                     @typescript-eslint/no-unused-vars
+  20287:11   error    'TEXT_TYPE' is assigned a value but never used                                                          no-unused-vars
+  20287:11   warning  'TEXT_TYPE' is assigned a value but never used                                                          @typescript-eslint/no-unused-vars
+  20298:41   error    'fiber' is defined but never used                                                                       no-unused-vars
+  20298:41   warning  'fiber' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  20302:65   error    'IS_REACT_ACT_ENVIRONMENT' is not defined                                                               no-undef
+  20312:65   error    'IS_REACT_ACT_ENVIRONMENT' is not defined                                                               no-undef
+  20349:9    error    Unexpected var, use let or const instead                                                                no-var
+  20481:49   error    'fiber' is defined but never used                                                                       no-unused-vars
+  20481:49   warning  'fiber' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  20680:27   error    'eventTime' is assigned a value but never used                                                          no-unused-vars
+  20680:27   warning  'eventTime' is assigned a value but never used                                                          @typescript-eslint/no-unused-vars
+  20734:30   error    'error2' is defined but never used                                                                      no-unused-vars
+  20759:11   error    Unreachable code                                                                                        no-unreachable
+  20952:20   error    Unexpected constant condition                                                                           no-constant-condition
+  21026:20   error    Unexpected constant condition                                                                           no-constant-condition
+  21074:20   error    Unexpected constant condition                                                                           no-constant-condition
+  21248:19   error    'shouldFireAfterActiveInstanceBlur2' is assigned a value but never used                                 no-unused-vars
+  21248:19   warning  'shouldFireAfterActiveInstanceBlur2' is assigned a value but never used                                 @typescript-eslint/no-unused-vars
+  21450:9    error    Unexpected var, use let or const instead                                                                no-var
+  21541:15   error    Unexpected var, use let or const instead                                                                no-var
+  21723:9    error    Unexpected var, use let or const instead                                                                no-var
+  22074:11   error    Unreachable code                                                                                        no-unreachable
+  22083:20   error    'e' is defined but never used                                                                           no-unused-vars
+  22255:57   error    'concurrentUpdatesByDefaultOverride' is defined but never used                                          no-unused-vars
+  22255:57   warning  'concurrentUpdatesByDefaultOverride' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+  22533:189  error    'transitionCallbacks' is defined but never used                                                         no-unused-vars
+  22533:189  warning  'transitionCallbacks' is defined but never used. Allowed unused args must match /^_/u                   @typescript-eslint/no-unused-vars
+  22626:162  error    'transitionCallbacks' is defined but never used                                                         no-unused-vars
+  22626:162  warning  'transitionCallbacks' is defined but never used. Allowed unused args must match /^_/u                   @typescript-eslint/no-unused-vars
+  22631:198  error    'transitionCallbacks' is defined but never used                                                         no-unused-vars
+  22631:198  warning  'transitionCallbacks' is defined but never used. Allowed unused args must match /^_/u                   @typescript-eslint/no-unused-vars
+  22766:40   error    'fiber' is defined but never used                                                                       no-unused-vars
+  22766:40   warning  'fiber' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  22772:42   error    'fiber' is defined but never used                                                                       no-unused-vars
+  22772:42   warning  'fiber' is defined but never used. Allowed unused args must match /^_/u                                 @typescript-eslint/no-unused-vars
+  22950:47   error    'instance' is defined but never used                                                                    no-unused-vars
+  22950:47   warning  'instance' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+  23074:15   error    'transitionCallbacks' is assigned a value but never used                                                no-unused-vars
+  23074:15   warning  'transitionCallbacks' is assigned a value but never used                                                @typescript-eslint/no-unused-vars
+  23194:13   error    Unexpected var, use let or const instead                                                                no-var
+  23217:20   error    Expected a conditional expression and instead saw an assignment                                         no-cond-assign
+  23227:13   error    Unexpected var, use let or const instead                                                                no-var
+  23456:17   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+  23473:77   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+  23474:11   error    '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                                                         no-undef
+  23485:9    error    Unexpected constant condition                                                                           no-constant-condition
+  23486:7    error    'checkDCE' is not defined                                                                               no-undef
+  23499:9    error    Unexpected constant condition                                                                           no-constant-condition
+  23529:9    error    Unexpected constant condition                                                                           no-constant-condition
+  23562:20   error    Unexpected var, use let or const instead                                                                no-var
+  23581:43   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+  23654:17   error    Unexpected var, use let or const instead                                                                no-var
+  23657:17   error    Unexpected var, use let or const instead                                                                no-var
+  23662:17   error    Unexpected var, use let or const instead                                                                no-var
+  23673:26   error    'x' is defined but never used                                                                           no-unused-vars
+  23697:26   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+  23700:27   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+  23701:36   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+  23702:30   warning  Unexpected console statement. Only these console methods are allowed: error, warn, log                  no-console
+  23762:54   error    'source' is defined but never used                                                                      no-unused-vars
+  23762:54   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  23762:62   error    'ownerFn' is defined but never used                                                                     no-unused-vars
+  23762:62   warning  'ownerFn' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+  23884:53   error    'source' is defined but never used                                                                      no-unused-vars
+  23884:53   warning  'source' is defined but never used. Allowed unused args must match /^_/u                                @typescript-eslint/no-unused-vars
+  23884:61   error    'ownerFn' is defined but never used                                                                     no-unused-vars
+  23884:61   warning  'ownerFn' is defined but never used. Allowed unused args must match /^_/u                               @typescript-eslint/no-unused-vars
+  23923:26   error    'x' is defined but never used                                                                           no-unused-vars
+  23923:29   error    Empty block statement                                                                                   no-empty
+  23991:22   error    'e' is defined but never used                                                                           no-unused-vars
+  24145:76   error    Do not access Object.prototype method 'hasOwnProperty' from target object                               no-prototype-builtins
+  24205:63   error    Unnecessary escape character: \/                                                                        no-useless-escape
+  24422:9    error    Unexpected constant condition                                                                           no-constant-condition
+  24921:28   error    '_row' is defined but never used                                                                        no-unused-vars
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\EconeuraCockpit.tsx
+   24:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   35:26  error    'JSX' is not defined                      no-undef
+   76:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   77:75  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   78:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   92:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  102:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  117:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  123:28  error    '_row' is defined but never used          no-unused-vars
+  123:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  139:81  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  145:89  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  252:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  271:16  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  298:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  325:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  494:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  495:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx
+   6:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:72  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\vitest.setup.ts
+  9:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Ô£û 684 problems (422 errors, 262 warnings)
+
+undefined
+ÔÇëERR_PNPM_RECURSIVE_EXEC_FIRST_FAILÔÇë Command failed with exit code 1: eslint .dev/cockpit --ext .ts .tsx .js .jsx --fix
+(node:26272) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\dist\clients\service-client.js
+  13:19  error  '_request' is defined but never used  no-unused-vars
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\dist\logging\index.js
+  4:29  warning  Unexpected console statement. Only these console methods are allowed: error, warn, log  no-console
+  7:30  warning  Unexpected console statement. Only these console methods are allowed: error, warn, log  no-console
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\dist\metrics.js
+  24:31  error  '_method' is defined but never used      no-unused-vars
+  24:40  error  '_route' is defined but never used       no-unused-vars
+  24:48  error  '_statusCode' is defined but never used  no-unused-vars
+  24:61  error  '_duration' is defined but never used    no-unused-vars
+  25:29  error  '_type' is defined but never used        no-unused-vars
+  25:36  error  '_route' is defined but never used       no-unused-vars
+  26:37  error  '_operation' is defined but never used   no-unused-vars
+  26:49  error  '_table' is defined but never used       no-unused-vars
+  26:57  error  '_duration' is defined but never used    no-unused-vars
+  27:38  error  '_cacheType' is defined but never used   no-unused-vars
+  27:50  error  '_hit' is defined but never used         no-unused-vars
+  28:33  error  '_model' is defined but never used       no-unused-vars
+  28:41  error  '_operation' is defined but never used   no-unused-vars
+  28:53  error  '_duration' is defined but never used    no-unused-vars
+  28:64  error  '_tokensUsed' is defined but never used  no-unused-vars
+  28:77  error  '_costEur' is defined but never used     no-unused-vars
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+  14:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  16:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  19:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:26  error    '_request' is defined but never used      no-unused-vars
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+  13:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  16:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+   4:32  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   4:42  warning  Unexpected console statement. Only these console methods are allowed: error, warn, log  no-console
+   5:32  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   6:33  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   7:33  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+   7:43  warning  Unexpected console statement. Only these console methods are allowed: error, warn, log  no-console
+  12:36  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+  13:37  warning  Unexpected any. Specify a different type                                                @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+  25:31   error    '_method' is defined but never used       no-unused-vars
+  25:48   error    '_route' is defined but never used        no-unused-vars
+  25:64   error    '_statusCode' is defined but never used   no-unused-vars
+  25:85   error    '_duration' is defined but never used     no-unused-vars
+  26:29   error    '_type' is defined but never used         no-unused-vars
+  26:44   error    '_route' is defined but never used        no-unused-vars
+  27:37   error    '_operation' is defined but never used    no-unused-vars
+  27:57   error    '_table' is defined but never used        no-unused-vars
+  27:73   error    '_duration' is defined but never used     no-unused-vars
+  28:38   error    '_cacheType' is defined but never used    no-unused-vars
+  28:58   error    '_hit' is defined but never used          no-unused-vars
+  29:33   error    '_model' is defined but never used        no-unused-vars
+  29:49   error    '_operation' is defined but never used    no-unused-vars
+  29:69   error    '_duration' is defined but never used     no-unused-vars
+  29:88   error    '_tokensUsed' is defined but never used   no-unused-vars
+  29:110  error    '_costEur' is defined but never used      no-unused-vars
+  31:40   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:50   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:61   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+   4:27  error    'req' is defined but never used           no-unused-vars
+   4:49  error    'res' is defined but never used           no-unused-vars
+   4:70  error    'next' is defined but never used          no-unused-vars
+   6:32  error    'req' is defined but never used           no-unused-vars
+   6:54  error    'res' is defined but never used           no-unused-vars
+   6:75  error    'next' is defined but never used          no-unused-vars
+  37:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+  8:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+  57:74  error    'req' is defined but never used           no-unused-vars
+  57:79  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  58:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+  7:21  error  '_error' is defined but never used  no-unused-vars
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\types\api\index.ts
+   7:107  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  10:29   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:26   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  12:32   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\types\models\index.ts
+   6:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  11:44  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  16:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  17:29  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+  1:24  error  'i' is defined but never used     no-unused-vars
+  1:26  error  'RequestInfo' is not defined      no-undef
+  1:42  error  'init' is defined but never used  no-unused-vars
+  1:48  error  'RequestInit' is not defined      no-undef
+  2:47  error  'RequestInfo' is not defined      no-undef
+  2:68  error  'RequestInit' is not defined      no-undef
+
+Ô£û 80 problems (48 errors, 32 warnings)
+
+undefined
+ÔÇëERR_PNPM_RECURSIVE_EXEC_FIRST_FAILÔÇë Command failed with exit code 1: eslint packages/shared --ext .ts .tsx .js .jsx --fix

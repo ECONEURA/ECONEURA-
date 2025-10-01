@@ -45,8 +45,8 @@ function extractPRInfo(filePath) {
     let title = '';
     let status = 'unknown';
     let completion = 0;
-    let evidence = [];
-    let issues = [];
+    const evidence = [];
+    const issues = [];
     
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();

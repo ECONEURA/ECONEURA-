@@ -1,0 +1,12 @@
+name: ci-web
+
+on:
+  push:
+    paths:
+      - 'apps/web/**'
+  pull_request:
+    paths:
+      - 'apps/web/**'
+
+jobs:
+  # Original ci-web preserved here

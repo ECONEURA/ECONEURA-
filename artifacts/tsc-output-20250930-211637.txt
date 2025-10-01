@@ -1,0 +1,4 @@
+
+> econeura-ia@ typecheck C:\Users\Usuario\ECONEURA-\ECONEURA-
+> tsc --noEmit
+
