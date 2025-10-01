@@ -35,6 +35,29 @@ for (const f of files) {
     // header Authorization con env.GW_KEY -> SIM o Bearer global
     s = s.replace(/Authorization['"]?:\s*`Bearer\s*\$\{[^}]*GW_KEY[^}]*\}`/g, 'Authorization: `Bearer ${ (window as any).__ECONEURA_BEARER || "SIMULATED" }`');
     // logActivity -> NOOP en UI
-    s = s.replace(/async function logActivity\([^)]*\)\s*\{[\s\S]*?\n\}/m, "async function logActivity(){ /* NOOP: UI sin claves */ }
+      const logActivityReplacement = 'async function logActivity(){ /* NOOP: UI sin claves */ }';
+      s = s.replace(/async function logActivity\([^)]*\)\s*\{[\s\S]*?\n\}/m, logActivityReplacement);
+
+      if (s !== o) {
+        try {
+          fs.writeFileSync(f, s, 'utf8');
+          patched++;
+        } catch (e) {
+          // ignore write errors
+        }
+      }
+      changes++;
+    } catch (e) {
+      // ignore file read errors
+    }
+  }
+
+  try {
+    fs.mkdirSync(path.join('docs', 'audit'), { recursive: true });
+    fs.writeFileSync(path.join('docs', 'audit', 'CLIENT_SECRET_PURGE.md'), `Patched ${patched}/${changes} archivos. Headers y env saneados.`, 'utf8');
+    console.log('CLIENT_SECRET_PURGE: OK -', patched, 'archivos patched');
+  } catch (e) {
+    console.error('CLIENT_SECRET_PURGE: failed to write audit file:', e && e.message ? e.message : e);
+  }
 fs.writeFileSync("docs/audit/CLIENT_SECRET_PURGE.md", `Patched ${patched}/${changes} archivos. Headers y env saneados.`);
 console.log('CLIENT_SECRET_PURGE: OK -', patched, 'archivos patched');
