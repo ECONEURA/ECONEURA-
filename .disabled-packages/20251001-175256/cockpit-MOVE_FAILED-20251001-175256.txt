@@ -1,0 +1,1 @@
+Move failed for .dev/cockpit on 20251001-175256. typeErr=True testErr=True. Error: The process cannot access the file 'C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src' because it is being used by another process.
