@@ -14,8 +14,8 @@
     "test:ui": "vitest --ui",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-  "typecheck": "pnpm -w exec -- tsc --noEmit",
-  "typecheck:watch": "pnpm -w exec -- tsc --noEmit --watch",
+  "typecheck": "node ./scripts/run-tsc.js --noEmit",
+  "typecheck:watch": "node ./scripts/run-tsc.js --noEmit --watch",
     "clean": "pnpm run --parallel clean && rm -rf node_modules/.cache",
     "prepare": "husky install"
   },
