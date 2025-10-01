@@ -169,7 +169,12 @@ if ((git status --porcelain) -ne "") {
 
 Write-Host "`n==== Resumen ===="
 foreach ($r in $report) {
-  Write-Host ("{0} -> moved: {1} {2}" -f $r.path, $r.moved, ($r.dest -or ''))
+  $path = $r['path']
+  $moved = $r['moved']
+  $dest = ''
+  if ($r.ContainsKey('dest')) { $dest = $r['dest'] }
+  elseif ($r.ContainsKey('marker')) { $dest = $r['marker'] }
+  Write-Host ("{0} -> moved: {1} {2}" -f $path, $moved, $dest)
 }
 
 Write-Host "`nSe ha creado la rama $branch con los commits. Revisa los cambios y haz push si estás listo:"

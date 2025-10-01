@@ -1,0 +1,38 @@
+(node:22192) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Oops! Something went wrong! :(
+
+ESLint: 9.36.0
+
+Error: Cannot find package 'C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\@typescript-eslint\eslint-plugin\index.js' imported from C:\Users\Usuario\ECONEURA-\ECONEURA-\eslint.config.mjs
+Did you mean to import "@typescript-eslint/eslint-plugin/dist/index.js"?
+    at legacyMainResolve (node:internal/modules/esm/resolve:204:26)
+    at packageResolve (node:internal/modules/esm/resolve:778:12)
+    at moduleResolve (node:internal/modules/esm/resolve:858:18)
+    at defaultResolve (node:internal/modules/esm/resolve:990:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:768:20)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:745:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:318:38)
+    at #link (node:internal/modules/esm/module_job:208:49)
+undefined
+ÔÇëERR_PNPM_RECURSIVE_EXEC_FIRST_FAILÔÇë Command failed with exit code 2: eslint .dev/cockpit --ext .ts .tsx .js .jsx --fix
+(node:25324) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Oops! Something went wrong! :(
+
+ESLint: 9.36.0
+
+Error: Cannot find package 'C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\@typescript-eslint\eslint-plugin\index.js' imported from C:\Users\Usuario\ECONEURA-\ECONEURA-\eslint.config.mjs
+Did you mean to import "@typescript-eslint/eslint-plugin/dist/index.js"?
+    at legacyMainResolve (node:internal/modules/esm/resolve:204:26)
+    at packageResolve (node:internal/modules/esm/resolve:778:12)
+    at moduleResolve (node:internal/modules/esm/resolve:858:18)
+    at defaultResolve (node:internal/modules/esm/resolve:990:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:768:20)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:745:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:318:38)
+    at #link (node:internal/modules/esm/module_job:208:49)
+undefined
+ÔÇëERR_PNPM_RECURSIVE_EXEC_FIRST_FAILÔÇë Command failed with exit code 2: eslint packages/shared --ext .ts .tsx .js .jsx --fix
