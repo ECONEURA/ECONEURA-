@@ -7,12 +7,12 @@ beforeAll(async () => {
   // Global setup before all tests
   console.log('Setting up test environment...');
 
-  // Setup global fetch for Node.js environment
-  if (typeof globalThis.fetch === 'undefined') {
-  globalThis.fetch = fetch as unknown as any;
-  globalThis.Headers = Headers as unknown as any;
-  globalThis.Request = Request as unknown as any;
-  globalThis.Response = Response as unknown as any;
+  // Provide fetch polyfill for Node environments used by tests
+  if (typeof (globalThis as any).fetch === 'undefined') {
+    ;(globalThis as any).fetch = fetch as unknown as any
+    ;(globalThis as any).Headers = Headers as unknown as any
+    ;(globalThis as any).Request = Request as unknown as any
+    ;(globalThis as any).Response = Response as unknown as any
   }
 });
 
