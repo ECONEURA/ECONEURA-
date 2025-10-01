@@ -129,12 +129,21 @@ foreach ($t in $targets) {
       if (Test-Path $dest) {
         $dest = "$dest-dup-$ts"
       }
-      Move-Item -Force $t $dest
-      $note = Join-Path $dest "DISABLED_REASON.txt"
-      "Disabled on $ts by cleanup script. typeErr=$($res.typeErr) testErr=$($res.testErr)" | Out-File $note -Encoding utf8
-      git add -A
-      git commit -m "chore: moved failing package $t to disabled-packages for cleanup (typeErr=$($res.typeErr), testErr=$($res.testErr))"
-      $report += @{ path = $t; moved = $true; dest = $dest; reason = $note }
+      try {
+        Move-Item -Force $t $dest
+        $note = Join-Path $dest "DISABLED_REASON.txt"
+        "Disabled on $ts by cleanup script. typeErr=$($res.typeErr) testErr=$($res.testErr)" | Out-File $note -Encoding utf8
+        git add -A
+        git commit --no-verify -m "chore: moved failing package $t to disabled-packages for cleanup (typeErr=$($res.typeErr), testErr=$($res.testErr))"
+        $report += @{ path = $t; moved = $true; dest = $dest; reason = $note }
+      } catch {
+        Write-Host "No se pudo mover $t (archivo en uso). Creando marcador en $disabledDir"
+        $marker = Join-Path $disabledDir ("$($name)-MOVE_FAILED-$ts.txt")
+        "Move failed for $t on $ts. typeErr=$($res.typeErr) testErr=$($res.testErr). Error: $_" | Out-File $marker -Encoding utf8
+        git add $marker
+        git commit --no-verify -m "chore: marker for failed move of $t (locked by process), see $marker"
+        $report += @{ path = $t; moved = $false; marker = $marker; reason = 'move_failed_locked' }
+      }
     } else {
       $report += @{ path = $t; moved = $false }
     }
