@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+void path;
 
 class PerformanceMonitor {
   constructor() {

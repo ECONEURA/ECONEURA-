@@ -4,6 +4,7 @@ const J = p => {
   try {
     return JSON.parse(fs.readFileSync(p, 'utf8'));
   } catch (e) {
+    void e;
     return {};
   }
 };

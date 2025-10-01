@@ -14,6 +14,7 @@ import { z } from 'zod';
 const ROOT = process.cwd();
 const file = path.join(ROOT, 'seed', 'agents_master.json');
 const depts = ['ceo','ia','cso','cto','ciso','coo','chro','mkt','cfo','cdo'] as const;
+const DEPTS_SET = new Set<string>(depts as readonly string[]);
 
 const AgentSchema = z.object({
   department: z.string().min(1),
@@ -65,7 +66,7 @@ if (data.length < 60) {
 }
 
 // Optional soft warnings: departments outside known set
-const unknownDepts = Array.from(new Set(data.map(a => a.department_key))).filter(d => !depts.includes(d as any));
+const unknownDepts = Array.from(new Set(data.map(a => a.department_key))).filter(d => !DEPTS_SET.has(String(d)));
 if (unknownDepts.length > 0) {
   console.warn(`⚠️ Unknown department_key values found: ${unknownDepts.join(', ')}`);
 }

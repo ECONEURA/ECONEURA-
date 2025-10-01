@@ -6,7 +6,6 @@
 
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
 
 function countFiles(pattern, exclude = []) {
   try {

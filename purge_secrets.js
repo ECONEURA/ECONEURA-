@@ -15,11 +15,11 @@ function walk(dir) {
           files.push(fullPath);
         }
       } catch (e) {
-        // ignore errors
-      }
+          void e;
+        }
     }
   } catch (e) {
-    // ignore errors
+    void e;
   }
 }
 walk('.');
@@ -42,12 +42,14 @@ for (const f of files) {
         try {
           fs.writeFileSync(f, s, 'utf8');
           patched++;
-        } catch (e) {
+        } catch (err) {
+          void err;
           // ignore write errors
         }
       }
       changes++;
-    } catch (e) {
+    } catch (err) {
+      void err;
       // ignore file read errors
     }
   }
@@ -56,8 +58,7 @@ for (const f of files) {
     fs.mkdirSync(path.join('docs', 'audit'), { recursive: true });
     fs.writeFileSync(path.join('docs', 'audit', 'CLIENT_SECRET_PURGE.md'), `Patched ${patched}/${changes} archivos. Headers y env saneados.`, 'utf8');
     console.log('CLIENT_SECRET_PURGE: OK -', patched, 'archivos patched');
-  } catch (e) {
-    console.error('CLIENT_SECRET_PURGE: failed to write audit file:', e && e.message ? e.message : e);
+  } catch (err) {
+    void err;
+    console.error('CLIENT_SECRET_PURGE: failed to write audit file');
   }
-fs.writeFileSync("docs/audit/CLIENT_SECRET_PURGE.md", `Patched ${patched}/${changes} archivos. Headers y env saneados.`);
-console.log('CLIENT_SECRET_PURGE: OK -', patched, 'archivos patched');

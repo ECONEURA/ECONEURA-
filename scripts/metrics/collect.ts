@@ -6,7 +6,6 @@
 
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
 
 interface Metrics {
   timestamp: string;

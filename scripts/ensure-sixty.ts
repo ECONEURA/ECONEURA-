@@ -7,7 +7,7 @@ const depts = [
 ];
 const auto = ["a1","a2","a3","a4","a5"];
 const doctor = "doctor_coach";
-const out:any[] = [];
+const out: unknown[] = [];
 for (const [k,n] of depts) {
   out.push({department:n,department_key:k,type:"director",agent_key:`${k}_orquestador`,agent_name:`Orquestador ${n}`,hitl:false});
   for (const a of auto) out.push({department:n,department_key:k,type:"agent",agent_key:`${k}_${a}`,agent_name:`${n} — ${a.toUpperCase()}`,hitl: a==="a3"});

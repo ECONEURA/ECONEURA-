@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+void __dirname;
 
 console.log('🚀 Inicializando funcionalidades avanzadas del PR-13...\n');
 
