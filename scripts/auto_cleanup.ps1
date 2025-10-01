@@ -45,6 +45,9 @@ Write-Host "Targets detectados: $($targets -join ', ')"
 # Por defecto saltamos la fase global de ESLint para evitar intentar lintear node_modules o paquetes externos
 $SKIP_ESLINT = $true
 
+# Inicializar $eslintReport para evitar referencias indefinidas cuando SKIP_ESLINT está activado
+$eslintReport = $null
+
 # Asegura carpetas auxiliares
 $disabledDir = ".disabled-packages/$ts"
 New-Item -ItemType Directory -Force -Path $disabledDir | Out-Null
@@ -205,3 +208,8 @@ foreach ($r in $report) {
 Write-Host "`nSe ha creado la rama $branch con los commits. Revisa los cambios y haz push si estás listo:"
 Write-Host "  git push -u origin $branch"
 Write-Host "Archivos de reportes: $eslintReport"
+if ($eslintReport) {
+  Write-Host "Archivos de reportes: $eslintReport"
+} else {
+  Write-Host "No se generaron reportes ESLint (SKIP_ESLINT activado o no hubo salida)."
+}
