@@ -1,4 +1,11 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+// Extend AxiosRequestConfig with an optional metadata field used across the workspace
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    metadata?: Record<string, any>;
+    skipAuth?: boolean;
+  }
+}
 import { z } from 'zod';
 
 // Base configuration
@@ -242,6 +249,48 @@ export class ECONEURAClient {
       return response.data;
     });
   }
+
+  // Compatibility helpers expected by resources elsewhere in the workspace
+  async get<T>(url: string, params?: any): Promise<{ data: T }> {
+    const response = await this.client.get<T>(url, { params });
+    return response as unknown as { data: T };
+  }
+
+  async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<{ data: T }> {
+    const response = await this.client.post<T>(url, data, config);
+    return response as unknown as { data: T };
+  }
+
+  async put<T>(url: string, data?: any): Promise<{ data: T }> {
+    const response = await this.client.put<T>(url, data);
+    return response as unknown as { data: T };
+  }
+
+  async delete<T = void>(url: string): Promise<{ data: T }> {
+    const response = await this.client.delete<T>(url);
+    return response as unknown as { data: T };
+  }
+
+  async patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<{ data: T }> {
+    const response = await this.client.patch<T>(url, data, config);
+    return response as unknown as { data: T };
+  }
+
+  setAccessToken(token: string | null) {
+    if (token) {
+      this.client.defaults.headers = this.client.defaults.headers || {};
+      (this.client.defaults.headers as any)['Authorization'] = `Bearer ${token}`;
+    } else {
+      if ((this.client.defaults.headers as any)['Authorization']) {
+        delete (this.client.defaults.headers as any)['Authorization'];
+      }
+    }
+  }
+
+  setRefreshToken(_token: string | null) {
+    // No-op placeholder; kept for API compatibility in resources
+    return;
+  }
 }
 
 // Factory function
@@ -260,3 +309,6 @@ export const defaultConfig: ECONEURAClientConfig = {
 
 // Export default instance
 export const econeuraClient = createECONEURAClient(defaultConfig);
+
+// Provide a compatibility alias 'ApiClient' expected by some resources
+export type ApiClient = ECONEURAClient;

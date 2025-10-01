@@ -2,15 +2,23 @@ name: ci
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - '**/*.txt'
   pull_request:
-    types: [ opened, synchronize, reopened ]
+    types: [opened, synchronize, reopened]
   workflow_dispatch: {}
 
 permissions:
   contents: read
   security-events: write
   checks: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   NODE_VERSION: '20'
@@ -31,10 +39,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install deps (fast)
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-node-${{ env.NODE_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
       - name: Install deps (fast)
         run: |
           pnpm install --frozen-lockfile --ignore-scripts || npm ci --no-audit --no-fund
@@ -58,6 +75,19 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}-node-${{ env.NODE_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
       - name: Install deps
         run: pnpm install --frozen-lockfile || npm ci --no-audit --no-fund
 
@@ -66,6 +96,15 @@ jobs:
 
       - name: Run tests (strict)
         run: pnpm run test --if-present -- --run || (echo "Tests failed" && exit 1)
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            reports
+            test-results
 
   cockpit-integration:
     name: Cockpit Integration
@@ -96,6 +135,13 @@ jobs:
     needs: [fast-check, quality]
     if: always()
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
       - name: Print summary
         run: |
           echo "Fast: ${{ needs.fast-check.result }}"

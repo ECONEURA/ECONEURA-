@@ -1,0 +1,14 @@
+name: cockpit-ci
+
+on:
+  push:
+    paths:
+      - '.dev/cockpit/**'
+  pull_request:
+    paths:
+      - '.dev/cockpit/**'
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch: {}
+
+# Original cockpit-ci preserved here

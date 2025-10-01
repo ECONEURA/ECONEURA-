@@ -1,0 +1,187 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/Usuario/ECONEURA-/ECONEURA-[39m
+
+ [32mÔ£ô[39m packages/shared/src/__tests__/rate-limiter.test.ts [2m([22m[2m17 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [31mÔØ»[39m apps/web/src/EconeuraCockpit.e2e.test.js [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m apps/web/src/EconeuraCockpit.e2e.test.tsx [2m([22m[2m0 test[22m[2m)[22m
+ [32mÔ£ô[39m packages/shared/src/__tests__/health.test.ts [2m([22m[2m13 tests[22m[2m)[22m[90m 21[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/config.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 17[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/middleware.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 25[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/validation.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 13[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/smoke.shared.test.ts [2m([22m[2m11 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+[90mstdout[2m | packages/shared/src/__tests__/retry.test.ts[2m > [22m[2mRetry Module[2m > [22m[2mwithRetry[2m > [22m[2mshould retry on failure and succeed
+[22m[39mAttempt 1 failed, retrying in 1ms: network error
+
+[90mstdout[2m | packages/shared/src/__tests__/retry.test.ts[2m > [22m[2mRetry Module[2m > [22m[2mwithRetry[2m > [22m[2mshould fail after max attempts
+[22m[39mAttempt 1 failed, retrying in 1ms: network error
+
+[90mstdout[2m | packages/shared/src/__tests__/retry.test.ts[2m > [22m[2mRetry Module[2m > [22m[2mwithRetry[2m > [22m[2mshould use custom retry condition
+[22m[39mAttempt 1 failed, retrying in 1ms: custom error
+
+ [32mÔ£ô[39m packages/shared/src/__tests__/retry.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 40[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/logging.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+stderr | .dev/cockpit/src/components/__tests__/AgentCard.busy.test.tsx > AgentCard busy state > disables Ejecutar button when busy is true
+Error: [vitest] No "ClipboardList" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+    at VitestMocker.createError (file:///C:/Users/Usuario/ECONEURA-/ECONEURA-/node_modules/.pnpm/vitest@2.1.9_@vitest+ui@2.1.9_jsdom@27.0.0/node_modules/vitest/dist/chunks/execute.2pr0rHgK.js:321:19)
+    at Object.get (file:///C:/Users/Usuario/ECONEURA-/ECONEURA-/node_modules/.pnpm/vitest@2.1.9_@vitest+ui@2.1.9_jsdom@27.0.0/node_modules/vitest/dist/chunks/execute.2pr0rHgK.js:389:22)
+    at iconForAgent (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:12:19)
+    at AgentCard (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:33:18)
+    at renderWithHooks (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\.pnpm\jsdom@27.0.0_postcss@8.5.6\node_modules\jsdom\lib\jsdom\living\generated\EventListener.js:26:30)
+    at innerInvokeEventListeners (C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\.pnpm\jsdom@27.0.0_postcss@8.5.6\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+Error: [vitest] No "ClipboardList" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+    at VitestMocker.createError (file:///C:/Users/Usuario/ECONEURA-/ECONEURA-/node_modules/.pnpm/vitest@2.1.9_@vitest+ui@2.1.9_jsdom@27.0.0/node_modules/vitest/dist/chunks/execute.2pr0rHgK.js:321:19)
+    at Object.get (file:///C:/Users/Usuario/ECONEURA-/ECONEURA-/node_modules/.pnpm/vitest@2.1.9_@vitest+ui@2.1.9_jsdom@27.0.0/node_modules/vitest/dist/chunks/execute.2pr0rHgK.js:389:22)
+    at iconForAgent (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:12:19)
+    at AgentCard (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:33:18)
+    at renderWithHooks (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\.pnpm\jsdom@27.0.0_postcss@8.5.6\node_modules\jsdom\lib\jsdom\living\generated\EventListener.js:26:30)
+    at innerInvokeEventListeners (C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\.pnpm\jsdom@27.0.0_postcss@8.5.6\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+The above error occurred in the <AgentCard> component:
+
+    at AgentCard (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:29:22)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+stderr | .dev/cockpit/src/components/__tests__/AgentCard.test.tsx > AgentCard > renders title and primary action
+Error: [vitest] No "ClipboardList" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+    at VitestMocker.createError (file:///C:/Users/Usuario/ECONEURA-/ECONEURA-/node_modules/.pnpm/vitest@2.1.9_@vitest+ui@2.1.9_jsdom@27.0.0/node_modules/vitest/dist/chunks/execute.2pr0rHgK.js:321:19)
+    at Object.get (file:///C:/Users/Usuario/ECONEURA-/ECONEURA-/node_modules/.pnpm/vitest@2.1.9_@vitest+ui@2.1.9_jsdom@27.0.0/node_modules/vitest/dist/chunks/execute.2pr0rHgK.js:389:22)
+    at iconForAgent (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:12:19)
+    at AgentCard (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:33:18)
+    at renderWithHooks (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\.pnpm\jsdom@27.0.0_postcss@8.5.6\node_modules\jsdom\lib\jsdom\living\generated\EventListener.js:26:30)
+    at innerInvokeEventListeners (C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\.pnpm\jsdom@27.0.0_postcss@8.5.6\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+Error: [vitest] No "ClipboardList" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+    at VitestMocker.createError (file:///C:/Users/Usuario/ECONEURA-/ECONEURA-/node_modules/.pnpm/vitest@2.1.9_@vitest+ui@2.1.9_jsdom@27.0.0/node_modules/vitest/dist/chunks/execute.2pr0rHgK.js:321:19)
+    at Object.get (file:///C:/Users/Usuario/ECONEURA-/ECONEURA-/node_modules/.pnpm/vitest@2.1.9_@vitest+ui@2.1.9_jsdom@27.0.0/node_modules/vitest/dist/chunks/execute.2pr0rHgK.js:389:22)
+    at iconForAgent (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:12:19)
+    at AgentCard (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:33:18)
+    at renderWithHooks (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:15486:18)
+    at mountIndeterminateComponent (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:20103:13)
+    at beginWork (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:21626:16)
+    at HTMLUnknownElement.callCallback (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\node_modules\react-dom\cjs\react-dom.development.js:4164:14)
+    at HTMLUnknownElement.callTheUserObjectsOperation (C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\.pnpm\jsdom@27.0.0_postcss@8.5.6\node_modules\jsdom\lib\jsdom\living\generated\EventListener.js:26:30)
+    at innerInvokeEventListeners (C:\Users\Usuario\ECONEURA-\ECONEURA-\node_modules\.pnpm\jsdom@27.0.0_postcss@8.5.6\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+The above error occurred in the <AgentCard> component:
+
+    at AgentCard (C:\Users\Usuario\ECONEURA-\ECONEURA-\.dev\cockpit\src\components\AgentCard.tsx:29:22)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+
+ [31mÔØ»[39m .dev/cockpit/src/components/__tests__/AgentCard.busy.test.tsx [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[90m 42[2mms[22m[39m
+[31m   [31m├ù[31m AgentCard busy state[2m > [22mdisables Ejecutar button when busy is true[90m 40[2mms[22m[31m[39m
+[31m     ÔåÆ [vitest] No "ClipboardList" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+ [31mÔØ»[39m .dev/cockpit/src/components/__tests__/AgentCard.test.tsx [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[90m 43[2mms[22m[39m
+[31m   [31m├ù[31m AgentCard[2m > [22mrenders title and primary action[90m 40[2mms[22m[31m[39m
+[31m     ÔåÆ [vitest] No "ClipboardList" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/errors.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Suites 2 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  apps/web/src/EconeuraCockpit.e2e.test.js [ apps/web/src/EconeuraCockpit.e2e.test.js ]
+Error: [vitest] No "Crown" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+vi.mock(import("lucide-react"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+  }
+})
+
+ ÔØ» apps/web/src/EconeuraCockpit.tsx:124:8
+    122| // Iconos por departamento
+    123| const DeptIcon: Record<string, React.ElementType> = {
+    124|   CEO: Crown,
+       |        ^
+    125|   IA: Brain,
+    126|   CSO: Target,
+ ÔØ» apps/web/src/EconeuraCockpit.e2e.test.js:6:31
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/4]ÔÄ»
+
+ FAIL  apps/web/src/EconeuraCockpit.e2e.test.tsx [ apps/web/src/EconeuraCockpit.e2e.test.tsx ]
+Error: [vitest] No "Crown" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+vi.mock(import("lucide-react"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+  }
+})
+
+ ÔØ» apps/web/src/EconeuraCockpit.tsx:124:8
+    122| // Iconos por departamento
+    123| const DeptIcon: Record<string, React.ElementType> = {
+    124|   CEO: Crown,
+       |        ^
+    125|   IA: Brain,
+    126|   CSO: Target,
+ ÔØ» apps/web/src/EconeuraCockpit.e2e.test.tsx:6:31
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[2/4]ÔÄ»
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 2 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  .dev/cockpit/src/components/__tests__/AgentCard.busy.test.tsx > AgentCard busy state > disables Ejecutar button when busy is true
+ FAIL  .dev/cockpit/src/components/__tests__/AgentCard.test.tsx > AgentCard > renders title and primary action
+Error: [vitest] No "ClipboardList" export is defined on the "lucide-react" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+vi.mock(import("lucide-react"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+  }
+})
+
+ ÔØ» iconForAgent .dev/cockpit/src/components/AgentCard.tsx:12:19
+     10| function iconForAgent(title: string): React.ElementType {
+     11|   const t = title.toLowerCase();
+     12|   let Icon: any = ClipboardList;
+       |                   ^
+     13|   if (t.includes('agenda')) Icon = CalendarDays;
+     14|   else if (t.includes('anuncio') || t.includes('comunicado')) Icon = MÔÇª
+ ÔØ» AgentCard .dev/cockpit/src/components/AgentCard.tsx:33:18
+ ÔØ» renderWithHooks .dev/cockpit/node_modules/react-dom/cjs/react-dom.development.js:15486:18
+ ÔØ» mountIndeterminateComponent .dev/cockpit/node_modules/react-dom/cjs/react-dom.development.js:20103:13
+ ÔØ» beginWork .dev/cockpit/node_modules/react-dom/cjs/react-dom.development.js:21626:16
+ ÔØ» beginWork$1 .dev/cockpit/node_modules/react-dom/cjs/react-dom.development.js:27465:14
+ ÔØ» performUnitOfWork .dev/cockpit/node_modules/react-dom/cjs/react-dom.development.js:26599:12
+ ÔØ» workLoopSync .dev/cockpit/node_modules/react-dom/cjs/react-dom.development.js:26505:5
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[3/4]ÔÄ»
+
+[2m Test Files [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (13)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m73 passed[39m[22m[90m (75)[39m
+[2m   Start at [22m 21:19:57
+[2m   Duration [22m 12.25s[2m (transform 724ms, setup 3.01s, collect 2.13s, tests 238ms, environment 18.86s, prepare 3.32s)[22m
+

@@ -1,0 +1,47 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/Usuario/ECONEURA-/ECONEURA-[39m
+
+ [31mÔØ»[39m apps/web/src/EconeuraCockpit.e2e.test.tsx [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m packages/shared/src/__tests__/rate-limiter.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m apps/web/src/EconeuraCockpit.e2e.test.js [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m packages/shared/src/__tests__/health.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m packages/shared/src/__tests__/config.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m packages/shared/src/__tests__/middleware.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m packages/shared/src/smoke.shared.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m packages/shared/src/__tests__/validation.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m packages/shared/src/__tests__/retry.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m .dev/cockpit/src/components/__tests__/AgentCard.test.tsx [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m .dev/cockpit/src/components/__tests__/AgentCard.busy.test.tsx [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m packages/shared/src/__tests__/logging.test.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m packages/shared/src/__tests__/errors.test.ts [2m([22m[2m0 test[22m[2m)[22m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Suites 13 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  apps/web/src/EconeuraCockpit.e2e.test.js [ apps/web/src/EconeuraCockpit.e2e.test.js ]
+ FAIL  packages/shared/src/smoke.shared.test.ts [ packages/shared/src/smoke.shared.test.ts ]
+ FAIL  packages/shared/src/__tests__/config.test.ts [ packages/shared/src/__tests__/config.test.ts ]
+ FAIL  packages/shared/src/__tests__/errors.test.ts [ packages/shared/src/__tests__/errors.test.ts ]
+ FAIL  packages/shared/src/__tests__/health.test.ts [ packages/shared/src/__tests__/health.test.ts ]
+ FAIL  packages/shared/src/__tests__/logging.test.ts [ packages/shared/src/__tests__/logging.test.ts ]
+ FAIL  packages/shared/src/__tests__/middleware.test.ts [ packages/shared/src/__tests__/middleware.test.ts ]
+ FAIL  packages/shared/src/__tests__/rate-limiter.test.ts [ packages/shared/src/__tests__/rate-limiter.test.ts ]
+ FAIL  packages/shared/src/__tests__/retry.test.ts [ packages/shared/src/__tests__/retry.test.ts ]
+ FAIL  packages/shared/src/__tests__/validation.test.ts [ packages/shared/src/__tests__/validation.test.ts ]
+ FAIL  .dev/cockpit/src/components/__tests__/AgentCard.busy.test.tsx [ .dev/cockpit/src/components/__tests__/AgentCard.busy.test.tsx ]
+ FAIL  .dev/cockpit/src/components/__tests__/AgentCard.test.tsx [ .dev/cockpit/src/components/__tests__/AgentCard.test.tsx ]
+Error: Failed to load url C:/Users/Usuario/ECONEURA-/ECONEURA-/vitest.setup.ts (resolved id: C:/Users/Usuario/ECONEURA-/ECONEURA-/vitest.setup.ts). Does the file exist?
+ ÔØ» loadAndTransform node_modules/.pnpm/vite@5.4.20/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:51968:17
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/13]ÔÄ»
+
+ FAIL  apps/web/src/EconeuraCockpit.e2e.test.tsx [ apps/web/src/EconeuraCockpit.e2e.test.tsx ]
+Error: Failed to load url C:/Users/Usuario/ECONEURA-/ECONEURA-/vitest.setup.ts (resolved id: C:/Users/Usuario/ECONEURA-/ECONEURA-/vitest.setup.ts). Does the file exist?
+ ÔØ» loadAndTransform node_modules/.pnpm/vite@5.4.20/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:51968:17
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[2/13]ÔÄ»
+
+[2m Test Files [22m [1m[31m13 failed[39m[22m[90m (13)[39m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 21:17:02
+[2m   Duration [22m 11.17s[2m (transform 40ms, setup 0ms, collect 0ms, tests 0ms, environment 21.70s, prepare 2.82s)[22m
+

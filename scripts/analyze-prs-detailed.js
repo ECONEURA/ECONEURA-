@@ -43,8 +43,8 @@ function extractPRInfoDetailed(filePath) {
     let title = '';
     let status = 'unknown';
     let completion = 0;
-    let evidence = [];
-    let issues = [];
+    const evidence = [];
+    const issues = [];
     let hasImplementation = false;
     let hasTests = false;
     let hasDocumentation = false;

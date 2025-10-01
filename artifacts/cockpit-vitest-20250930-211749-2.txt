@@ -1,0 +1,54 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/Usuario/ECONEURA-/ECONEURA-[39m
+
+ [32mÔ£ô[39m packages/shared/src/__tests__/rate-limiter.test.ts [2m([22m[2m17 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [31mÔØ»[39m apps/web/src/EconeuraCockpit.e2e.test.js [2m([22m[2m0 test[22m[2m)[22m
+ [31mÔØ»[39m apps/web/src/EconeuraCockpit.e2e.test.tsx [2m([22m[2m0 test[22m[2m)[22m
+ [32mÔ£ô[39m packages/shared/src/__tests__/health.test.ts [2m([22m[2m13 tests[22m[2m)[22m[90m 27[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/config.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 17[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/middleware.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 24[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/validation.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+[90mstdout[2m | packages/shared/src/__tests__/retry.test.ts[2m > [22m[2mRetry Module[2m > [22m[2mwithRetry[2m > [22m[2mshould retry on failure and succeed
+[22m[39mAttempt 1 failed, retrying in 1ms: network error
+
+[90mstdout[2m | packages/shared/src/__tests__/retry.test.ts[2m > [22m[2mRetry Module[2m > [22m[2mwithRetry[2m > [22m[2mshould fail after max attempts
+[22m[39mAttempt 1 failed, retrying in 1ms: network error
+
+[90mstdout[2m | packages/shared/src/__tests__/retry.test.ts[2m > [22m[2mRetry Module[2m > [22m[2mwithRetry[2m > [22m[2mshould use custom retry condition
+[22m[39mAttempt 1 failed, retrying in 1ms: custom error
+
+ [32mÔ£ô[39m packages/shared/src/smoke.shared.test.ts [2m([22m[2m11 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/retry.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 47[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/logging.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32mÔ£ô[39m .dev/cockpit/src/components/__tests__/AgentCard.busy.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 236[2mms[22m[39m
+ [32mÔ£ô[39m .dev/cockpit/src/components/__tests__/AgentCard.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 265[2mms[22m[39m
+ [32mÔ£ô[39m packages/shared/src/__tests__/errors.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Suites 2 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  apps/web/src/EconeuraCockpit.e2e.test.js [ apps/web/src/EconeuraCockpit.e2e.test.js ]
+ FAIL  apps/web/src/EconeuraCockpit.e2e.test.tsx [ apps/web/src/EconeuraCockpit.e2e.test.tsx ]
+Error: Failed to resolve import "lucide-react" from "apps/web/src/EconeuraCockpit.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: C:/Users/Usuario/ECONEURA-/ECONEURA-/apps/web/src/EconeuraCockpit.tsx:6:7
+  28 |    ListChecks,
+  29 |    CalendarDays
+  30 |  } from "lucide-react";
+     |          ^
+  31 |  const cx = (...cls) => cls.filter(Boolean).join(" ");
+  32 |  function isReactComponent(x) {
+ ÔØ» TransformPluginContext._formatError node_modules/.pnpm/vite@5.4.20/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:49258:41
+ ÔØ» TransformPluginContext.error node_modules/.pnpm/vite@5.4.20/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:49253:16
+ ÔØ» normalizeUrl node_modules/.pnpm/vite@5.4.20/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:64306:23
+ ÔØ» node_modules/.pnpm/vite@5.4.20/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:64438:39
+ ÔØ» TransformPluginContext.transform node_modules/.pnpm/vite@5.4.20/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:64365:7
+ ÔØ» PluginContainer.transform node_modules/.pnpm/vite@5.4.20/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:49099:18
+ ÔØ» loadAndTransform node_modules/.pnpm/vite@5.4.20/node_modules/vite/dist/node/chunks/dep-D_zLpgQd.js:51977:27
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/2]ÔÄ»
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m11 passed[39m[22m[90m (13)[39m
+[2m      Tests [22m [1m[32m75 passed[39m[22m[90m (75)[39m
+[2m   Start at [22m 21:17:50
+[2m   Duration [22m 11.39s[2m (transform 380ms, setup 2.60s, collect 2.29s, tests 669ms, environment 18.06s, prepare 3.23s)[22m
+

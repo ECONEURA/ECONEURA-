@@ -6,5 +6,5 @@ const check = (p)=>new Promise(res=>{
   const req = http.request(host.replace("https://","http://")+p,{headers:{Upgrade:"websocket",Connection:"Upgrade"}}, r=>res(false));
   req.on("upgrade",()=>res(true)); req.on("error",()=>res(false)); req.end();
 });
-let ok=false; for (const p of candidates){ /* eslint-disable no-await-in-loop */ if(await check(p)){ ok=true; break; } }
+let ok=false; for (const p of candidates){   if(await check(p)){ ok=true; break; } }
 if(!ok){ process.exitCode=1; }
