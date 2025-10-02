@@ -19,3 +19,6 @@ coverage
 packages/*/coverage
 packages/*/dist
 apps/*/dist
+
+# Generated reports from CI/tools
+reports/
