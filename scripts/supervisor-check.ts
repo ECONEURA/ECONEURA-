@@ -1,5 +1,4 @@
 #!/usr/bin/env tsx
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'node:fs';
 import cp from 'node:child_process';
 import fg from 'fast-glob';

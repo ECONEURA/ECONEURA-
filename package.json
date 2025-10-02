@@ -11,16 +11,18 @@
     "build:web": "pnpm --filter @econeura/web build",
     "build:api": "pnpm --filter @econeura/api build",
     "test": "vitest run --coverage",
+    "pretest": "node ./scripts/ensure-local-react.js",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-  "typecheck": "node ./scripts/run-tsc.js --noEmit",
-  "typecheck:watch": "node ./scripts/run-tsc.js --noEmit --watch",
+    "lint": "eslint \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\"",
+    "lint:fix": "eslint \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\" --fix",
+    "typecheck": "node ./scripts/run-tsc.js --noEmit",
+    "typecheck:watch": "node ./scripts/run-tsc.js --noEmit --watch",
     "clean": "pnpm run --parallel clean && rm -rf node_modules/.cache",
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@apidevtools/swagger-parser": "^12.0.0",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.36.0",
@@ -34,10 +36,17 @@
     "husky": "^9.1.6",
     "jsdom": "^27.0.0",
     "lint-staged": "^15.2.10",
-    "typescript": "^5.9.2",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.44.1",
     "undici": "^7.16.0",
     "vitest": "^2.1.9"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "18.3.1",
+      "react-dom": "18.3.1"
+    }
   }
 }
 

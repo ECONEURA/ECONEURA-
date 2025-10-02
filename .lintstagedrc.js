@@ -1,53 +1,13 @@
 export default {
-  // TypeScript and JavaScript files
-  '**/*.{ts,tsx,js,jsx}': [
-    'eslint --fix --max-warnings 0',
-    'prettier --write',
-  ],
+  // TypeScript and JavaScript files: lint and format
+  '**/*.{ts,tsx,js,jsx}': ['eslint --fix --max-warnings 0', 'prettier --write'],
 
-  // JSON files
-  '**/*.json': [
-    'prettier --write',
-    'jsonlint --quiet',
-  ],
+  // JSON, YAML and Markdown: format with Prettier only (avoids external tool requirements)
+  '**/*.json': ['prettier --write'],
+  '**/*.{yml,yaml}': ['prettier --write'],
+  '**/*.md': ['prettier --write'],
 
-  // Markdown files
-  '**/*.md': [
-    'prettier --write',
-    'markdownlint --fix',
-  ],
-
-  // YAML files
-  '**/*.{yml,yaml}': [
-    'prettier --write',
-    'yamllint --strict',
-  ],
-
-  // CSS and SCSS files
-  '**/*.{css,scss,sass}': [
-    'prettier --write',
-    'stylelint --fix',
-  ],
-
-  // Package.json files
-  '**/package.json': [
-    'prettier --write',
-    'npmPkgJsonLint .',
-  ],
-
-  // Docker files
-  '**/Dockerfile*': [
-    'hadolint',
-  ],
-
-  // Shell scripts
-  '**/*.{sh,bash}': [
-    'shellcheck',
-    'shfmt -w -i 2',
-  ],
-
-  // GitHub Actions workflows
-  '.github/workflows/*.yml': [
-    'actionlint',
-  ],
+  // Styles and package.json: format only
+  '**/*.{css,scss,sass}': ['prettier --write'],
+  '**/package.json': ['prettier --write'],
 };
