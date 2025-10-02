@@ -39,10 +39,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      - name: Install pnpm
+        run: npm i -g pnpm@${{ env.PNPM_VERSION }}
 
       - name: Cache pnpm store
         uses: actions/cache@v4
@@ -75,10 +73,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      - name: Install pnpm
+        run: npm i -g pnpm@${{ env.PNPM_VERSION }}
 
       - name: Cache pnpm store
         uses: actions/cache@v4
@@ -161,10 +157,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      - name: Install pnpm
+        run: npm i -g pnpm@${{ env.PNPM_VERSION }}
 
       - name: Install deps (fast)
         run: pnpm install --frozen-lockfile --ignore-scripts
