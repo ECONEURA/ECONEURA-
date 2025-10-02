@@ -16,10 +16,12 @@
     "test:ui": "vitest --ui",
     "lint": "eslint \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\"",
     "lint:fix": "eslint \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\" --fix",
+    "ci-check": "pnpm -w run lint && pnpm -w run typecheck && pnpm -w run test",
     "typecheck": "node ./scripts/run-tsc.js --noEmit",
     "typecheck:watch": "node ./scripts/run-tsc.js --noEmit --watch",
     "clean": "pnpm run --parallel clean && rm -rf node_modules/.cache",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "coverage:check": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\run_one_shot_check.ps1"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "^12.0.0",
