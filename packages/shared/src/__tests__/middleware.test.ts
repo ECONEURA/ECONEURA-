@@ -2,11 +2,11 @@ import { describe, it, expect, vi } from 'vitest';
 import { corsMiddleware, requestLogger, errorHandler } from '../middleware.js';
 
 // Simple mock objects
-function createMockRequest(method = 'GET', url = '/'): any { // eslint-disable-line @typescript-eslint/no-explicit-any
+function createMockRequest(method = 'GET', url = '/'): any {
   return { method, url, headers: {} };
 }
 
-function createMockResponse(): any { // eslint-disable-line @typescript-eslint/no-explicit-any
+function createMockResponse(): any {
   return {
     setHeader: vi.fn(),
     writeHead: vi.fn(),

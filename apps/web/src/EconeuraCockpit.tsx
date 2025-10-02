@@ -88,8 +88,8 @@ const nowIso = () => new Date().toISOString();
 
 function correlationId() {
   try {
-    const rnd = (globalThis as any).crypto?.getRandomValues(new Uint32Array(4));
-    if (rnd) return Array.from(rnd).map((n) => n.toString(16)).join("");
+    const rnd = (globalThis as any).crypto?.getRandomValues(new Uint32Array(4)) as Uint32Array | undefined;
+    if (rnd) return Array.from(rnd).map((n: number) => n.toString(16)).join("");
     throw new Error('no crypto');
   } catch {
     const r = () => Math.floor(Math.random() * 1e9).toString(16);
@@ -526,7 +526,7 @@ function AgentCard({ a, busy, onRun }: AgentCardProps) {
 }
 
 // Organigrama
-function OrgChart() {
+export function OrgChart() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       {DATA.map((d) => {

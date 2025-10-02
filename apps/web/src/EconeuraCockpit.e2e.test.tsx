@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, fireEvent, waitFor, act, cleanup } from '@testing-library/react'
+import { render, screen, waitFor, act, cleanup } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
-import EconeuraCockpit from './EconeuraCockpit.tsx'
+import EconeuraCockpit from './EconeuraCockpit'
 
 // Mock fetch globally
 const mockFetch = vi.fn()

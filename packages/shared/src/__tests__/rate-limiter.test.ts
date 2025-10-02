@@ -117,9 +117,9 @@ describe('RateLimiter', () => {
 
 describe('createRateLimitMiddleware', () => {
   let limiter: RateLimiter;
-  let mockReq: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  let mockRes: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  let next: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  let mockReq: any;
+  let mockRes: any;
+  let next: any;
 
   beforeEach(() => {
     limiter = new RateLimiter(2, 1000);
