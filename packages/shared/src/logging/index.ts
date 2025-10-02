@@ -1,5 +1,8 @@
 // Lightweight logger compatibility layer used by other packages during typechecking
 
+/* eslint-disable no-console -- this module intentionally uses console for a small,
+   synchronous logger used during startup and tests. Keep rule disabled only here. */
+
 // Improvements in this file:
 // - Stronger types (use `unknown` instead of `any`)
 // - Safe serialization of meta objects (handles Error and circular refs)
@@ -12,6 +15,12 @@ export interface Logger {
   warn: (msg: string, ...meta: unknown[]) => void;
   error: (msg: string, ...meta: unknown[]) => void;
   debug: (msg: string, ...meta: unknown[]) => void;
+}
+
+export type LogLevel = keyof typeof levels;
+
+export interface Transport {
+  log: (level: LogLevel, msg: string, meta: unknown[]) => void;
 }
 
 function safeStringify(value: unknown): string {
@@ -62,8 +71,8 @@ function formatMeta(meta: unknown[]): unknown[] {
 const levels: Record<string, number> = { error: 0, warn: 1, info: 2, debug: 3 };
 
 let currentLevel = (() => {
-  const env = (process && process.env && process.env.LOG_LEVEL) || 'info';
-  return levels[env] ?? levels.info;
+  const env = (process && process.env && process.env.LOG_LEVEL) || 'debug';
+  return levels[env] ?? levels.debug;
 })();
 
 export function setLogLevel(level: keyof typeof levels | string) {
@@ -84,7 +93,8 @@ export const logger: Logger = {
   info: (msg: string, ...meta: unknown[]) => {
     if (currentLevel < levels.info) return;
     const formatted = formatMeta(meta);
-    console.log(msg, ...(formatted as any));
+
+    console.info(msg, ...(formatted as any));
   },
   warn: (msg: string, ...meta: unknown[]) => {
     if (currentLevel < levels.warn) return;
@@ -100,15 +110,52 @@ export const logger: Logger = {
     if (currentLevel < levels.debug) return;
     const formatted = formatMeta(meta);
     // Some environments don't implement console.debug; fallback to log
-    console.log(msg, ...(formatted as any));
+
+    if (typeof console.debug === 'function') {
+      console.debug(msg, ...(formatted as any));
+    } else {
+      console.log(msg, ...(formatted as any));
+    }
   },
 };
 
-// Also provide an 'apiLogger' quick shim used in some artifacts
-export const apiLogger = {
-  logStartup: (msg: string, meta?: unknown) => logger.info(msg, meta as unknown),
-  logShutdown: (msg: string, meta?: unknown) => logger.info(msg, meta as unknown),
+// Transport support: optional adapter that receives structured logs.
+let currentTransport: Transport | null = null;
+
+export function setTransport(t: Transport | null) {
+  currentTransport = t;
+}
+
+export function clearTransport() {
+  currentTransport = null;
+}
+
+// Wrap console-backed logger to route to transport when configured
+const origLogger = logger;
+export const routedLogger: Logger = {
+  info: (msg, ...meta) => {
+    if (currentTransport) return currentTransport.log('info', msg, formatMeta(meta));
+    return origLogger.info(msg, ...meta);
+  },
+  warn: (msg, ...meta) => {
+    if (currentTransport) return currentTransport.log('warn', msg, formatMeta(meta));
+    return origLogger.warn(msg, ...meta);
+  },
+  error: (msg, ...meta) => {
+    if (currentTransport) return currentTransport.log('error', msg, formatMeta(meta));
+    return origLogger.error(msg, ...meta);
+  },
+  debug: (msg, ...meta) => {
+    if (currentTransport) return currentTransport.log('debug', msg, formatMeta(meta));
+    return origLogger.debug(msg, ...meta);
+  },
 };
 
-// Default export kept for backwards compatibility with import default usage
-export default logger;
+// Keep default export and named `logger` for compatibility; export routedLogger as default logger instance
+export default routedLogger;
+
+// Also provide an 'apiLogger' quick shim used in some artifacts (route through routedLogger)
+export const apiLogger = {
+  logStartup: (msg: string, meta?: unknown) => routedLogger.info(msg, meta as unknown),
+  logShutdown: (msg: string, meta?: unknown) => routedLogger.info(msg, meta as unknown),
+};
