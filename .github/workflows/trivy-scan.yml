@@ -1,0 +1,37 @@
+name: Trivy scan (repo)
+
+on:
+  push:
+    branches:
+      - feat/coverage-aggregator
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trivy:
+    name: Run Trivy filesystem scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy filesystem scan (produce SARIF)
+        uses: aquasecurity/trivy-action@v1
+        with:
+          scan-type: fs
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH,MEDIUM,LOW
+
+      - name: Upload SARIF to Code Scanning (optional)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+
+      - name: Upload artifact (trivy-results.sarif)
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-results.sarif
+          path: trivy-results.sarif
