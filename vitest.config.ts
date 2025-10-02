@@ -48,11 +48,12 @@ export default defineConfig({
       ['apps/web/**/*.spec.{ts,tsx,js,jsx}', 'jsdom']
     ],
     globals: true,
-    deps: {
-      inline: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime']
-    },
+    // Note: `deps.inline` at test-level is deprecated; server.deps.inline + optimizeDeps.include
+    // already cover the needed inlining for react runtimes.
   setupFiles: [path.resolve(__dirname, 'test/setup.ts')],
-    reporters: [['default'], ['json', { outputFile: 'reports/vitest.json' }]],
+  // Use an absolute path for the custom reporter so Vite/Vitest won't attempt to bundle
+  // via require.resolve which can trigger static-analysis warnings on some systems.
+  reporters: [['default'], [normalize(path.resolve(__dirname, './scripts/vitest-atomic-reporter.cjs')), { outputFile: 'reports/vitest.json' }]],
     testTimeout: 8000,
     retry: 1,
     include: [

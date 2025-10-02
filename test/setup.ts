@@ -3,6 +3,10 @@ import { beforeAll, afterAll, beforeEach, afterEach } from 'vitest'
 import { fetch, Headers, Request, Response } from 'undici'
 
 // Setup global test environment
+// Tell React testing utilities that we're running in a React act()-capable environment
+// This avoids the repeated warning: "The current testing environment is not configured to support act(...)"
+;(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true
+
 beforeAll(async () => {
   // Global setup before all tests
   console.log('Setting up test environment...')
