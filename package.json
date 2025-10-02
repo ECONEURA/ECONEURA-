@@ -46,7 +46,8 @@
   "pnpm": {
     "overrides": {
       "react": "18.3.1",
-      "react-dom": "18.3.1"
+      "react-dom": "18.3.1",
+      "fast-redact": "3.5.2"
     }
   }
 }
