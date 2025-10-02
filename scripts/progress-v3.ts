@@ -6,7 +6,21 @@ import pc from "picocolors";
 import YAML from "yaml";
 import crypto from "node:crypto";
 import { execSync } from "node:child_process";
-import SwaggerParser from "@apidevtools/swagger-parser";
+// Lazy-load SwaggerParser so the script won't crash when devDeps aren't installed locally.
+let SwaggerParser: any | null = null;
+async function getSwaggerParser() {
+  if (SwaggerParser !== null) return SwaggerParser;
+  try {
+    const mod = await import("@apidevtools/swagger-parser");
+    // prefer default export when present
+    SwaggerParser = (mod && (mod as any).default) || mod;
+    return SwaggerParser;
+  } catch {
+    // Mark as unavailable to avoid repeated failed imports
+    SwaggerParser = null;
+    return null;
+  }
+}
 
 type Check =
   | { kind: "file_exists"; path: string }
@@ -59,7 +73,9 @@ function calcPrDelivery(target: number) {
 async function checkOpenApiRoute(p: string, route: string, method: string) {
   if (!exists(p)) return false;
   try {
-    const api = await SwaggerParser.parse(p);
+    const parser = await getSwaggerParser();
+    if (!parser) return false;
+    const api = await parser.parse(p);
     const apiAny = api as unknown as Record<string, any>;
     const paths = apiAny.paths || {};
     const entry = (paths as Record<string, any>)[route];
