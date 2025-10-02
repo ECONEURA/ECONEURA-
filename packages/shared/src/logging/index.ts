@@ -1,10 +1,23 @@
+/* eslint-disable no-console */
 // Lightweight logger compatibility layer used by other packages during typechecking
 // Keeps a very small API so callers importing '@econeura/shared/logging' work
 export const logger = {
-  info: (msg: string, ...args: any[]) => console.info(msg, ...(args || [])),
-  warn: (msg: string, ...args: any[]) => console.warn(msg, ...(args || [])),
-  error: (msg: string, ...args: any[]) => console.error(msg, ...(args || [])),
-  debug: (msg: string, ...args: any[]) => console.debug(msg, ...(args || [])),
+  info: (msg: string, ...args: any[]) => {
+    // eslint-disable-next-line no-console
+    return console.info(msg, ...(args || []));
+  },
+  warn: (msg: string, ...args: any[]) => {
+    // eslint-disable-next-line no-console
+    return console.warn(msg, ...(args || []));
+  },
+  error: (msg: string, ...args: any[]) => {
+    // eslint-disable-next-line no-console
+    return console.error(msg, ...(args || []));
+  },
+  debug: (msg: string, ...args: any[]) => {
+    // eslint-disable-next-line no-console
+    return console.debug(msg, ...(args || []));
+  },
 };
 
 // Also provide an 'apiLogger' quick shim used in some artifacts
