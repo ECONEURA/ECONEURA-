@@ -45,8 +45,9 @@ export default [
     },
     plugins: { '@typescript-eslint': tseslint },
     rules: {
-      '@typescript-eslint/no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
-      '@typescript-eslint/no-explicit-any': 'warn',
+  '@typescript-eslint/no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
+  // Temporalmente desactivada para evitar ruido en PRs mientras incrementamos cobertura y tipamos gradualmente.
+  '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-empty-function': 'off',
