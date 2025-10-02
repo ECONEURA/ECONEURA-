@@ -26,7 +26,8 @@ async function main() {
     try {
       await run(process.execPath, [possible, ...args]);
       return;
-    } catch (err) {
+    } catch (_err) {
+      void _err;
       // fallback to direct tsc if available in PATH
       try {
         await run('tsc', args);
@@ -37,19 +38,21 @@ async function main() {
         return;
       }
     }
-  } catch (e) {
+  } catch (_e) {
+    void _e;
     // couldn't resolve typescript via require.resolve, fallback to pnpm exec
     try {
       await run('pnpm', ['-w', 'exec', '--', 'tsc', ...args]);
       return;
-    } catch (err) {
+    } catch (_err2) {
+      void _err2;
       console.error('\nFailed to run tsc via require.resolve or pnpm. Please ensure typescript is installed.');
       process.exit(1);
     }
   }
 }
 
-main().catch((err) => {
-  console.error(err);
+main().catch((_err3) => {
+  console.error(_err3);
   process.exit(1);
 });
