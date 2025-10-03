@@ -58,14 +58,14 @@ if(-not $coverageFiles -or $coverageFiles.Count -eq 0){
 Write-Host "Found $($coverageFiles.Count) coverage files"
 
 # accumulator
-$totalStatements = 0
-$coveredStatements = 0
-$totalBranches = 0
-$coveredBranches = 0
-$totalFunctions = 0
-$coveredFunctions = 0
+$script:totalStatements = 0
+$script:coveredStatements = 0
+$script:totalBranches = 0
+$script:coveredBranches = 0
+$script:totalFunctions = 0
+$script:coveredFunctions = 0
 
-$perFile = @{}
+$script:perFile = @{}
 
 function Parse-V8Json($filePath){
   try{
@@ -90,11 +90,11 @@ function Parse-V8Json($filePath){
     try{ $bCount = $m.branchMap.PSObject.Properties.Count } catch { $bCount = 0 }
     try{ $bCov = ($m.b.PSObject.Properties | Where-Object { [int]$_.Value -gt 0 } | Measure-Object).Count } catch { $bCov = 0 }
 
-    $totalStatements += $sCount; $coveredStatements += $sCov
-    $totalFunctions += $fCount; $coveredFunctions += $fCov
-    $totalBranches += $bCount; $coveredBranches += $bCov
+  $script:totalStatements += $sCount; $script:coveredStatements += $sCov
+  $script:totalFunctions += $fCount; $script:coveredFunctions += $fCov
+  $script:totalBranches += $bCount; $script:coveredBranches += $bCov
 
-    $perFile[$name] = @{ statements=$sCount; coveredStatements=$sCov; functions=$fCount; coveredFunctions=$fCov; branches=$bCount; coveredBranches=$bCov }
+  $script:perFile[$name] = @{ statements=$sCount; coveredStatements=$sCov; functions=$fCount; coveredFunctions=$fCov; branches=$bCount; coveredBranches=$bCov }
   }
 }
 
@@ -111,11 +111,11 @@ function Parse-IstanbulSummary($filePath){
     $bCount = [int]($data.branches.total -as [int])
     $bCov = [int]($data.branches.covered -as [int])
 
-    $totalStatements += $sCount; $coveredStatements += $sCov
-    $totalFunctions += $fCount; $coveredFunctions += $fCov
-    $totalBranches += $bCount; $coveredBranches += $bCov
+  $script:totalStatements += $sCount; $script:coveredStatements += $sCov
+  $script:totalFunctions += $fCount; $script:coveredFunctions += $fCov
+  $script:totalBranches += $bCount; $script:coveredBranches += $bCov
 
-    $perFile[$name] = @{ statements=$sCount; coveredStatements=$sCov; functions=$fCount; coveredFunctions=$fCov; branches=$bCount; coveredBranches=$bCov }
+  $script:perFile[$name] = @{ statements=$sCount; coveredStatements=$sCov; functions=$fCount; coveredFunctions=$fCov; branches=$bCount; coveredBranches=$bCov }
   }
 }
 
@@ -140,10 +140,10 @@ function Parse-Lcov($filePath){
     }
   }
   # accumulate perFile
-  foreach($k in $perFile.Keys){
-    $totalStatements += $perFile[$k].statements; $coveredStatements += $perFile[$k].coveredStatements
-    $totalBranches += $perFile[$k].branches; $coveredBranches += $perFile[$k].coveredBranches
-    $totalFunctions += $perFile[$k].functions; $coveredFunctions += $perFile[$k].coveredFunctions
+  foreach($k in $script:perFile.Keys){
+    $script:totalStatements += $script:perFile[$k].statements; $script:coveredStatements += $script:perFile[$k].coveredStatements
+    $script:totalBranches += $script:perFile[$k].branches; $script:coveredBranches += $script:perFile[$k].coveredBranches
+    $script:totalFunctions += $script:perFile[$k].functions; $script:coveredFunctions += $script:perFile[$k].coveredFunctions
   }
 }
 
@@ -164,7 +164,7 @@ foreach($f in $coverageFiles){
   }
 }
 
-if($totalStatements -eq 0 -and $totalBranches -eq 0 -and $totalFunctions -eq 0){
+if($script:totalStatements -eq 0 -and $script:totalBranches -eq 0 -and $script:totalFunctions -eq 0){
   "NO METRICS: Parsers found zero totals" | Out-File -FilePath $outSummary -Encoding utf8
   "NO-METRICS-ZERO" | Out-File -FilePath $outDiag -Encoding utf8
   Write-Host 'No measurable metrics found in coverage artifacts.'
@@ -173,9 +173,9 @@ if($totalStatements -eq 0 -and $totalBranches -eq 0 -and $totalFunctions -eq 0){
 
 function Percent($num,$den){ if($den -eq 0){ return 100 } else { return [math]::Round(100.0 * $num / $den, 2) } }
 
-$pctStatements = Percent $coveredStatements $totalStatements
-$pctBranches = Percent $coveredBranches $totalBranches
-$pctFunctions = Percent $coveredFunctions $totalFunctions
+$pctStatements = Percent $script:coveredStatements $script:totalStatements
+$pctBranches = Percent $script:coveredBranches $script:totalBranches
+$pctFunctions = Percent $script:coveredFunctions $script:totalFunctions
 
 $threshold = $env:COVERAGE_THRESHOLD
 if(-not $threshold){ $threshold = 100 }
@@ -183,17 +183,17 @@ else { $threshold = [int]$threshold }
 
 $summary = @()
 $summary += "COVERAGE SUMMARY METRICS"
-$summary += "Total statements: $coveredStatements / $totalStatements ($pctStatements%)"
-$summary += "Total branches:   $coveredBranches / $totalBranches ($pctBranches%)"
-$summary += "Total functions:  $coveredFunctions / $totalFunctions ($pctFunctions%)"
+$summary += "Total statements: $script:coveredStatements / $script:totalStatements ($pctStatements%)"
+$summary += "Total branches:   $script:coveredBranches / $script:totalBranches ($pctBranches%)"
+$summary += "Total functions:  $script:coveredFunctions / $script:totalFunctions ($pctFunctions%)"
 $summary += "Threshold: $threshold% (env:COVERAGE_THRESHOLD)"
 
 $summary | Out-File -FilePath $outSummary -Encoding utf8
 
 $diag = @()
 $diag += "PER FILE (sample up to 200 entries)"
-foreach($k in ($perFile.Keys | Sort-Object) | Select-Object -First 200){
-  $v = $perFile[$k]
+foreach($k in ($script:perFile.Keys | Sort-Object) | Select-Object -First 200){
+  $v = $script:perFile[$k]
   $ps = Percent $v.coveredStatements $v.statements
   $pb = Percent $v.coveredBranches $v.branches
   $pf = Percent $v.coveredFunctions $v.functions
