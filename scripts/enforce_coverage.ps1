@@ -57,6 +57,36 @@ if(-not $coverageFiles -or $coverageFiles.Count -eq 0){
 
 Write-Host "Found $($coverageFiles.Count) coverage files"
 
+# If repository root contains a .coverage.ignore file, honor those patterns to exclude
+# lines (one pattern per line, supports simple wildcards '*' and path substrings).
+$ignoreFile = Join-Path $repoRoot '.coverage.ignore'
+$ignorePatterns = @()
+if (Test-Path $ignoreFile) {
+  Write-Host "Found .coverage.ignore; reading patterns"
+  $ignorePatterns = Get-Content $ignoreFile | ForEach-Object { $_.Trim() } | Where-Object { $_ -and -not $_.StartsWith('#') }
+  foreach ($pat in $ignorePatterns) { Write-Host "  ignore: $pat" }
+
+  # Filter coverageFiles by patterns
+  $coverageFiles = $coverageFiles | Where-Object {
+    $full = $_.FullName.Replace('/','\').ToLower()
+    $keep = $true
+    foreach ($pat in $ignorePatterns) {
+      $p = $pat.Replace('/','\').ToLower()
+      try {
+        if ($p -like '*`*') {
+          # If pattern contains wildcard characters, use -like directly
+          if ($full -like $p) { $keep = $false; break }
+        } else {
+          # substring match
+          if ($full -like "*${p}*") { $keep = $false; break }
+        }
+      } catch { if ($full -like "*${p}*") { $keep = $false; break } }
+    }
+    $keep
+  }
+  Write-Host "After .coverage.ignore filtering, $($coverageFiles.Count) coverage files remain"
+}
+
 # Filter out known locations that contain stale or disabled coverage artifacts
 # (e.g. backups, vendor node_modules copies, or our .artifacts directory).
 $coverageFiles = $coverageFiles | Where-Object {
@@ -121,20 +151,30 @@ function Parse-V8Json($filePath){
     $bCount = Count-Entries $m.branchMap
     # branches covered: values are arrays of branch hits -> count entries where any element > 0
     $bCov = 0
-    try{
-      if($m.b -ne $null){
-        $vals = @()
-        try{ $vals = @($m.b.Values) } catch { $vals = @() }
-        foreach($v in $vals){
-          if($v -is [System.Collections.IEnumerable]){
-            $any = ($v | Where-Object { $_ -gt 0 } | Measure-Object).Count
-            if($any -gt 0){ $bCov += 1 }
+    if($m.b -ne $null){
+      try{
+        # Prefer enumerating PSObject properties for predictable behavior across JSON shapes
+        $props = $m.b.PSObject.Properties
+        foreach($prop in $props){
+          $val = $prop.Value
+          if($val -is [System.Collections.IEnumerable]){
+            # check if any numeric entry > 0
+            $anyHits = ($val | Where-Object { try { ([int]$_) -gt 0 } catch { $false } } | Measure-Object).Count
+            if($anyHits -gt 0){ $bCov += 1 }
           } else {
-            if([int]$v -gt 0){ $bCov += 1 }
+            try{ if(([int]$val) -gt 0){ $bCov += 1 } } catch {}
           }
         }
+      } catch {
+        # Fallback: m.b might be an array or other enumerable
+        try{
+          foreach($v in @($m.b)){
+            $anyHits = ($v | Where-Object { try { ([int]$_) -gt 0 } catch { $false } } | Measure-Object).Count
+            if($anyHits -gt 0){ $bCov += 1 }
+          }
+        } catch {}
       }
-    } catch { $bCov = 0 }
+    }
 
     Write-Host "  -> $name : statements=$sCount covered=$sCov functions=$fCount coveredFns=$fCov branches=$bCount coveredBr=$bCov"
     $script:totalStatements += $sCount; $script:coveredStatements += $sCov

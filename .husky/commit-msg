@@ -1,2 +1,3 @@
+#!/usr/bin/env sh
 # Use commitlint for commit message validation
 npx --no-install commitlint --edit "$1"

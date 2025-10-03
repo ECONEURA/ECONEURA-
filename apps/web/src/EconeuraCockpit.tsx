@@ -559,16 +559,28 @@ export function OrgChart() {
  * - getPalette retorna estructura esperada y tiene fallback
  * - LogoEconeura smoke
  */
-(()=>{
+export function __RUN_SELF_TESTS(overrides?: { iconForAgent?: any; getDeptIcon?: any; getPalette?: any; LogoEconeura?: any }) {
   const failures: string[] = [];
   try {
-    ['Agente: Agenda Consejo','Agente: Resumen','Agente: OKR','Agente: Phishing Triage','Agente: X'].forEach(s=>{
-      const I = iconForAgent(s); if (!isReactComponent(I)) failures.push(`iconForAgent inválido: ${s}`);
+    const agentNames = ['Agente: Agenda Consejo','Agente: Resumen','Agente: OKR','Agente: Phishing Triage','Agente: X'];
+    agentNames.forEach(s=>{
+      const fn = overrides?.iconForAgent ?? iconForAgent;
+      const I = fn(s); if (!isReactComponent(I)) failures.push(`iconForAgent inválido: ${s}`);
     });
-  ['CEO','IA','CTO','CISO','UNKNOWN'].forEach(id=>{ const I=getDeptIcon(id); if(!isReactComponent(I)) failures.push(`dept icon inválido: ${id}`); const pal=getPalette(id); if(!pal?.accentText) failures.push(`palette inválido: ${id}`); });
-    const el = LogoEconeura(); if(!(el as any)?.props?.dangerouslySetInnerHTML?.__html) failures.push('Logo vacío');
+    const ids = ['CEO','IA','CTO','CISO','UNKNOWN'];
+    ids.forEach(id=>{
+      const gdi = overrides?.getDeptIcon ?? getDeptIcon;
+      const palFn = overrides?.getPalette ?? getPalette;
+      const I = gdi(id); if(!isReactComponent(I)) failures.push(`dept icon inválido: ${id}`);
+      const pal = palFn(id); if(!pal?.accentText) failures.push(`palette inválido: ${id}`);
+    });
+    const logoFn = overrides?.LogoEconeura ?? LogoEconeura;
+    const el = logoFn(); if(!(el as any)?.props?.dangerouslySetInnerHTML?.__html) failures.push('Logo vacío');
   } catch (e: any) { failures.push(`self-test: ${e?.message||e}`);} finally { if (failures.length) console.warn('[ECONEURA self-test]', failures); }
-})();
+}
+
+// Ejecutar self-tests en carga para mantener comportamiento actual
+__RUN_SELF_TESTS();
 
 // Export internal helpers only for test-time access. These are safe to ship.
 export const __TEST_HELPERS = {

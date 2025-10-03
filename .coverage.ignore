@@ -1,0 +1,21 @@
+# Coverage ignore patterns (one per line)
+# Substring matches or simple wildcard patterns
+
+# Ignore any coverage artifacts that live under backups or disabled directories
+disabled-packages
+*.disabled
+\node_modules\
+.artifacts\
+\.artifacts\
+# Ignore transpiled test artifacts and e2e bundles
+*.test.js
+*.spec.js
+*.e2e.*
+# Ignore common editor/backup files
+*.bak
+*.orig
+*.tmp
+
+# Ignore any vendor copies inside 'vendor' or '.vendor'
+vendor\
+.vendor\
