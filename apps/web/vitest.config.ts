@@ -23,12 +23,12 @@ export default defineConfig({
   // like 'react/jsx-dev-runtime' don't fail to resolve due to PNPM linking.
   { find: /^react\/jsx-runtime$/, replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-runtime.js')) },
   { find: /^react\/jsx-dev-runtime$/, replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-dev-runtime.js')) },
-  { find: 'react-dom', replacement: normalize(req.resolve('react-dom')) },
-  { find: 'react-dom/client', replacement: normalize(req.resolve('react-dom/client')) }
+  { find: 'react-dom', replacement: normalize(path.resolve(req.resolve('react-dom'))) },
+  { find: 'react-dom/client', replacement: normalize(path.resolve(__dirname, 'test/shims/react-dom-client.js')) }
     ]
   },
   optimizeDeps: {
-    include: ['react/jsx-runtime', 'react/jsx-dev-runtime', 'react', 'react-dom']
+    include: ['react/jsx-runtime', 'react/jsx-dev-runtime', 'react', 'react-dom', 'react-dom/client']
   },
   ssr: {
     noExternal: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime']
@@ -37,14 +37,21 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: [path.resolve(__dirname, 'src/test/setup.ts')],
+    deps: {
+      inline: ['react-dom/client']
+    },
   // Ignore generated/compiled JS test files and E2E test artifacts
   // so TSX sources are used by Vitest and disabled E2E files won't fail the run.
   exclude: ['**/*.test.js', '**/*.spec.js', '**/*.e2e.*'],
     coverage: {
+      provider: 'istanbul',
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',
         'src/test/',
+        '**/__tests__/**',
+        '**/*.test.*',
+        '**/*.spec.*',
         '**/*.d.ts',
         '**/*.config.*',
         '**/coverage/**',

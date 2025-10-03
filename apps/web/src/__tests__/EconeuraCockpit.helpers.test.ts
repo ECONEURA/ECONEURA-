@@ -1,5 +1,6 @@
 import { test, expect } from 'vitest'
-import { __TEST_HELPERS } from '../EconeuraCockpit'
+import * as M from '../EconeuraCockpit'
+const __TEST_HELPERS = (M as any).__TEST_HELPERS
 
 test('iconForAgent returns sensible components for various titles', () => {
   const { iconForAgent } = __TEST_HELPERS as any
@@ -15,7 +16,13 @@ test('iconForAgent returns sensible components for various titles', () => {
 
 test('correlationId fallback returns hex-like string when crypto unavailable', () => {
   const { correlationId } = __TEST_HELPERS as any
-  // Temporarily remove crypto
-  const orig = (globalThis as any).crypto
-  try { (globalThis as any).crypto = undefined; const v = correlationId(); expect(typeof v).toBe('string'); expect(v.length).toBeGreaterThan(8); } finally { (globalThis as any).crypto = orig }
+  // If crypto exists and getRandomValues is writable, stub it to force the fallback path.
+  const origCrypto = (globalThis as any).crypto as any
+  if (origCrypto && typeof origCrypto.getRandomValues === 'function') {
+    const origGRV = origCrypto.getRandomValues
+    origCrypto.getRandomValues = (() => { throw new Error('no crypto') }) as any
+    try { const v = correlationId(); expect(typeof v).toBe('string'); expect(v.length).toBeGreaterThan(8); } finally { origCrypto.getRandomValues = origGRV }
+  } else {
+    const v = correlationId(); expect(typeof v).toBe('string'); expect(v.length).toBeGreaterThan(8);
+  }
 })

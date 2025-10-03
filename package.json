@@ -54,7 +54,12 @@
     "overrides": {
       "react": "18.3.1",
       "react-dom": "18.3.1",
-      "fast-redact": "3.5.0"
+      "fast-redact": "3.5.0",
+      "vitest": "3.2.4",
+      "@vitest/coverage-v8": "3.2.4",
+      "@vitest/coverage-istanbul": "3.2.4",
+      "@vitest/coverage-istanbul-reporter": "3.2.4"
     }
   }
 }
+

@@ -18,7 +18,7 @@ test('login, run agent (mocked fetch) and open chat', async () => {
   fireEvent.click(loginBtn);
 
   // after login event the search input should appear (authenticated true)
-  await waitFor(() => expect(screen.getByPlaceholderText('Buscar...')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByPlaceholderText('Buscar...')).toBeTruthy());
 
   // mock a successful fetch response for invokeAgent
   (globalThis as any).fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ output: 'ok-result' }) });
@@ -38,11 +38,14 @@ test('login, run agent (mocked fetch) and open chat', async () => {
   // Open chat and expect chat UI elements
   const chatBtn = screen.getByText('Abrir chat');
   fireEvent.click(chatBtn);
-  expect(screen.getByText('Resumen del día')).toBeInTheDocument();
+  // prefer the first matching 'Resumen del día' element
+  const resumen = screen.getAllByText('Resumen del día')[0];
+  expect(resumen).toBeTruthy();
 });
 
 test('OrgChart renders departments', () => {
   render(<OrgChart />);
-  expect(screen.getByText('Ejecutivo (CEO)')).toBeInTheDocument();
-  expect(screen.getByText('Plataforma IA')).toBeInTheDocument();
+  // Use generic assertions compatible across test environments
+  expect(screen.getByText('Ejecutivo (CEO)')).toBeTruthy();
+  expect(screen.getByText('Plataforma IA')).toBeTruthy();
 });

@@ -22,6 +22,18 @@
 
 		}
 	},
-	"include": ["packages/**/*", "types/**/*"],
-	"exclude": ["node_modules"]
+		"include": ["packages/**/*", "types/**/*"],
+		"exclude": [
+			"node_modules",
+			".dev",
+			".husky",
+			"scripts",
+			"backups",
+			"backups/**",
+			"**/*.bak",
+			"**/*.backup",
+			"apps/**/src/test",
+			"apps/**/__tests__",
+			"apps/**/src/__tests__"
+		]
 }
