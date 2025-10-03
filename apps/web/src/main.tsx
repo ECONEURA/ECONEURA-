@@ -1,5 +1,5 @@
 import React from "react";
-import App from "./App";
+import React from "react";
 
 const defaultRoot = document.getElementById("root")!
 
@@ -26,7 +26,14 @@ export async function mountApp(root: HTMLElement | null = defaultRoot, forceClie
 			const mod = await import(dynamicPath)
 			createRoot = (mod as any).createRoot
 		}
-		if (createRoot && root) createRoot(root).render(<App />)
+			if (createRoot && root) {
+				// Import App lazily so tests can set up shims/global hooks before App's
+				// module (which may use JSX runtime imports) is evaluated.
+				const mod = await import('./App')
+				const App = (mod && mod.default) || mod
+				// Use React.createElement to avoid compiling JSX here
+				createRoot(root).render(React.createElement(App))
+			}
 	} catch (err) {
 		console.error('Failed to mount react-dom client', err)
 	}

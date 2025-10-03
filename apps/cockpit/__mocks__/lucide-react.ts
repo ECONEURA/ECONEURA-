@@ -17,4 +17,18 @@ export const Inbox = make('Inbox')
 export const Mail = make('Mail')
 export const TrendingUp = make('TrendingUp')
 
+// Additional icons used by EconeuraCockpit
+export const Crown = make('Crown')
+export const Cpu = make('Cpu')
+export const Shield = make('Shield')
+export const Workflow = make('Workflow')
+export const Users = make('Users')
+export const Target = make('Target')
+export const Brain = make('Brain')
+export const LineChart = make('LineChart')
+export const Wallet = make('Wallet')
+export const Database = make('Database')
+export const ShieldCheck = make('ShieldCheck')
+export const UserCheck = make('UserCheck')
+
 export default undefined

@@ -21,8 +21,9 @@ export default defineConfig({
   { find: 'react', replacement: normalize(req.resolve('react')) },
   // During tests, prefer local lightweight shims so transform-time imports
   // like 'react/jsx-dev-runtime' don't fail to resolve due to PNPM linking.
-  { find: /^react\/jsx-runtime$/, replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-runtime.js')) },
-  { find: /^react\/jsx-dev-runtime$/, replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-dev-runtime.js')) },
+  // Prefer CommonJS shims (SSR / vite-node) then fall back to ESM shims
+  { find: /^react\/jsx-runtime$/, replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-runtime.cjs')) },
+  { find: /^react\/jsx-dev-runtime$/, replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-dev-runtime.cjs')) },
   { find: 'react-dom', replacement: normalize(path.resolve(req.resolve('react-dom'))) },
   { find: 'react-dom/client', replacement: normalize(path.resolve(__dirname, 'test/shims/react-dom-client.js')) }
     ]
