@@ -569,3 +569,14 @@ export function OrgChart() {
     const el = LogoEconeura(); if(!(el as any)?.props?.dangerouslySetInnerHTML?.__html) failures.push('Logo vacío');
   } catch (e: any) { failures.push(`self-test: ${e?.message||e}`);} finally { if (failures.length) console.warn('[ECONEURA self-test]', failures); }
 })();
+
+// Export internal helpers only for test-time access. These are safe to ship.
+export const __TEST_HELPERS = {
+  isReactComponent,
+  readVar,
+  correlationId,
+  invokeAgent,
+  iconForAgent,
+  getDeptIcon,
+  getPalette,
+};
