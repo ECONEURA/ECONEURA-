@@ -8,6 +8,9 @@
     "watch": "npm run build -- --watch",
     "test": "vitest",
     "test:ci": "vitest run --reporter=dot --run"
+  ,"lint": "eslint \"src/**\" --ext .ts,.tsx --max-warnings=0"
+  ,"typecheck": "tsc -p tsconfig.json --noEmit"
+  ,"test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "react": "18.3.1",

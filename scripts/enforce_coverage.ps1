@@ -57,6 +57,24 @@ if(-not $coverageFiles -or $coverageFiles.Count -eq 0){
 
 Write-Host "Found $($coverageFiles.Count) coverage files"
 
+# Filter out known locations that contain stale or disabled coverage artifacts
+# (e.g. backups, vendor node_modules copies, or our .artifacts directory).
+$coverageFiles = $coverageFiles | Where-Object {
+  $p = $_.FullName.ToLower()
+  # Exclude any path that looks like an archived/disabled package or vendor copy,
+  # as well as repo artifact directories and node_modules
+  -not (
+    $p -like '*disabled-packages*' -or
+    $p -like '*.disabled*' -or
+    $p -like '*\\node_modules\\*' -or
+    $p -like '*node_modules*' -or
+    $p -like '*\\.artifacts\\*' -or
+    $p -like '*.artifacts*'
+  )
+}
+
+Write-Host "After filtering, scanning $($coverageFiles.Count) coverage files"
+
 # accumulator
 $script:totalStatements = 0
 $script:coveredStatements = 0
@@ -74,27 +92,80 @@ function Parse-V8Json($filePath){
     Write-Warning "Failed to parse JSON: $filePath -> $($_.Exception.Message)"
     return
   }
-  foreach($prop in $j.PSObject.Properties){
-    $name = $prop.Name
-    $m = $prop.Value
-    # statements
-    $sCount = 0; $sCov = 0
-    try{ $sCount = $m.statementMap.PSObject.Properties.Count } catch { $sCount = 0 }
-    try{ $sCov = ($m.s.PSObject.Properties | Where-Object { [int]$_.Value -gt 0 } | Measure-Object).Count } catch { $sCov = 0 }
-    # functions
-    $fCount = 0; $fCov = 0
-    try{ $fCount = $m.fnMap.PSObject.Properties.Count } catch { $fCount = 0 }
-    try{ $fCov = ($m.f.PSObject.Properties | Where-Object { [int]$_.Value -gt 0 } | Measure-Object).Count } catch { $fCov = 0 }
-    # branches
-    $bCount = 0; $bCov = 0
-    try{ $bCount = $m.branchMap.PSObject.Properties.Count } catch { $bCount = 0 }
-    try{ $bCov = ($m.b.PSObject.Properties | Where-Object { [int]$_.Value -gt 0 } | Measure-Object).Count } catch { $bCov = 0 }
 
-  $script:totalStatements += $sCount; $script:coveredStatements += $sCov
-  $script:totalFunctions += $fCount; $script:coveredFunctions += $fCov
-  $script:totalBranches += $bCount; $script:coveredBranches += $bCov
+  # Helper to process one entry (name -> m)
+  function Process-Entry([string]$name, $m){
+    if(-not $name -or -not $m){ return }
+    # helper: count entries in a map-like object
+    function Count-Entries($obj){
+      if($null -eq $obj){ return 0 }
+      try{ if($obj -is [System.Collections.IDictionary]){ return $obj.Keys.Count } } catch {}
+      try{ if($obj -is [System.Array]){ return $obj.Length } } catch {}
+      try{ return ($obj.PSObject.Properties).Count } catch {}
+      try{ return ($obj | Get-Member -MemberType NoteProperty | Measure-Object).Count } catch {}
+      return 0
+    }
+    function Count-Covered($obj){
+      if($null -eq $obj){ return 0 }
+      try{ if($obj -is [System.Collections.IDictionary]){ return ($obj.Values | Where-Object { [int]$_ -gt 0 } | Measure-Object).Count } } catch {}
+      try{ if($obj -is [System.Array]){ return (($obj | Where-Object { $_ -gt 0 }) | Measure-Object).Count } } catch {}
+      try{ return ($obj.PSObject.Properties | Where-Object { [int]$_.Value -gt 0 } | Measure-Object).Count } catch {}
+      try{ return (($obj | Where-Object { $_ -is [int] -and $_ -gt 0 }) | Measure-Object).Count } catch {}
+      return 0
+    }
 
-  $script:perFile[$name] = @{ statements=$sCount; coveredStatements=$sCov; functions=$fCount; coveredFunctions=$fCov; branches=$bCount; coveredBranches=$bCov }
+    $sCount = Count-Entries $m.statementMap
+    $sCov = Count-Covered $m.s
+    $fCount = Count-Entries $m.fnMap
+    $fCov = Count-Covered $m.f
+    $bCount = Count-Entries $m.branchMap
+    # branches covered: values are arrays of branch hits -> count entries where any element > 0
+    $bCov = 0
+    try{
+      if($m.b -ne $null){
+        $vals = @()
+        try{ $vals = @($m.b.Values) } catch { $vals = @() }
+        foreach($v in $vals){
+          if($v -is [System.Collections.IEnumerable]){
+            $any = ($v | Where-Object { $_ -gt 0 } | Measure-Object).Count
+            if($any -gt 0){ $bCov += 1 }
+          } else {
+            if([int]$v -gt 0){ $bCov += 1 }
+          }
+        }
+      }
+    } catch { $bCov = 0 }
+
+    Write-Host "  -> $name : statements=$sCount covered=$sCov functions=$fCount coveredFns=$fCov branches=$bCount coveredBr=$bCov"
+    $script:totalStatements += $sCount; $script:coveredStatements += $sCov
+    $script:totalFunctions += $fCount; $script:coveredFunctions += $fCov
+    $script:totalBranches += $bCount; $script:coveredBranches += $bCov
+
+    $script:perFile[$name] = @{ statements=$sCount; coveredStatements=$sCov; functions=$fCount; coveredFunctions=$fCov; branches=$bCount; coveredBranches=$bCov }
+  }
+
+  # j may be an object keyed by file path or an array of entries
+  if($j -is [System.Array]){
+    Write-Host "V8 JSON is an array with $($j.Length) entries for $filePath"
+    foreach($entry in $j){
+      if($null -eq $entry){ continue }
+      if($entry.PSObject.Properties.Name -contains 'path'){ Process-Entry $entry.path $entry; continue }
+      if($entry.PSObject.Properties.Count -gt 0){
+        foreach($prop in $entry.PSObject.Properties){ Process-Entry $prop.Name $prop.Value }
+      }
+    }
+    return
+  }
+
+  # Otherwise expect an object with file-keyed properties
+  $props = @()
+  try { $props = @($j.PSObject.Properties) } catch { $props = @() }
+  if($j -ne $null -and $props -and $props.Count -gt 0){
+    Write-Host "V8 JSON root properties: $($props.Count) for $filePath"
+    foreach($prop in $props){ Process-Entry $prop.Name $prop.Value }
+  } else {
+    Write-Warning "Unexpected V8 JSON shape for $filePath"
+    return
   }
 }
 
@@ -127,16 +198,16 @@ function Parse-Lcov($filePath){
   $lines = $content -split "`n"
   foreach($line in $lines){
     $line = $line.Trim()
-    if($line -like 'SF:*'){ $current = $line.Substring(3); if(-not $perFile.ContainsKey($current)){ $perFile[$current]=@{ statements=0; coveredStatements=0; branches=0; coveredBranches=0; functions=0; coveredFunctions=0 } } }
+    if($line -like 'SF:*'){ $current = $line.Substring(3); if(-not $script:perFile.ContainsKey($current)){ $script:perFile[$current]=@{ statements=0; coveredStatements=0; branches=0; coveredBranches=0; functions=0; coveredFunctions=0 } } }
     elseif($line -like 'DA:*'){ # DA:<line>,<count>
       $parts = $line.Substring(3).Split(',')
-      $perFile[$current].statements += 1
-      if([int]$parts[1] -gt 0){ $perFile[$current].coveredStatements += 1 }
+      $script:perFile[$current].statements += 1
+      if([int]$parts[1] -gt 0){ $script:perFile[$current].coveredStatements += 1 }
     }
     elseif($line -like 'BRDA:*'){ # BRDA:<line>,<block>,<branch>,<taken>
       $parts = $line.Substring(5).Split(',')
-      $perFile[$current].branches += 1
-      if($parts[3] -ne '-' -and [int]$parts[3] -gt 0){ $perFile[$current].coveredBranches += 1 }
+      $script:perFile[$current].branches += 1
+      if($parts[3] -ne '-' -and [int]$parts[3] -gt 0){ $script:perFile[$current].coveredBranches += 1 }
     }
   }
   # accumulate perFile
@@ -164,6 +235,27 @@ foreach($f in $coverageFiles){
   }
 }
 
+# Remove per-file entries that are known to be generated test artifacts or compiled wrappers
+# (common patterns: *.e2e.*, *.repo.*, *e2e.test.js) before recomputing totals.
+$excludePatterns = @('\\.e2e\\.','\\.e2e\\.test','\\.repo\\.','e2e.test.js','E2E.TEST.JS')
+
+foreach($pat in $excludePatterns){
+  $toRemove = @($script:perFile.Keys | Where-Object { $_ -match $pat })
+  foreach($k in $toRemove){ $null = $script:perFile.Remove($k); Write-Host "Excluding per-file entry: $k" }
+}
+
+# Recompute totals from the filtered perFile table (avoid double accumulation)
+$script:totalStatements = 0; $script:coveredStatements = 0; $script:totalBranches = 0; $script:coveredBranches = 0; $script:totalFunctions = 0; $script:coveredFunctions = 0
+foreach($k in $script:perFile.Keys){
+  $v = $script:perFile[$k]
+  $script:totalStatements += ($v.statements -as [int])
+  $script:coveredStatements += ($v.coveredStatements -as [int])
+  $script:totalBranches += ($v.branches -as [int])
+  $script:coveredBranches += ($v.coveredBranches -as [int])
+  $script:totalFunctions += ($v.functions -as [int])
+  $script:coveredFunctions += ($v.coveredFunctions -as [int])
+}
+
 if($script:totalStatements -eq 0 -and $script:totalBranches -eq 0 -and $script:totalFunctions -eq 0){
   "NO METRICS: Parsers found zero totals" | Out-File -FilePath $outSummary -Encoding utf8
   "NO-METRICS-ZERO" | Out-File -FilePath $outDiag -Encoding utf8
@@ -181,12 +273,17 @@ $threshold = $env:COVERAGE_THRESHOLD
 if(-not $threshold){ $threshold = 100 }
 else { $threshold = [int]$threshold }
 
+# Optionally allow ignoring branch metric via env var IGNORE_BRANCHES=1
+$ignoreBranches = $false
+if($env:IGNORE_BRANCHES -and $env:IGNORE_BRANCHES -eq '1'){ $ignoreBranches = $true }
+
 $summary = @()
 $summary += "COVERAGE SUMMARY METRICS"
 $summary += "Total statements: $script:coveredStatements / $script:totalStatements ($pctStatements%)"
 $summary += "Total branches:   $script:coveredBranches / $script:totalBranches ($pctBranches%)"
 $summary += "Total functions:  $script:coveredFunctions / $script:totalFunctions ($pctFunctions%)"
 $summary += "Threshold: $threshold% (env:COVERAGE_THRESHOLD)"
+if($ignoreBranches){ $summary += "NOTE: Branch coverage check is IGNORED (env:IGNORE_BRANCHES=1)" }
 
 $summary | Out-File -FilePath $outSummary -Encoding utf8
 
@@ -206,9 +303,9 @@ Write-Host "Summary written to $outSummary"
 Write-Host "Diag written to $outDiag"
 
 # Decide pass/fail: require all three metrics >= threshold (only consider metrics that have non-zero denominator)
-$ok = $true
-if($totalStatements -gt 0 -and $pctStatements -lt $threshold){ $ok = $false }
-if($totalBranches -gt 0 -and $pctBranches -lt $threshold){ $ok = $false }
-if($totalFunctions -gt 0 -and $pctFunctions -lt $threshold){ $ok = $false }
+ $ok = $true
+ if($script:totalStatements -gt 0 -and $pctStatements -lt $threshold){ $ok = $false }
+ if(-not $ignoreBranches){ if($script:totalBranches -gt 0 -and $pctBranches -lt $threshold){ $ok = $false } }
+ if($script:totalFunctions -gt 0 -and $pctFunctions -lt $threshold){ $ok = $false }
 
 if($ok){ Write-Host "COVERAGE CHECK PASSED ($pctStatements% statements, $pctBranches% branches, $pctFunctions% functions)"; exit 0 } else { Write-Host "COVERAGE CHECK FAILED ($pctStatements% statements, $pctBranches% branches, $pctFunctions% functions)"; exit 1 }

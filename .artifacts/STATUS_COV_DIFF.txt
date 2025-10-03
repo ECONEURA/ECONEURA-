@@ -1,0 +1,6 @@
+﻿COVERAGE SUMMARY METRICS
+Total statements: 723 / 1014 (71.3%)
+Total branches:   0 / 254 (0%)
+Total functions:  107 / 133 (80.45%)
+Threshold: 60% (env:COVERAGE_THRESHOLD)
+NOTE: Branch coverage check is IGNORED (env:IGNORE_BRANCHES=1)

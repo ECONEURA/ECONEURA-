@@ -1,0 +1,65 @@
+﻿PER FILE (sample up to 200 entries)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\__tests__\smoke.spec.tsx
+  statements: 8/8 (100%)  branches: 0/2 (0%)  functions: 0/0 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\App.js
+  statements: 4/4 (100%)  branches: 0/0 (100%)  functions: 0/0 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\App.tsx
+  statements: 1/2 (50%)  branches: 0/0 (100%)  functions: 0/1 (0%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\EconeuraCockpit.e2e.test.tsx
+  statements: 0/0 (100%)  branches: 0/1 (0%)  functions: 1/1 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\EconeuraCockpit.js
+  statements: 3/3 (100%)  branches: 0/0 (100%)  functions: 0/0 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\EconeuraCockpit.tsx
+  statements: 162/429 (37.76%)  branches: 0/43 (0%)  functions: 8/17 (47.06%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\main.js
+  statements: 0/1 (0%)  branches: 0/1 (0%)  functions: 0/1 (0%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\apps\web\src\main.tsx
+  statements: 0/5 (0%)  branches: 0/1 (0%)  functions: 0/1 (0%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\ai\cost-utils.ts
+  statements: 7/7 (100%)  branches: 0/3 (0%)  functions: 2/2 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\admin-client.ts
+  statements: 9/9 (100%)  branches: 0/3 (0%)  functions: 3/3 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\ai-client.ts
+  statements: 8/8 (100%)  branches: 0/4 (0%)  functions: 3/3 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\flows-client.ts
+  statements: 8/8 (100%)  branches: 0/3 (0%)  functions: 3/3 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\integrations-client.ts
+  statements: 8/8 (100%)  branches: 0/3 (0%)  functions: 3/3 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+  statements: 33/33 (100%)  branches: 0/5 (0%)  functions: 5/5 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\config.ts
+  statements: 66/66 (100%)  branches: 0/21 (0%)  functions: 5/5 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core\index.ts
+  statements: 1/1 (100%)  branches: 0/0 (100%)  functions: 0/0 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\events.ts
+  statements: 1/1 (100%)  branches: 0/0 (100%)  functions: 0/0 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\graph\env.guard.ts
+  statements: 5/7 (71.43%)  branches: 0/3 (0%)  functions: 2/2 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\health.ts
+  statements: 49/49 (100%)  branches: 0/15 (0%)  functions: 7/7 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+  statements: 9/9 (100%)  branches: 0/1 (0%)  functions: 1/1 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+  statements: 96/107 (89.72%)  branches: 0/52 (0%)  functions: 16/16 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+  statements: 31/31 (100%)  branches: 0/19 (0%)  functions: 19/31 (61.29%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics\index.ts
+  statements: 1/1 (100%)  branches: 0/0 (100%)  functions: 0/0 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+  statements: 55/55 (100%)  branches: 0/18 (0%)  functions: 5/5 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+  statements: 10/10 (100%)  branches: 0/2 (0%)  functions: 2/2 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\otel\index.ts
+  statements: 6/6 (100%)  branches: 0/2 (0%)  functions: 2/2 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+  statements: 57/57 (100%)  branches: 0/22 (0%)  functions: 7/7 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+  statements: 52/52 (100%)  branches: 0/18 (0%)  functions: 5/5 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+  statements: 1/1 (100%)  branches: 0/2 (0%)  functions: 1/1 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation.ts
+  statements: 20/24 (83.33%)  branches: 0/5 (0%)  functions: 3/5 (60%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\crm.ts
+  statements: 6/6 (100%)  branches: 0/3 (0%)  functions: 2/2 (100%)
+C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\erp.ts
+  statements: 6/6 (100%)  branches: 0/2 (0%)  functions: 2/2 (100%)

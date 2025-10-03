@@ -82,7 +82,10 @@ export default [
       'f1_*.js',
       'tmp-*.js',
       'node_modules/**',
+      // ignore build artifacts anywhere in the repo
       'dist/**',
+      '**/dist/**',
+      '**/*/dist/**',
       'build/**',
       '.next/**',
       'coverage/**',

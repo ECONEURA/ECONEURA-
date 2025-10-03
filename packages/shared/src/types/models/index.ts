@@ -21,3 +21,7 @@ export type CreateActivity = Partial<Activity> & { type?: string };
 export type UpdateActivity = Partial<Activity>;
 
 export type PaginationResponse = { cursor?: string | null; limit?: number; total?: number };
+
+export function modelTypesAvailable() {
+	return true
+}

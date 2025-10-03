@@ -11,7 +11,15 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       reportsDirectory: 'coverage',
       include: ['src/**/*.ts'],
-      exclude: ['src/**/*.test.ts', 'src/**/*.spec.ts', 'src/__auto_tests__/**']
+      // exclude tests, auto tests and type-only or generated folders that should not
+      // count towards function/statement/line coverage
+      exclude: [
+        'src/**/*.test.ts',
+        'src/**/*.spec.ts',
+        'src/__auto_tests__/**',
+        'src/schemas/**',
+        'src/types/**'
+      ]
     },
     include: ['src/**/*.{test,spec}.ts'],
     exclude: ['**/node_modules/**', 'src/__auto_tests__/**']

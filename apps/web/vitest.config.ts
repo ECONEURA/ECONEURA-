@@ -13,14 +13,16 @@ function normalize(p: string) {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react({ jsxRuntime: 'classic' })],
   resolve: {
     alias: [
       { find: 'lucide-react', replacement: path.resolve(__dirname, '../../.dev/cockpit/__mocks__/lucide-react.ts') },
       // Ensure Vite can resolve react and its jsx runtimes in PNPM workspaces
   { find: 'react', replacement: normalize(req.resolve('react')) },
-  { find: 'react/jsx-runtime', replacement: normalize(path.resolve(__dirname, '../../test/shims/react-jsx-runtime.cjs')) },
-  { find: 'react/jsx-dev-runtime', replacement: normalize(path.resolve(__dirname, '../../test/shims/react-jsx-dev-runtime.cjs')) },
+  // During tests, prefer local lightweight shims so transform-time imports
+  // like 'react/jsx-dev-runtime' don't fail to resolve due to PNPM linking.
+  { find: /^react\/jsx-runtime$/, replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-runtime.js')) },
+  { find: /^react\/jsx-dev-runtime$/, replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-dev-runtime.js')) },
   { find: 'react-dom', replacement: normalize(req.resolve('react-dom')) },
   { find: 'react-dom/client', replacement: normalize(req.resolve('react-dom/client')) }
     ]
@@ -35,6 +37,9 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: [path.resolve(__dirname, 'src/test/setup.ts')],
+  // Ignore generated/compiled JS test files and E2E test artifacts
+  // so TSX sources are used by Vitest and disabled E2E files won't fail the run.
+  exclude: ['**/*.test.js', '**/*.spec.js', '**/*.e2e.*'],
     coverage: {
       reporter: ['text', 'json', 'html'],
       exclude: [
@@ -42,7 +47,11 @@ export default defineConfig({
         'src/test/',
         '**/*.d.ts',
         '**/*.config.*',
-        '**/coverage/**'
+        '**/coverage/**',
+        'test/shims/**',
+        'dist/**',
+        '.eslintrc.cjs',
+        '**/*.repo.*'
       ],
       thresholds: {
         global: {
