@@ -23,13 +23,17 @@ Write-Host "Checking repository for forbidden/generated files..."
 $matches = @()
 foreach($pat in $forbiddenPatterns){
   try{
-    $out = & git ls-files -- $pat 2>$null
-    if($out){ $matches += $out }
+    # Run git ls-files and split into lines to ensure we always accumulate an array of paths
+    $raw = & git ls-files -- $pat 2>$null
+    if($raw){
+      $out = $raw -split "`n" | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
+      if($out) { $matches += $out }
+    }
   } catch { }
 }
 
-$matches = $matches | Sort-Object -Unique
-if($matches.Count -gt 0){
+$matches = @($matches | Where-Object { $_ -ne '' } | Sort-Object -Unique)
+if((@($matches)).Count -gt 0){
   Write-Host "Found forbidden/tracked files:" -ForegroundColor Yellow
   foreach($m in $matches){ Write-Host "  " $m }
   Write-Host "Please remove these files from the index (git rm --cached ...) or add to .gitignore as appropriate." -ForegroundColor Red

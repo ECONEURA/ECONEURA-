@@ -27,3 +27,9 @@ reports/
 .econeura_backup/
 backups/
 *.log
+.github/workflows/backups/
+*.backup
+apps/web/package-lock.json
+# Ignore compiled JS artifacts accidentally checked into source
+apps/web/src/*.js
+apps/web/src/**/*.js

@@ -18,3 +18,7 @@ export type PaginationResponse = {
 };
 
 export type PaginationResponseApi = PaginationResponse;
+
+export function apiTypesAvailable() {
+	return true
+}

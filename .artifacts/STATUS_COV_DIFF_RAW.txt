@@ -1,0 +1,19 @@
+{
+    "funW":  85.59,
+    "vals":  [
+                 {
+                     "stm":  91.64,
+                     "fun":  85.59
+                 }
+             ],
+    "stmW":  91.64,
+    "rawTotals":  {
+                      "fc":  95,
+                      "tc":  515,
+                      "fs":  111,
+                      "ts":  562
+                  },
+    "targets":  [
+                    "packages/shared"
+                ]
+}

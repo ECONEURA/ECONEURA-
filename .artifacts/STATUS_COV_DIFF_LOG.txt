@@ -1,0 +1,416 @@
+ReadCovTotals: loading packages\shared\coverage\coverage-final.json
+Loaded JSON. topProps=1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\config.ts
+ sprops=66
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\events.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\health.ts
+ sprops=49
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+ sprops=31
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+ sprops=55
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+ sprops=10
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+ sprops=57
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+ sprops=52
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation.ts
+ sprops=24
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\ai\cost-utils.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\admin-client.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\ai-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\flows-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\integrations-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+ sprops=33
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\graph\env.guard.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+ sprops=107
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\otel\index.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\crm.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\erp.ts
+ sprops=6
+Totals computed ts=562 tc=515 fs=111 fc=95
+Pct computed stm=91.64 fun=85.59
+ReadCovTotals: loading packages\shared\coverage\coverage-final.json
+Loaded JSON. topProps=1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\config.ts
+ sprops=66
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\events.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\health.ts
+ sprops=49
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+ sprops=31
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+ sprops=55
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+ sprops=10
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+ sprops=57
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+ sprops=52
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation.ts
+ sprops=24
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\ai\cost-utils.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\admin-client.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\ai-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\flows-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\integrations-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+ sprops=33
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\graph\env.guard.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+ sprops=107
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\otel\index.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\crm.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\erp.ts
+ sprops=6
+Totals computed ts=562 tc=515 fs=111 fc=95
+Pct computed stm=91.64 fun=85.59
+ReadCovTotals: loading packages\shared\coverage\coverage-final.json
+Loaded JSON. topProps=1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\config.ts
+ sprops=66
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\events.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\health.ts
+ sprops=49
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+ sprops=31
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+ sprops=55
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+ sprops=10
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+ sprops=57
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+ sprops=52
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation.ts
+ sprops=24
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\ai\cost-utils.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\admin-client.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\ai-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\flows-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\integrations-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+ sprops=33
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\graph\env.guard.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+ sprops=107
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\otel\index.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\crm.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\erp.ts
+ sprops=6
+Totals computed ts=562 tc=515 fs=111 fc=95
+Pct computed stm=91.64 fun=85.59
+ReadCovTotals: loading packages\shared\coverage\coverage-final.json
+Loaded JSON. topProps=1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\config.ts
+ sprops=66
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\events.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\health.ts
+ sprops=49
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+ sprops=31
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+ sprops=55
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+ sprops=10
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+ sprops=57
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+ sprops=52
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation.ts
+ sprops=24
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\ai\cost-utils.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\admin-client.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\ai-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\flows-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\integrations-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+ sprops=33
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\graph\env.guard.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+ sprops=107
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\otel\index.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\crm.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\erp.ts
+ sprops=6
+Totals computed ts=562 tc=515 fs=111 fc=95
+Pct computed stm=91.64 fun=85.59
+ReadCovTotals: loading packages\shared\coverage\coverage-final.json
+Loaded JSON. topProps=1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\config.ts
+ sprops=66
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\events.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\health.ts
+ sprops=49
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+ sprops=31
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+ sprops=55
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+ sprops=10
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+ sprops=57
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+ sprops=52
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation.ts
+ sprops=24
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\ai\cost-utils.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\admin-client.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\ai-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\flows-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\integrations-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+ sprops=33
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\graph\env.guard.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+ sprops=107
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\otel\index.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\crm.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\erp.ts
+ sprops=6
+Totals computed ts=562 tc=515 fs=111 fc=95
+Pct computed stm=91.64 fun=85.59
+ReadCovTotals: loading packages\shared\coverage\coverage-final.json
+Loaded JSON. topProps=1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\config.ts
+ sprops=66
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\events.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\health.ts
+ sprops=49
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+ sprops=31
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+ sprops=55
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+ sprops=10
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+ sprops=57
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+ sprops=52
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation.ts
+ sprops=24
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\ai\cost-utils.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\admin-client.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\ai-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\flows-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\integrations-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+ sprops=33
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\graph\env.guard.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+ sprops=107
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\otel\index.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\crm.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\erp.ts
+ sprops=6
+Totals computed ts=562 tc=515 fs=111 fc=95
+Pct computed stm=91.64 fun=85.59
+ReadCovTotals: loading packages\shared\coverage\coverage-final.json
+Loaded JSON. topProps=1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\config.ts
+ sprops=66
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\events.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\health.ts
+ sprops=49
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+ sprops=31
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+ sprops=55
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+ sprops=10
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+ sprops=57
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+ sprops=52
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation.ts
+ sprops=24
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\ai\cost-utils.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\admin-client.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\ai-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\flows-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\integrations-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+ sprops=33
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\graph\env.guard.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+ sprops=107
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\otel\index.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\crm.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\erp.ts
+ sprops=6
+Totals computed ts=562 tc=515 fs=111 fc=95
+Pct computed stm=91.64 fun=85.59
+ReadCovTotals: loading packages\shared\coverage\coverage-final.json
+Loaded JSON. topProps=1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\config.ts
+ sprops=66
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\events.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\health.ts
+ sprops=49
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\index.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics.ts
+ sprops=31
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\middleware.ts
+ sprops=55
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\minimal.ts
+ sprops=10
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\rate-limiter.ts
+ sprops=57
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\retry.ts
+ sprops=52
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation.ts
+ sprops=24
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\ai\cost-utils.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\admin-client.ts
+ sprops=9
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\ai-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\flows-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\integrations-client.ts
+ sprops=8
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\clients\service-client.ts
+ sprops=33
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\core\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\graph\env.guard.ts
+ sprops=7
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\logging\index.ts
+ sprops=107
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\metrics\index.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\otel\index.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\utils\fetch-safe.ts
+ sprops=1
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\crm.ts
+ sprops=6
+Inspecting prop: C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared\src\validation\erp.ts
+ sprops=6
+Totals computed ts=562 tc=515 fs=111 fc=95
+Pct computed stm=91.64 fun=85.59

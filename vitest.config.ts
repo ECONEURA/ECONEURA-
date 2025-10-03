@@ -14,9 +14,9 @@ export default defineConfig({
   esbuild: { sourcemap: true },
   resolve: {
     alias: [
-  // Prefer local CJS shims for React jsx runtimes so tests get exact function references
-  { find: 'react/jsx-runtime', replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-runtime.cjs')) },
-  { find: 'react/jsx-dev-runtime', replacement: normalize(path.resolve(__dirname, 'test/shims/react-jsx-dev-runtime.cjs')) },
+  // Prefer the actual installed react runtime modules so Vite can resolve helper imports
+  { find: 'react/jsx-runtime', replacement: normalize(req.resolve('react/jsx-runtime')) },
+  { find: 'react/jsx-dev-runtime', replacement: normalize(req.resolve('react/jsx-dev-runtime')) },
       { find: '@', replacement: path.resolve(__dirname, './apps/web/src') },
       { find: '@shared', replacement: path.resolve(__dirname, './packages/shared/src') },
       { find: '@econeura/shared', replacement: path.resolve(__dirname, './packages/shared/src') },

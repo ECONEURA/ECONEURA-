@@ -1,0 +1,12 @@
+# Ignore compiled artifacts and dependencies
+**/dist/**
+node_modules/
+**/*.min.js
+**/build/**
+**/.next/**
+**/.vercel/**
+**/out/**
+
+# Keep local config and scripts
+!.eslintrc.js
+!.eslint.config.js

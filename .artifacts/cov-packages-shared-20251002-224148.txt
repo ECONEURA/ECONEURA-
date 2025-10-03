@@ -1,0 +1,2 @@
+TIMEOUT pnpm --filter "./packages/shared" run test:coverage --silent
+WARN: coverage fail → continúo
