@@ -1,1 +1,0 @@
-Sin cambios en cockpit/web → forzar chequeo rápido
