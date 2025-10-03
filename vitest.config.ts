@@ -90,7 +90,13 @@ export default defineConfig({
         'dist/',
         'build/',
         '.next/',
-        'coverage/'
+        'coverage/',
+        // exclude package-local generated schemas and types which are not runtime code
+        'packages/*/src/schemas/**',
+        'packages/*/src/types/**',
+        // also exclude shared package specific folders just in case
+        'packages/shared/src/schemas/**',
+        'packages/shared/src/types/**'
       ],
       thresholds: {
         // Temporarily relax thresholds so CI can be brought to green while

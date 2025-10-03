@@ -22,3 +22,8 @@ apps/*/dist
 
 # Generated reports from CI/tools
 reports/
+
+# Local backups and temporary artifacts
+.econeura_backup/
+backups/
+*.log
