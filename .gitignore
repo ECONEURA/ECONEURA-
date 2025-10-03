@@ -27,3 +27,6 @@ reports/
 .econeura_backup/
 backups/
 *.log
+.github/workflows/backups/
+*.backup
+apps/web/package-lock.json
