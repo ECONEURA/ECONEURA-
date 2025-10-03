@@ -1,2 +1,0 @@
-TIMEOUT pnpm --filter "./apps/cockpit" run test:coverage --silent
-WARN: coverage fail → continúo

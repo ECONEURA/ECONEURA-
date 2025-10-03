@@ -33,3 +33,6 @@ apps/web/package-lock.json
 # Ignore compiled JS artifacts accidentally checked into source
 apps/web/src/*.js
 apps/web/src/**/*.js
+ 
+# Coverage/diagnostics artifacts created by scripts (should not be tracked)
+.artifacts/
