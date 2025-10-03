@@ -7,8 +7,10 @@
     "declarationMap": true,
     "sourceMap": true,
     "noEmit": false,
-  "composite": true,
-  "incremental": true
+    "composite": true,
+    "incremental": true,
+    // Add vitest types for test globals when running typecheck during pre-push
+    "types": ["vitest/globals"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist", "tests", "src/__auto_tests__"]
