@@ -1,0 +1,58 @@
+name: Coverage Check
+on:
+  pull_request:
+    paths-ignore:
+      - "README.md"
+      - ".github/**"
+
+jobs:
+  test-and-collect:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: ["apps/web", "apps/api"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@8.15.5 --activate
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run tests for ${{ matrix.package }}
+        run: |
+          pnpm --filter "${{ matrix.package }}" run test -- --coverage
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.package }}
+          path: |
+            ${{ matrix.package }}/coverage
+
+  aggregate:
+    runs-on: ubuntu-latest
+    needs: test-and-collect
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-apps/web
+          path: artifacts/coverage/web || true
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage-apps/api
+          path: artifacts/coverage/api || true
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      - name: Aggregate coverage and comment
+        run: node scripts/aggregate_coverage_and_comment.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

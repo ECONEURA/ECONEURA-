@@ -1,3 +1,13 @@
+node_modules/
+.env
+/.devcontainer/
+/.vscode/
+/.cache/
+/.pnpm-store/
+/.playwright/
+coverage/
+artifacts/
+dist/
 node_modules
 dist
 .vite
