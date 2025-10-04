@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { HealthChecker, healthChecker, createHealthCheck, databaseHealthCheck, redisHealthCheck } from '../health';
+import {
+  HealthChecker,
+  healthChecker,
+  createHealthCheck,
+  databaseHealthCheck,
+  redisHealthCheck,
+} from '../health';
 
 describe('HealthChecker', () => {
   let checker: HealthChecker;
@@ -22,7 +28,7 @@ describe('HealthChecker', () => {
       const health = await checker.checkHealth();
       expect(health.services['test-service']).toEqual({
         status: 'up',
-        responseTime: expect.any(Number)
+        responseTime: expect.any(Number),
       });
       expect(mockCheck).toHaveBeenCalledTimes(1);
     });
@@ -67,14 +73,23 @@ describe('HealthChecker', () => {
     });
 
     it('should measure response time', async () => {
-      checker.registerService('slow-service', async () => {
-        await new Promise(resolve => setTimeout(resolve, 10));
-        return true;
-      });
+      // Use fake timers to avoid flaky timing assertions
+      vi.useFakeTimers();
+      try {
+        checker.registerService('slow-service', async () => {
+          await new Promise(resolve => setTimeout(resolve, 10));
+          return true;
+        });
 
-      const health = await checker.checkHealth();
+        const checkPromise = checker.checkHealth();
+        // advance timers by 10ms to simulate the work
+        vi.advanceTimersByTime(10);
+        const health = await checkPromise;
 
-      expect(health.services['slow-service'].responseTime).toBeGreaterThanOrEqual(10);
+        expect(health.services['slow-service'].responseTime).toBeGreaterThanOrEqual(10);
+      } finally {
+        vi.useRealTimers();
+      }
     });
   });
 

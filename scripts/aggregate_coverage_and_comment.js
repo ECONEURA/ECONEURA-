@@ -41,7 +41,7 @@ function parseIstanbul(jsonPath) {
   try {
     const content = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
     // coverage-final.json can come in different shapes (nyc/istanbul, c8/v8)
-    let total = { lines: 0, covered: 0, statements: 0, coveredStatements: 0 };
+    const total = { lines: 0, covered: 0, statements: 0, coveredStatements: 0 };
     for (const key of Object.keys(content)) {
       const entry = content[key];
       if (!entry) continue;
@@ -57,6 +57,7 @@ function parseIstanbul(jsonPath) {
       // functions
       if (entry.f && typeof entry.f === 'object') {
         const fnKeys = Object.keys(entry.f);
+        void fnKeys
         // not used in percent calc now, but keep for completeness
       }
       // nyc/istanbul-like: entry.lines or entry.statements may have totals
@@ -71,6 +72,7 @@ function parseIstanbul(jsonPath) {
     }
     return total;
   } catch (err) {
+    void err
     return null;
   }
 }
@@ -109,7 +111,7 @@ function aggregateCoverage() {
     console.log('Filtered lcov files:', lcovFiles);
     console.log('Exclude patterns:', EXCLUDE_PATTERNS);
   }
-  let total = { lines: 0, covered: 0, statements: 0, coveredStatements: 0 };
+  const total = { lines: 0, covered: 0, statements: 0, coveredStatements: 0 };
 
   for (const f of istanbulFiles) {
     const p = parseIstanbul(f);
@@ -145,6 +147,7 @@ function getChangedLinesAgainstMain() {
       const ref = execSync('git rev-parse --abbrev-ref origin/HEAD', { encoding: 'utf8' }).trim();
       if (ref && ref.startsWith('origin/')) defaultBranch = ref.replace('origin/', '');
     } catch (e) {
+      void e
       // ignore, we'll try sensible defaults below
     }
 
@@ -152,6 +155,7 @@ function getChangedLinesAgainstMain() {
     try {
       execSync(`git fetch origin ${defaultBranch} --no-tags --prune --depth=50`, { stdio: 'ignore' });
     } catch (e) {
+      void e
       // best-effort fetch, ignore failures
     }
 
@@ -160,6 +164,7 @@ function getChangedLinesAgainstMain() {
     try {
       mergeBase = execSync(`git merge-base origin/${defaultBranch} HEAD`, { encoding: 'utf8' }).trim();
     } catch (e) {
+      void e
       // merge-base calculation failed; try the other common default
       if (defaultBranch === 'main') {
         try {
@@ -167,6 +172,7 @@ function getChangedLinesAgainstMain() {
           mergeBase = execSync('git merge-base origin/master HEAD', { encoding: 'utf8' }).trim();
           defaultBranch = 'master';
         } catch (ee) {
+          void ee
           mergeBase = null;
         }
       }
@@ -200,6 +206,7 @@ function getChangedLinesAgainstMain() {
     for (const f of Object.keys(files)) out[f] = Array.from(files[f]);
     return out;
   } catch (err) {
+    void err
     // swallow git-specific errors and return null so caller can fallback cleanly
     return null;
   }
@@ -219,9 +226,9 @@ function computeDiffCoverageFromIstanbul(istanbulFiles, changedLinesMap) {
         }
         const changed = changedLinesMap[rel] || changedLinesMap[content[src].path] || null;
         if (!changed) continue;
-        const sMap = content[src].statementMap || {};
-        const sHits = content[src].s || {};
-        for (const sid of Object.keys(sMap)) {
+          const sMap = content[src].statementMap || {};
+          const sHits = content[src].s || {};
+          for (const sid of Object.keys(sMap)) {
           const st = sMap[sid];
           const stmtLine = st.start && st.start.line;
           if (!stmtLine) continue;
@@ -233,6 +240,7 @@ function computeDiffCoverageFromIstanbul(istanbulFiles, changedLinesMap) {
         }
       }
     } catch (e) {
+      void e
       // ignore
     }
   }
