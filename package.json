@@ -10,9 +10,9 @@
     "build": "pnpm run --parallel build",
     "build:web": "pnpm --filter @econeura/web build",
     "build:api": "pnpm --filter @econeura/api build",
-  "test": "vitest run --coverage",
-  "test:fast": "vitest run --threads --reporter dot",
-  "test:parallel": "pnpm -w -r --parallel test",
+    "test": "vitest run --coverage",
+    "test:fast": "vitest run --threads --reporter dot",
+    "test:parallel": "pnpm -w -r --parallel test",
     "pretest": "node ./scripts/ensure-local-react.js",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
@@ -23,8 +23,10 @@
     "typecheck:watch": "node ./scripts/run-tsc.js --noEmit --watch",
     "clean": "pnpm run --parallel clean && rm -rf node_modules/.cache",
     "prepare": "husky install",
-  "create-pr": "node scripts/create_pr.js",
-  "coverage:check": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\run_one_shot_check.ps1",
+    "create-pr": "node scripts/create_pr.js",
+    "bootstrap": "sh scripts/bootstrap.sh || pwsh -File scripts\\bootstrap.ps1",
+    "e2e:web": "playwright test apps/web/e2e --config=apps/web/e2e/playwright.config.ts",
+    "coverage:check": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\run_one_shot_check.ps1",
     "coverage:enforce": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\enforce_coverage.ps1",
     "check:forbidden": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\check_forbidden_files.ps1",
     "test:coverage": "vitest run --coverage"
@@ -37,9 +39,9 @@
     "@types/node": "^24.6.1",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
-  "@vitest/coverage-v8": "^2.1.9",
-  "@testing-library/jest-dom": "^6.0.0",
-  "@types/testing-library__jest-dom": "^5.14.2",
+    "@vitest/coverage-v8": "^2.1.9",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@types/testing-library__jest-dom": "^5.14.2",
     "@vitest/ui": "^2.1.9",
     "eslint": "^9.36.0",
     "globals": "^16.4.0",
@@ -50,7 +52,9 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.44.1",
     "undici": "^7.16.0",
-    "vitest": "^2.1.9"
+    "vitest": "^2.1.9",
+    "playwright": "^1.40.0",
+    "http-server": "^14.1.1"
   },
   "dependencies": {
     "react": "18.3.1",
@@ -71,6 +75,9 @@
 
 
 
+
+
 {"name": "econeura-ia","private": true,"packageManager": "pnpm@8.15.5","scripts": {"dev": "pnpm run --parallel dev","dev:web": "pnpm --filter @econeura/web dev","dev:api": "pnpm --filter @econeura/api dev","build": "pnpm run --parallel build","build:web": "pnpm --filter @econeura/web build","build:api": "pnpm --filter @econeura/api build","test": "vitest run --coverage","test:watch": "vitest --watch","test:ui": "vitest --ui","lint": "eslint .","lint:fix": "eslint . --fix","typecheck": "tsc --noEmit","typecheck:watch": "tsc --noEmit --watch","clean": "pnpm run --parallel clean && rm -rf node_modules/.cache","prepare": "husky install"},"devDependencies": {"@commitlint/cli": "^20.1.0","@commitlint/config-conventional": "^20.0.0","@eslint/js": "^9.36.0","@typescript-eslint/eslint-plugin": "^8.45.0","@typescript-eslint/parser": "^8.45.0","@vitejs/coverage-v8": "^2.1.9","@vitejs/ui": "^2.1.9","eslint": "^9.36.0","globals": "^16.4.0","husky": "^9.1.6","jsdom": "^27.0.0","lint-staged": "^15.2.10","typescript": "^5.9.2","typescript-eslint": "^8.44.1","undici": "^7.16.0","vitest": "^2.1.9"}}
+
 
 
