@@ -95,6 +95,17 @@ async function main() {
       throw e;
     }
   }
+
+  // After all packages ran, attempt to merge any v8 fragments into coverage/ so gate can read it
+  try {
+    const merger = require('./merge_v8_fragments');
+    if (merger && merger.runCLI) {
+      merger.runCLI();
+      console.log('Merged v8 fragments after package runs');
+    }
+  } catch (e) {
+    // best-effort
+  }
 }
 
 main().catch((err) => {
