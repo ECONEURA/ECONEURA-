@@ -252,13 +252,6 @@ pnpm -C apps/api test:coverage
 
 ## Licencia
 
-Definir antes de producción. Opciones sugeridas: Apache 2.0 o Business Source con anexo de uso responsable.
+ Apache 2.0 o Business Source con anexo de uso responsable.
 
----
 
-**ECONEURA** · **Gestiona IA sobre tu <sistema>. No sustituimos ERP/CRM.**
-
-STATUS: mixto · long≈alto · claimsExt=N · faltantes=S (capturas reales y ejemplos de políticas DLP/FinOps en repo)
-
-```
-```
