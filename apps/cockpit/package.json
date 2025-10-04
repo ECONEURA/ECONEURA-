@@ -19,7 +19,7 @@
     "lucide-react": "0.441.0"
   },
   "devDependencies": {
-    "esbuild": "0.23.0",
+    "esbuild": "0.25.0",
     "vitest": "^3.2.4",
     "@vitest/coverage-v8": "^3.2.4",
     "@testing-library/react": "^14.0.0",
