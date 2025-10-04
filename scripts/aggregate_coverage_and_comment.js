@@ -18,6 +18,25 @@ function findFiles(dir, name) {
   return results;
 }
 
+// Exclude common generated/backup paths from coverage aggregation
+const EXCLUDE_PATTERNS = [
+  'node_modules',
+  `${path.sep}dist${path.sep}`,
+  `${path.sep}build${path.sep}`,
+  '.generated',
+  '.backup',
+  `${path.sep}.cache${path.sep}`
+];
+
+function isExcluded(p) {
+  const normalized = p.replace(/\\/g, '/');
+  for (const pat of EXCLUDE_PATTERNS) {
+    const normPat = pat.replace(/\\/g, '/');
+    if (normalized.indexOf(normPat) !== -1) return true;
+  }
+  return false;
+}
+
 function parseIstanbul(jsonPath) {
   try {
     const content = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
@@ -77,8 +96,10 @@ function aggregateCoverage() {
   const cwd = process.cwd();
   const artifactsRoot = path.join(cwd, 'artifacts', 'coverage');
   const searchRoot = fs.existsSync(artifactsRoot) ? artifactsRoot : cwd;
-  const istanbulFiles = findFiles(searchRoot, 'coverage-final.json');
-  const lcovFiles = findFiles(searchRoot, 'lcov.info');
+  const istanbulFilesRaw = findFiles(searchRoot, 'coverage-final.json');
+  const lcovFilesRaw = findFiles(searchRoot, 'lcov.info');
+  const istanbulFiles = istanbulFilesRaw.filter(p => !isExcluded(p));
+  const lcovFiles = lcovFilesRaw.filter(p => !isExcluded(p));
   let total = { lines: 0, covered: 0, statements: 0, coveredStatements: 0 };
 
   for (const f of istanbulFiles) {
@@ -182,8 +203,9 @@ function computeDiffCoverageFromIstanbul(istanbulFiles, changedLinesMap) {
     try {
       const content = JSON.parse(fs.readFileSync(fPath, 'utf8'));
       for (const src of Object.keys(content)) {
-        const rel = path.relative(process.cwd(), content[src].path || src).replace(/\\/g, '/');
-        const changed = changedLinesMap[rel] || changedLinesMap[content[src].path] || null;
+  const rel = path.relative(process.cwd(), content[src].path || src).replace(/\\/g, '/');
+  if (isExcluded(rel)) continue; // ignore generated/backup files
+  const changed = changedLinesMap[rel] || changedLinesMap[content[src].path] || null;
         if (!changed) continue;
         const sMap = content[src].statementMap || {};
         const sHits = content[src].s || {};
