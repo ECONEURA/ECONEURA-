@@ -43,14 +43,20 @@ jobs:
         if: env.COVERAGE_GATE != '0'
         env:
           CI: "true"
-        run: node ./scripts/coverage-gate.js --threshold 95 --metric statements
+        run: |
+          # Merge any v8 fragments produced during package runs into coverage/summary
+          node ./scripts/merge_v8_fragments.js || true
+          node ./scripts/coverage-gate.js --threshold 95 --metric statements
 
       - name: Upload coverage artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage/**
+          path: |
+            coverage/**
+            coverage/coverage-final.json
+            coverage/coverage-gate-result.json
 
       - name: Comment PR with coverage result
         if: always() && github.event_name == 'pull_request'
