@@ -81,7 +81,15 @@ async function main() {
     try {
       // ensure coverage tmp exists right before running each package to avoid races
       try { ensureCovTmp(); } catch (e) { /* continue anyway */ }
-      run('pnpm', ['-C', pkgPath, 'run', useScript]);
+
+      // Create a per-package coverage dir to avoid multiple processes writing to same files
+      const pkgName = path.basename(pkgPath).replace(/[\s\/\\]/g, '_');
+      const perPkgCov = path.join(process.cwd(), 'coverage', '.tmp', pkgName);
+      fs.mkdirSync(perPkgCov, { recursive: true });
+
+      // Pass NODE_V8_COVERAGE so v8 coverage writes into package-specific dir
+      const env = Object.assign({}, process.env, { NODE_V8_COVERAGE: perPkgCov });
+      run('pnpm', ['-C', pkgPath, 'run', useScript], { env });
     } catch (e) {
       console.error('Tests failed for', pkgPath);
       throw e;
