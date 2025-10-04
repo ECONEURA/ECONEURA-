@@ -1,8 +1,9 @@
 export default {
-  // TypeScript and JavaScript files: lint and format
-  '**/*.{ts,tsx,js,jsx}': ['eslint --fix --max-warnings 0', 'prettier --write'],
+  // Keep pre-commit fast and non-blocking: format files locally with Prettier.
+  // Full lint (eslint --max-warnings=0 + typecheck) runs in CI (see `ci-check`).
+  '**/*.{ts,tsx,js,jsx}': ['prettier --write'],
 
-  // JSON, YAML and Markdown: format with Prettier only (avoids external tool requirements)
+  // JSON, YAML and Markdown: format with Prettier
   '**/*.json': ['prettier --write'],
   '**/*.{yml,yaml}': ['prettier --write'],
   '**/*.md': ['prettier --write'],

@@ -14,6 +14,7 @@
 		"noEmit": true,
 		"jsx": "react-jsx",
 		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"types": ["vitest/globals"],
 		"baseUrl": ".",
 		"paths": {
 			"@econeura/*": ["packages/*/src", "packages/*/dist"],
@@ -22,7 +23,7 @@
 
 		}
 	},
-		"include": ["packages/**/*", "types/**/*"],
+		"include": ["packages/**/*", "types/**/*", "apps/**/*"],
 		"exclude": [
 			"node_modules",
 			".dev",

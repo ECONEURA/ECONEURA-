@@ -11,6 +11,12 @@ export function jsxs(type, props, key) {
   return React.createElement(type, props)
 }
 
+// Some transforms (especially in dev mode) import jsxDEV from the dev runtime.
+// Provide a compatible implementation that forwards to React.createElement.
+export function jsxDEV(type, props, key) {
+  return React.createElement(type, props)
+}
+
 export const Fragment = React.Fragment
 
-export default { jsx, jsxs, Fragment }
+export default { jsx, jsxs, Fragment, jsxDEV }
