@@ -29,7 +29,10 @@ jobs:
       - name: Run workspace CI (tests + coverage)
         env:
           CI: "true"
-        run: pnpm -w run ci-check
+        run: |
+          # Ensure coverage temp folder exists to avoid ENOENT from coverage reporters
+          mkdir -p coverage/.tmp
+          pnpm -w run ci-check
 
       - name: Quick unit test for coverage-gate
         env:
