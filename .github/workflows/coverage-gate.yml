@@ -7,6 +7,8 @@ on:
 jobs:
   test-and-coverage:
     runs-on: ubuntu-latest
+    env:
+      COVERAGE_GATE: "1" # set to '0' to temporarily disable the gate
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,7 +31,68 @@ jobs:
           CI: "true"
         run: pnpm -w run ci-check
 
-      - name: Run coverage gate
+      - name: Quick unit test for coverage-gate
         env:
           CI: "true"
-        run: node ./scripts/coverage-gate.js --threshold 95
+        run: node scripts/__tests__/coverage-gate.test.js
+
+      - name: Run coverage gate
+        if: env.COVERAGE_GATE != '0'
+        env:
+          CI: "true"
+        run: node ./scripts/coverage-gate.js --threshold 95 --metric statements
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/**
+
+      - name: Comment PR with coverage result
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = 'coverage/coverage-gate-result.json';
+            let body = '';
+            if (fs.existsSync(path)) {
+              const r = JSON.parse(fs.readFileSync(path, 'utf8'));
+              body = `### Coverage Gate result\n- metric: **${r.metric}**\n- threshold: **${r.threshold}%**\n- percent: **${r.percent !== null ? r.percent + '%' : 'N/A'}**\n- passed: **${r.passed}**`;
+            } else {
+              body = 'Coverage gate did not produce a result file. Please check the workflow logs.';
+            }
+            const pr = github.context.payload.pull_request;
+            if (pr && pr.number) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body
+              });
+            } else {
+              core.info('Not a pull_request event, skipping PR comment.');
+            }
+
+      - name: Annotate failed coverage gate
+        if: always() && github.event_name == 'pull_request'
+        run: |
+          set -e
+          PATH_JSON=coverage/coverage-gate-result.json
+          if [ -f "$PATH_JSON" ]; then
+            PCT=$(jq -r '.percent' $PATH_JSON)
+            PASSED=$(jq -r '.passed' $PATH_JSON)
+            THRESH=$(jq -r '.threshold' $PATH_JSON)
+            METRIC=$(jq -r '.metric' $PATH_JSON)
+            if [ "$PASSED" = "false" ]; then
+              MSG="Coverage gate failed (${METRIC}): ${PCT}% < ${THRESH}%"
+              # Create a GitHub annotation that links to the result file
+              echo "::error file=coverage/coverage-gate-result.json,line=1::${MSG}"
+            else
+              echo "Coverage gate passed: ${PCT}% >= ${THRESH}%"
+            fi
+          else
+            echo "::warning file=coverage/coverage-gate-result.json,line=1::coverage-gate-result.json not found"
+          fi
