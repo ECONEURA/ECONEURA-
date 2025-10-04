@@ -60,4 +60,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERAGE_THRESHOLD: "85"
           COVERAGE_MODE: "diff"
+          COVERAGE_DEBUG: "1"
         run: node scripts/aggregate_coverage_and_comment.js
