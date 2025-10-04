@@ -19,7 +19,7 @@ if (!fs.existsSync(covPath)) {
 
 const raw = fs.readFileSync(covPath, 'utf-8')
 let obj
-try { obj = JSON.parse(raw) } catch (e) { console.error('invalid json in', covPath); process.exit(2) }
+try { obj = JSON.parse(raw) } catch (e) { void e; console.error('invalid json in', covPath); process.exit(2) }
 
 const rows = []
 for (const key of Object.keys(obj)) {
@@ -48,7 +48,7 @@ for (const key of Object.keys(obj)) {
 rows.sort((a,b) => a.pct - b.pct)
 
 const outDir = path.resolve(__dirname, '..', '.artifacts')
-try { fs.mkdirSync(outDir, { recursive: true }) } catch(e){}
+try { fs.mkdirSync(outDir, { recursive: true }) } catch(e){ void e }
 const outPath = path.join(outDir, `COVERAGE_DETAILS_${pkg}.txt`)
 
 const lines = []

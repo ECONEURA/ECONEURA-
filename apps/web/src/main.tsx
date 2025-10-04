@@ -11,6 +11,7 @@ export async function mountApp(root: HTMLElement | null = defaultRoot, forceClie
         root.appendChild(node);
       }
     } catch (e) {
+      void e;
       /* ignore in test env */
     }
     return;
@@ -36,6 +37,7 @@ export async function mountApp(root: HTMLElement | null = defaultRoot, forceClie
       createRoot(root).render(React.createElement(App));
     }
   } catch (err) {
+    void err;
     console.error('Failed to mount react-dom client', err);
   }
 }
