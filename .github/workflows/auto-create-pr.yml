@@ -1,0 +1,37 @@
+name: Auto-create PR for feature branches
+
+on:
+  push:
+    branches:
+      - "feat/**"
+
+jobs:
+  create_pr:
+    name: Create PR if missing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create PR via GitHub API
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const branchRef = context.ref; // refs/heads/feat/...
+            if (!branchRef.startsWith('refs/heads/feat/')) {
+              core.info('Not a feature branch; skipping.');
+              return;
+            }
+            const branch = branchRef.replace('refs/heads/', '');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Check existing open PRs from this branch
+            const { data: prs } = await github.rest.pulls.list({ owner, repo, head: `${owner}:${branch}`, state: 'open' });
+            if (prs.length > 0) {
+              console.log(`Open PR already exists: ${prs[0].html_url}`);
+              return;
+            }
+
+            const title = `Auto PR: ${branch}`;
+            const body = `Auto-created pull request for branch ${branch}.`;
+
+            const created = await github.rest.pulls.create({ owner, repo, head: branch, base: 'main', title, body });
+            console.log('PR created:', created.data.html_url);
