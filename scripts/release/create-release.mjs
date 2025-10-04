@@ -166,7 +166,7 @@ class ReleaseCreator {
   /**
    * Create release
    */
-  create(releaseType = 'patch') {
+  async create(releaseType = 'patch') {
     console.log('🚀 Creating release...');
     
     const currentVersion = this.getPackageVersion();
@@ -212,7 +212,10 @@ class ReleaseCreator {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const releaseType = process.argv[2] || 'patch';
   const creator = new ReleaseCreator();
-  creator.create(releaseType);
+  creator.create(releaseType).catch(err => {
+    console.error('Error running create-release:', err);
+    process.exitCode = 1;
+  });
 }
 
 export default ReleaseCreator;
