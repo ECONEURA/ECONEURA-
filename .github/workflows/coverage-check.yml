@@ -13,6 +13,8 @@ jobs:
         package: ["apps/web", "apps/api"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -37,22 +39,25 @@ jobs:
     needs: test-and-collect
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Download coverage artifacts
         uses: actions/download-artifact@v4
         with:
-          name: coverage-apps/web
-          path: artifacts/coverage/web || true
-      - uses: actions/download-artifact@v4
-        with:
-          name: coverage-apps/api
-          path: artifacts/coverage/api || true
-      - name: Install Node
+          path: artifacts/coverage
+      - name: Ensure git refs for diff
+        run: |
+          # ensure remote branches are available for merge-base/diff
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --no-tags --prune || true
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
       - name: Install deps
         run: pnpm install --frozen-lockfile
       - name: Aggregate coverage and comment
-        run: node scripts/aggregate_coverage_and_comment.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERAGE_THRESHOLD: "85"
+          COVERAGE_MODE: "diff"
+        run: node scripts/aggregate_coverage_and_comment.js
