@@ -51,7 +51,7 @@ $tasks = @'
     { "label": "web:dev", "type": "shell", "command": "pnpm -C apps/web dev", "isBackground": true, "problemMatcher": [] },
     { "label": "web:lint", "type": "shell", "command": "pnpm -C apps/web lint --max-warnings 0" },
     { "label": "web:type", "type": "shell", "command": "pnpm -C apps/web typecheck" },
-    { "label": "web:test:cov-fast", "type": "shell", "command": "pnpm -C apps/web test:coverage -- --runInBand" }
+  { "label": "web:test:cov-fast", "type": "shell", "command": "pnpm -C apps/web test:coverage -- --threads 1" }
   ]
 }
 '@
@@ -72,7 +72,7 @@ Write-Host "[5] (opcional) Arranque omitido en script en este entorno — contin
 Write-Host "[6] Validaciones rápidas (lint/type/tests)..."
 try { pnpm -C apps/web lint --max-warnings 0; Write-Host 'Lint OK' } catch { Write-Host 'WARN lint' }
 try { pnpm -C apps/web typecheck; Write-Host 'Typecheck OK' } catch { Write-Host 'WARN types' }
-try { pnpm -C apps/web test:coverage -- --runInBand; Write-Host 'Tests OK' } catch { Write-Host 'WARN tests' }
+try { pnpm -C apps/web test:coverage -- --threads 1; Write-Host 'Tests OK' } catch { Write-Host 'WARN tests' }
 
 Write-Host "[7] Git: añadir y commitear cambios si existen"
 git add -A

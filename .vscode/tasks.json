@@ -4,6 +4,6 @@
     { "label": "web:dev", "type": "shell", "command": "pnpm -C apps/web dev", "isBackground": true, "problemMatcher": [] },
     { "label": "web:lint", "type": "shell", "command": "pnpm -C apps/web lint --max-warnings 0" },
     { "label": "web:type", "type": "shell", "command": "pnpm -C apps/web typecheck" },
-    { "label": "web:test:cov-fast", "type": "shell", "command": "pnpm -C apps/web test:coverage -- --runInBand" }
+  { "label": "web:test:cov-fast", "type": "shell", "command": "pnpm -C apps/web test:coverage -- --threads 1" }
   ]
 }
