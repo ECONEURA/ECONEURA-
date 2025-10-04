@@ -100,6 +100,15 @@ function aggregateCoverage() {
   const lcovFilesRaw = findFiles(searchRoot, 'lcov.info');
   const istanbulFiles = istanbulFilesRaw.filter(p => !isExcluded(p));
   const lcovFiles = lcovFilesRaw.filter(p => !isExcluded(p));
+  const DEBUG = !!process.env.COVERAGE_DEBUG;
+  if (DEBUG) {
+    console.log('Coverage aggregator debug: searchRoot=', searchRoot);
+    console.log('Found istanbul coverage-final.json (raw):', istanbulFilesRaw);
+    console.log('Filtered istanbul files:', istanbulFiles);
+    console.log('Found lcov.info (raw):', lcovFilesRaw);
+    console.log('Filtered lcov files:', lcovFiles);
+    console.log('Exclude patterns:', EXCLUDE_PATTERNS);
+  }
   let total = { lines: 0, covered: 0, statements: 0, coveredStatements: 0 };
 
   for (const f of istanbulFiles) {
@@ -203,9 +212,12 @@ function computeDiffCoverageFromIstanbul(istanbulFiles, changedLinesMap) {
     try {
       const content = JSON.parse(fs.readFileSync(fPath, 'utf8'));
       for (const src of Object.keys(content)) {
-  const rel = path.relative(process.cwd(), content[src].path || src).replace(/\\/g, '/');
-  if (isExcluded(rel)) continue; // ignore generated/backup files
-  const changed = changedLinesMap[rel] || changedLinesMap[content[src].path] || null;
+        const rel = path.relative(process.cwd(), content[src].path || src).replace(/\\/g, '/');
+        if (isExcluded(rel)) {
+          if (process.env.COVERAGE_DEBUG) console.log('Skipping excluded file in diff:', rel);
+          continue; // ignore generated/backup files
+        }
+        const changed = changedLinesMap[rel] || changedLinesMap[content[src].path] || null;
         if (!changed) continue;
         const sMap = content[src].statementMap || {};
         const sHits = content[src].s || {};
@@ -291,6 +303,10 @@ async function main() {
     const changed = getChangedLinesAgainstMain();
     if (!changed) {
       md = 'Could not compute diff against main; falling back to aggregate.\n\n';
+      if (process.env.COVERAGE_DEBUG) {
+        console.error('Diff computation failed: getChangedLinesAgainstMain returned null.\n' +
+          'Ensure checkout has full refs or inspect git fetch in workflow.');
+      }
     } else {
       const diffRes = computeDiffCoverageFromIstanbul(result.istanbulFiles, changed);
       const pct = diffRes.totalChangedStatements ? (diffRes.coveredChangedStatements / diffRes.totalChangedStatements) * 100 : 100;
