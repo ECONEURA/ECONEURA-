@@ -25,8 +25,10 @@ run e2e:web
 
 5. Cobertura y gate de PR
 
-La acción de GitHub `Coverage Check` agrega reportes por paquete y publica un
-comentario en el PR. Cockpit (dev) - arranque rápido
+Nota: El workflow de cobertura a nivel de repo ha sido desactivado temporalmente
+y sustituido por un CI más simple y fiable. Si necesitas restablecer una
+política de cobertura en PRs, crea una propuesta de workflow enfocada y probada
+para incluirlo nuevamente.
 
 ---
 
