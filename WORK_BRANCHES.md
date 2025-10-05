@@ -15,3 +15,10 @@ Generated list of local branches with last commit:
 ## Cleanup actions
 
 - Removed complex and flaky workflows and consolidated to a single minimal `.github/workflows/ci.yml` that runs lint, typecheck and fast smoke tests. This simplifies CI and reduces false negatives for contributors.
+
+- Added `coverage-gate-staging` workflow that annotates PRs with coverage (non-blocking) so the team can iterate the gate without blocking merges.
+- Added `CONTRIBUTING.md` and a PR template to standardize checks before opening PRs.
+
+## Quick test change for PR creation
+
+This small entry is intentionally added to allow creating a test PR from `work/ci-fixes-2` so CI can be triggered and validated in a clean run. Remove after verification.
