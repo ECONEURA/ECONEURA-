@@ -36,8 +36,8 @@ jobs:
       - name: Merge fragments and run coverage gate
         run: |
           node ./scripts/merge_v8_fragments.js || true
-          # Lower threshold to 87 to match current coverage and allow the gate to pass
-          node ./scripts/coverage-gate.js --threshold 87 --metric statements
+          # Restore threshold to 95 now that coverage has been raised
+          node ./scripts/coverage-gate.js --threshold 95 --metric statements
 
       - name: Archive package vitest reports
         if: always()
@@ -78,8 +78,8 @@ jobs:
             } else {
               body = 'Coverage gate did not produce a result file. Please check the workflow logs.';
             }
-            // Add an explanatory note about the temporary threshold change and next steps
-            body += `\n\n**Nota:** El umbral de cobertura se ha reducido temporalmente a **87%** para desbloquear merges mientras trabajamos en aumentar la cobertura al 95%. Se recomienda crear tareas para incrementar las pruebas y restaurar el umbral cuando esté alcanzable.`;
+            // Add an explanatory note about the gate restoration and next steps
+            body += `\n\n**Nota:** El umbral de cobertura ha sido restaurado a **95%** ahora que se han añadido pruebas para alcanzar este objetivo. Si encuentran problemas, por favor revisen los reportes adjuntos en los artefactos y propongan pruebas adicionales por paquete.`;
 
             const pr = github.context.payload.pull_request;
             if (pr && pr.number) {
