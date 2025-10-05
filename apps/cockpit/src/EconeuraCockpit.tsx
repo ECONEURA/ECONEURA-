@@ -153,16 +153,27 @@ async function invokeAgent(agentId: string, payload: any = {}) {
   else if (agentId.includes('int') || agentId.includes('integration'))
     url = '/api/agents/integration';
   if (!token) return { ok: true, simulated: true, output: `Simulado ${agentId}` };
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ input: payload?.input ?? '' }),
-  }).catch(() => null as any);
-  if (!res || !res.ok) return { ok: false, simulated: true, output: `Simulado ${agentId}` };
-  return res.json().catch(() => ({}));
+  // Use AbortController to avoid hanging fetches; fall back to simulated result on timeout/failure
+  try {
+    const controller = new AbortController();
+    const timeoutMs = 3000; // 3s timeout for external calls to keep UI responsive
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ input: payload?.input ?? '' }),
+      signal: controller.signal as any,
+    }).catch(() => null as any);
+    clearTimeout(timer);
+    if (!res || !res.ok) return { ok: false, simulated: true, output: `Simulado ${agentId}` };
+    return res.json().catch(() => ({}));
+  } catch (e) {
+    // AbortError or other network failures -> simulated result
+    return { ok: false, simulated: true, output: `Simulado ${agentId}` };
+  }
 }
 
 // Telemetría cliente → NOOP por seguridad
