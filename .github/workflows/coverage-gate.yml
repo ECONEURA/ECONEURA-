@@ -24,6 +24,18 @@ jobs:
         with:
           version: "8.15.5"
 
+      - name: Verify Node and pnpm (diagnostic)
+        run: |
+          echo "Node version:"; node -v || true
+          echo "pnpm version:"; pnpm -v || (corepack enable && corepack prepare pnpm@8.15.5 --activate && pnpm -v)
+          echo "Running scripts/check_env.sh for additional diagnostics...";
+          if [ -f ./scripts/check_env.sh ]; then
+            chmod +x ./scripts/check_env.sh || true
+            ./scripts/check_env.sh || true
+          else
+            echo "scripts/check_env.sh not found"
+          fi
+
       - name: Install dependencies
         run: pnpm -w install --frozen-lockfile
 
