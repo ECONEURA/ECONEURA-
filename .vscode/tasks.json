@@ -4,20 +4,21 @@
     {
       "label": "web:dev",
       "type": "shell",
-      "command": "npm run dev -- --host 127.0.0.1 --port 5173",
+      "command": "npm run dev",
       "options": { "cwd": "apps/web" },
       "isBackground": true,
       "problemMatcher": {
         "owner": "vite",
-        "fileLocation": ["relative", "${workspaceFolder}"],
         "pattern": {
-          "regexp": ".*",
-          "message": 0
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": "Local:.*127.0.0.1:5173",
-          "endsPattern": "ready in .*"
+          "beginsPattern": "VITE.*ready in",
+          "endsPattern": "Local:.*127\\.0\\.0\\.1:8080"
         }
       }
     },
