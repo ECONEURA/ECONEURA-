@@ -112,3 +112,5 @@ jobs:
           else
             echo "::warning file=coverage/coverage-gate-result.json,line=1::coverage-gate-result.json not found"
           fi
+
+# ci: trigger workflow run to post PR comment - 2025-10-05T00:00:00Z
