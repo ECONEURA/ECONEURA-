@@ -508,3 +508,4 @@ Apache 2.0 o Business Source con anexo de uso responsable.
 ---
 
 **ECONEURA** · **Gestiona IA sobre tu <sistema>. No sustituimos ERP/CRM.**
+CI re-trigger: 2025-10-05T16:12:58Z
