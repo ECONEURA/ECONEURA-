@@ -1,6 +1,7 @@
 {
   "version": "2.0.0",
   "tasks": [
+
     {
       "label": "web:dev",
       "type": "shell",
@@ -60,5 +61,11 @@
     { "id": "lpStart", "type": "command", "command": "livePreview.startServer" },
     { "id": "lpOpen",  "type": "command", "command": "livePreview.openPreview",
       "args": { "path": "/preview/preview.html" } }
+
+    { "label": "web:dev", "type": "shell", "command": "pnpm -C apps/web dev", "isBackground": true, "problemMatcher": [] },
+    { "label": "web:lint", "type": "shell", "command": "pnpm -C apps/web lint --max-warnings 0" },
+    { "label": "web:type", "type": "shell", "command": "pnpm -C apps/web typecheck" },
+  { "label": "web:test:cov-fast", "type": "shell", "command": "pnpm -C apps/web test:coverage -- --threads 1" }
+
   ]
 }

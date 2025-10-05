@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { __TEST_HELPERS as H, OrgChart } from '../EconeuraCockpit';
 import React from 'react';
+import { describe, it, expect } from 'vitest';
+import { __TEST_HELPERS as H, OrgChart } from '../EconeuraCockpit';
 import { render } from '@testing-library/react';
 
 describe('EconeuraCockpit helpers', () => {

@@ -1,4 +1,4 @@
-name: CI Minimal
+name: CI
 
 on:
   push:
@@ -12,25 +12,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "pnpm"
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8.15.5
+          version: "8.15.5"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Bootstrap workspace
-        run: pnpm run bootstrap
+      - name: Ensure coverage temp
+        run: node ./scripts/ensure-coverage-tmp.js
 
-      - name: Run CI checks (serial coverage runner)
+      - name: Run tests + coverage (serial)
+        env:
+          CI: true
         run: pnpm -w run test:coverage:ci

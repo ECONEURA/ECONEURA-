@@ -1,5 +1,4 @@
-import React from 'react';
-import { render } from '@testing-library/react';
+// ...existing code...
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { __TEST_HELPERS } from '../EconeuraCockpit';
 
@@ -23,7 +22,7 @@ describe('EconeuraCockpit extra helpers', () => {
       'Agente: Phishing Triage',
       'Agente: Email notifier',
     ];
-    samples.forEach((s) => {
+    samples.forEach(s => {
       const I = iconForAgent(s);
       expect(isReactComponent(I)).toBeTruthy();
     });
@@ -32,7 +31,7 @@ describe('EconeuraCockpit extra helpers', () => {
   it('getDeptIcon and getPalette return usable values', () => {
     const { getDeptIcon, getPalette, isReactComponent } = __TEST_HELPERS as any;
     const ids = ['CEO', 'IA', 'CSO', 'UNKNOWN'];
-    ids.forEach((id) => {
+    ids.forEach(id => {
       const I = getDeptIcon(id);
       expect(isReactComponent(I)).toBeTruthy();
       const pal = getPalette(id);
