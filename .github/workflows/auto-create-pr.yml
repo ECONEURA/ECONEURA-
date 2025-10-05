@@ -13,36 +13,46 @@ jobs:
   create-pr:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
       - name: Check for existing PRs
         id: check
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
           script: |
             const branch = process.env.GITHUB_REF.replace('refs/heads/', '');
-            const base = 'main';
             const prs = await github.rest.pulls.list({ owner: context.repo.owner, repo: context.repo.repo, head: `${context.repo.owner}:${branch}`, state: 'open' });
             if (prs.data && prs.data.length > 0) {
               console.log('PR already exists for', branch);
-              return { exists: true, url: prs.data[0].html_url };
+              return JSON.stringify({ exists: true, url: prs.data[0].html_url });
             }
-            return { exists: false };
+            return JSON.stringify({ exists: false });
 
       - name: Create PR if missing
-        if: steps.check.outputs.exists == 'false'
+        id: create_pr
+        if: ${{ fromJson(steps.check.outputs.result).exists == false }}
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
           script: |
+            function ascii(str) {
+              // replace en-dash and em-dash with hyphen and strip other non-ASCII
+              return str.replace(/[–—]/g, '-').replace(/[^\x00-\x7F]/g, '');
+            }
             const branch = process.env.GITHUB_REF.replace('refs/heads/', '');
             const base = 'main';
-            const title = `Automated PR: ${branch} -> ${base}`;
-            const body = `This PR was automatically created for branch **${branch}**. Please review and run CI.\n\nFiles changed by automation: see branch.\n`;
+            const title = ascii(`Automated PR: ${branch} -> ${base}`);
+            const body = ascii(`This PR was automatically created for branch **${branch}**. Please review and run CI.\n\nFiles changed by automation: see branch.\n`);
             const pr = await github.rest.pulls.create({ owner: context.repo.owner, repo: context.repo.repo, head: branch, base, title, body });
             console.log('Created PR:', pr.data.html_url);
-            return pr.data.html_url;
+            return JSON.stringify({ url: pr.data.html_url });
 
       - name: Output PR URL
-        if: steps.check.outputs.exists == 'true'
         run: |
-          echo "PR already exists: ${{ steps.check.outputs.url }}"
+          if [ "${{ fromJson(steps.check.outputs.result).exists }}" = "true" ]; then
+            echo "PR already exists: ${{ fromJson(steps.check.outputs.result).url }}";
+          else
+            echo "Created PR: ${{ fromJson(steps.create_pr.outputs.result).url }}";
+          fi

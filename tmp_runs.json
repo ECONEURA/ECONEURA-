@@ -1,0 +1,9 @@
+{
+  "id": 18261334153,
+  "name": "Auto-create PR for work branches",
+  "head_branch": "work/automation-run",
+  "event": "push",
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/ECONEURA/ECONEURA-/actions/runs/18261334153"
+}
