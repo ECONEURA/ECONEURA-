@@ -5,10 +5,79 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  test-and-coverage:
+  coverage:
     runs-on: ubuntu-latest
-    env:
-      COVERAGE_GATE: "1" # set to '0' to temporarily disable the gate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '8.15.5'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -w run test:coverage:ci
+      - run: node ./scripts/merge_v8_fragments.js || true
+      - run: node ./scripts/coverage-gate.js --threshold 95 --metric statements
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/**
+name: Coverage Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: '8.15.5'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run workspace tests + coverage (serial)
+        env:
+          CI: true
+        run: |
+          node ./scripts/ensure-coverage-tmp.js
+          pnpm -w run test:coverage:ci
+
+      - name: Merge fragments and run coverage gate
+        run: |
+          node ./scripts/merge_v8_fragments.js || true
+          node ./scripts/coverage-gate.js --threshold 95 --metric statements
+
+      - name: Upload coverage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage/**
+            coverage/coverage-gate-result.json
+name: Coverage Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,92 +85,148 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8.7.0
+          version: '8.15.5'
 
       - name: Install dependencies
-        run: pnpm -w install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - name: Run workspace CI (tests + coverage) - serial coverage
+      - name: Run workspace tests + coverage (serial)
         env:
-          CI: "true"
+          CI: true
         run: |
-          # Ensure coverage temp folder exists to avoid ENOENT from coverage reporters
-          mkdir -p coverage/.tmp
+          node ./scripts/ensure-coverage-tmp.js
           pnpm -w run test:coverage:ci
 
-      - name: Quick unit test for coverage-gate
-        env:
-          CI: "true"
-        run: node scripts/__tests__/coverage-gate.test.js
-
-      - name: Run coverage gate
-        if: env.COVERAGE_GATE != '0'
-        env:
-          CI: "true"
+      - name: Merge fragments and run coverage gate
         run: |
-          # Merge any v8 fragments produced during package runs into coverage/summary
           node ./scripts/merge_v8_fragments.js || true
           node ./scripts/coverage-gate.js --threshold 95 --metric statements
 
-      - name: Upload coverage artifact
+      - name: Upload coverage artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: |
             coverage/**
-            coverage/coverage-final.json
             coverage/coverage-gate-result.json
+                else
+                  echo "Coverage gate passed: ${PCT}% >= ${THRESH}%"
+                fi
+              else
+                echo "::warning file=coverage/coverage-gate-result.json,line=1::coverage-gate-result.json not found"
+              fi
 
-      - name: Comment PR with coverage result
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const path = 'coverage/coverage-gate-result.json';
-            let body = '';
-            if (fs.existsSync(path)) {
-              const r = JSON.parse(fs.readFileSync(path, 'utf8'));
-              body = `### Coverage Gate result\n- metric: **${r.metric}**\n- threshold: **${r.threshold}%**\n- percent: **${r.percent !== null ? r.percent + '%' : 'N/A'}**\n- passed: **${r.passed}**`;
-            } else {
-              body = 'Coverage gate did not produce a result file. Please check the workflow logs.';
-            }
-            const pr = github.context.payload.pull_request;
-            if (pr && pr.number) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: pr.number,
-                body
-              });
-            } else {
-              core.info('Not a pull_request event, skipping PR comment.');
-            }
+      name: Coverage Gate
 
-      - name: Annotate failed coverage gate
-        if: always() && github.event_name == 'pull_request'
-        run: |
-          set -e
-          PATH_JSON=coverage/coverage-gate-result.json
-          if [ -f "$PATH_JSON" ]; then
-            PCT=$(jq -r '.percent' $PATH_JSON)
-            PASSED=$(jq -r '.passed' $PATH_JSON)
-            THRESH=$(jq -r '.threshold' $PATH_JSON)
-            METRIC=$(jq -r '.metric' $PATH_JSON)
-            if [ "$PASSED" = "false" ]; then
-              MSG="Coverage gate failed (${METRIC}): ${PCT}% < ${THRESH}%"
-              # Create a GitHub annotation that links to the result file
-              echo "::error file=coverage/coverage-gate-result.json,line=1::${MSG}"
-            else
-              echo "Coverage gate passed: ${PCT}% >= ${THRESH}%"
-            fi
-          else
-            echo "::warning file=coverage/coverage-gate-result.json,line=1::coverage-gate-result.json not found"
-          fi
+      on:
+        pull_request:
+          types: [opened, synchronize, reopened]
+
+      jobs:
+        test-and-coverage:
+          runs-on: ubuntu-latest
+          env:
+            COVERAGE_GATE: "1" # set to '0' to temporarily disable the gate
+          steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: "20"
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                version: '8.15.5'
+
+            - name: Install dependencies
+              run: pnpm -w install --frozen-lockfile
+
+            - name: Run workspace CI (tests + coverage) - serial coverage
+              env:
+                CI: "true"
+              run: |
+                # Ensure coverage temp folder exists to avoid ENOENT from coverage reporters
+                node ./scripts/ensure-coverage-tmp.js
+                pnpm -w run test:coverage:ci
+
+            - name: Quick unit test for coverage-gate
+              env:
+                CI: "true"
+              run: node scripts/__tests__/coverage-gate.test.js
+
+            - name: Run coverage gate
+              if: env.COVERAGE_GATE != '0'
+              env:
+                CI: "true"
+              run: |
+                # Merge any v8 fragments produced during package runs into coverage/summary
+                node ./scripts/merge_v8_fragments.js || true
+                node ./scripts/coverage-gate.js --threshold 95 --metric statements
+
+            - name: Upload coverage artifact
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                name: coverage-report
+                path: |
+                  coverage/**
+                  coverage/coverage-final.json
+                  coverage/coverage-gate-result.json
+
+            - name: Comment PR with coverage result
+              if: always() && github.event_name == 'pull_request'
+              uses: actions/github-script@v7
+              with:
+                github-token: ${{ secrets.GITHUB_TOKEN }}
+                script: |
+                  const fs = require('fs');
+                  const path = 'coverage/coverage-gate-result.json';
+                  let body = '';
+                  if (fs.existsSync(path)) {
+                    const r = JSON.parse(fs.readFileSync(path, 'utf8'));
+                    body = `### Coverage Gate result\n- metric: **${r.metric}**\n- threshold: **${r.threshold}%**\n- percent: **${r.percent !== null ? r.percent + '%' : 'N/A'}**\n- passed: **${r.passed}**`;
+                  } else {
+                    body = 'Coverage gate did not produce a result file. Please check the workflow logs.';
+                  }
+                  const pr = github.context.payload.pull_request;
+                  if (pr && pr.number) {
+                    await github.rest.issues.createComment({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      issue_number: pr.number,
+                      body
+                    });
+                  } else {
+                    core.info('Not a pull_request event, skipping PR comment.');
+                  }
+
+            - name: Annotate failed coverage gate
+              if: always() && github.event_name == 'pull_request'
+              run: |
+                set -e
+                PATH_JSON=coverage/coverage-gate-result.json
+                if [ -f "$PATH_JSON" ]; then
+                  PCT=$(jq -r '.percent' $PATH_JSON)
+                  PASSED=$(jq -r '.passed' $PATH_JSON)
+                  THRESH=$(jq -r '.threshold' $PATH_JSON)
+                  METRIC=$(jq -r '.metric' $PATH_JSON)
+                  if [ "$PASSED" = "false" ]; then
+                    MSG="Coverage gate failed (${METRIC}): ${PCT}% < ${THRESH}%"
+                    # Create a GitHub annotation that links to the result file
+                    echo "::error file=coverage/coverage-gate-result.json,line=1::${MSG}"
+                  else
+                    echo "Coverage gate passed: ${PCT}% >= ${THRESH}%"
+                  fi
+                else
+                  echo "::warning file=coverage/coverage-gate-result.json,line=1::coverage-gate-result.json not found"
+                fi
+            }
