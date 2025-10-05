@@ -85,6 +85,10 @@ bash .\scripts\check_env.sh
 
 Si el script detecta falta de herramientas mostrará pasos rápidos para instalarlas.
 
+## Devcontainer
+
+Se incluye un DevContainer básico en `.devcontainer/` para reproducir el entorno de desarrollo (Node 20 + pnpm). Abre la carpeta en VS Code y selecciona "Reopen in Container".
+
 
 El script creará un PR draft usando los valores por defecto. Puedes editar el
 archivo `.git/PR_DRAFT_BODY.md` para personalizar el cuerpo antes de ejecutar.
