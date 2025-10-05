@@ -1,9 +1,71 @@
 {
   "version": "2.0.0",
   "tasks": [
+
+    {
+      "label": "web:dev",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "apps/web" },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "VITE.*ready in",
+          "endsPattern": "Local:.*127\\.0\\.0\\.1:8080"
+        }
+      }
+    },
+    {
+      "label": "livePreview:start",
+      "type": "shell",
+      "command": "echo start",
+      "problemMatcher": [],
+      "options": { "env": {} },
+      "inputs": []
+    },
+    {
+      "label": "livePreview:open",
+      "type": "shell",
+      "command": "echo open",
+      "problemMatcher": [],
+      "options": { "env": {} }
+    },
+    {
+      "label": "ECONEURA: Dev + LivePreview",
+      "dependsOn": [
+        "web:dev",
+        "livePreview:open"
+      ]
+    }
+    ,
+    {
+      "label": "Cockpit: Dev",
+      "type": "shell",
+      "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File .\\.dev\\cockpit\\setup-cockpit.ps1",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    }
+  ],
+  "inputs": [
+    { "id": "lpStart", "type": "command", "command": "livePreview.startServer" },
+    { "id": "lpOpen",  "type": "command", "command": "livePreview.openPreview",
+      "args": { "path": "/preview/preview.html" } }
+
     { "label": "web:dev", "type": "shell", "command": "pnpm -C apps/web dev", "isBackground": true, "problemMatcher": [] },
     { "label": "web:lint", "type": "shell", "command": "pnpm -C apps/web lint --max-warnings 0" },
     { "label": "web:type", "type": "shell", "command": "pnpm -C apps/web typecheck" },
   { "label": "web:test:cov-fast", "type": "shell", "command": "pnpm -C apps/web test:coverage -- --threads 1" }
+
   ]
 }
