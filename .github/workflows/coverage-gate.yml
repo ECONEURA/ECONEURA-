@@ -47,6 +47,7 @@ jobs:
           path: |
             coverage/**
             coverage/coverage-gate-result.json
+            packages/*/reports/**/*.json
 
       - name: Comment PR with coverage result
         if: always() && github.event_name == 'pull_request'
