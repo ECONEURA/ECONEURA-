@@ -84,7 +84,7 @@ bash .\scripts\check_env.sh
 ```
 
 Si el script detecta falta de herramientas mostrará pasos rápidos para instalarlas.
-**Advertencia:** Asegúrate de establecer `FORCE_COVERAGE` si deseas forzar la cobertura de pruebas.
+
 
 El script creará un PR draft usando los valores por defecto. Puedes editar el
 archivo `.git/PR_DRAFT_BODY.md` para personalizar el cuerpo antes de ejecutar.
