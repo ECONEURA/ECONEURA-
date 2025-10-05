@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       COVERAGE_GATE: "1"
+      COVERAGE_THRESHOLD: "95"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,8 +37,12 @@ jobs:
       - name: Merge fragments and run coverage gate
         run: |
           node ./scripts/merge_v8_fragments.js || true
-          # Restore threshold to 95 now that coverage has been raised
-          node ./scripts/coverage-gate.js --threshold 95 --metric statements
+          # Ensure coverage summary exists before running gate
+          if [ ! -f coverage/coverage-summary.json ]; then
+            echo "coverage/coverage-summary.json not found; failing workflow";
+            exit 2;
+          fi
+          node ./scripts/coverage-gate.js --threshold ${COVERAGE_THRESHOLD} --metric statements
 
       - name: Archive package vitest reports
         if: always()
@@ -79,7 +84,7 @@ jobs:
               body = 'Coverage gate did not produce a result file. Please check the workflow logs.';
             }
             // Add an explanatory note about the gate restoration and next steps
-            body += `\n\n**Nota:** El umbral de cobertura ha sido restaurado a **95%** ahora que se han añadido pruebas para alcanzar este objetivo. Si encuentran problemas, por favor revisen los reportes adjuntos en los artefactos y propongan pruebas adicionales por paquete.`;
+            body += `\n\n**Nota:** El umbral de cobertura ha sido restaurado a **${process.env.COVERAGE_THRESHOLD || '95'}%** ahora que se han añadido pruebas para alcanzar este objetivo. Si encuentran problemas, por favor revisen los reportes adjuntos en los artefactos y propongan pruebas adicionales por paquete.`;
 
             const pr = github.context.payload.pull_request;
             if (pr && pr.number) {
