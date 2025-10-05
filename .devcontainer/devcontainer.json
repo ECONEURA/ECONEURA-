@@ -1,8 +1,65 @@
 {
-  "name": "ECONEURA Devcontainer",
-  "dockerFile": "Dockerfile",
+  "name": "ECONEURA Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "workspaceFolder": "/workspace",
+  "remoteUser": "node",
   "customizations": {
     "vscode": {
-      {"name":"ECONEURA Devcontainer","build":{"dockerfile":"Dockerfile"},"workspaceFolder":"/workspace","customizations":{"vscode":{"extensions":["esbenp.prettier-vscode","dbaeumer.vscode-eslint","ms-vscode.vscode-typescript-next"],"settings":{"terminal.integrated.shell.linux":"/bin/bash","editor.formatOnSave":true}}},"forwardPorts":[3000,4000,5432,6379,5050,8081],"postCreateCommand":"pnpm -w install --frozen-lockfile","remoteUser":"node"}
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "GitHub.vscode-pull-request-github",
+        "redhat.vscode-yaml"
+      ],
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "editor.formatOnSave": true
+      }
     }
+  },
+  "forwardPorts": [5173],
+  "postCreateCommand": "pnpm -w install --frozen-lockfile || true"
+}
+{
+  "name": "ECONEURA Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/workspace",
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "GitHub.vscode-pull-request-github",
+        {
+          "name": "ECONEURA Dev Container",
+          "build": {
+            "dockerfile": "Dockerfile"
+          },
+          "workspaceFolder": "/workspace",
+          "remoteUser": "node",
+          "customizations": {
+            "vscode": {
+              "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "eamodio.gitlens",
+                "GitHub.vscode-pull-request-github",
+                "redhat.vscode-yaml"
+              ],
+              "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash",
+                "editor.formatOnSave": true
+              }
+            }
+          },
+          "forwardPorts": [5173],
+          "postCreateCommand": "pnpm -w install --frozen-lockfile || true"
+        }
+      "customizations": {

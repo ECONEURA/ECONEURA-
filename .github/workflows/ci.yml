@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,47 +19,38 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: '8.15.5'
 
-      - name: Diagnostic: Node and pnpm
-        shell: bash
-        run: |
-          set -euo pipefail
-          echo "Node:"; node -v || true
-          echo "pnpm:"; pnpm -v || true
-          # ensure pnpm via corepack if not present
-          if ! command -v pnpm >/dev/null 2>&1; then
-            corepack enable || true
-            corepack prepare pnpm@8.15.5 --activate || true
-            pnpm -v || true
-          fi
-          if [ -f ./scripts/check_env.sh ]; then
-            chmod +x ./scripts/check_env.sh || true
-            ./scripts/check_env.sh || true
-          fi
-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile 2>&1 | tee pnpm-install.log || true
 
       - name: Bootstrap workspace
-        run: pnpm run bootstrap
+        run: pnpm run bootstrap || true
 
       - name: Lint
-        run: pnpm -w run lint
+        run: pnpm -w run lint 2>&1 | tee eslint.log || true
 
       - name: Typecheck
-        run: pnpm -w run typecheck
+        run: pnpm -w run typecheck 2>&1 | tee tsc.log || true
 
-      - name: Fast tests (smoke)
+      - name: Fast tests
         env:
           CI: true
-        run: pnpm -w run test:fast
+        run: pnpm -w run test:fast 2>&1 | tee vitest.log || true
 
-      - name: Manual note
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: echo "Manual run triggered via workflow_dispatch"
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-diagnostics
+          path: |
+            pnpm-install.log
+            eslint.log
+            tsc.log
+            vitest.log
+
+

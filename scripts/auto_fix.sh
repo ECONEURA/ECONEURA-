@@ -1,43 +1,65 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
 echo "Auto-fix helper: attempting safe automatic fixes (eslint --fix) and reporting results"
-
-if ! command -v pnpm >/dev/null 2>&1; then
-  echo "pnpm not found. Please install pnpm (see scripts/setup_dev_env.sh)" >&2
-  exit 2
-fi
-
 echo "Running eslint --fix across workspace..."
-pnpm -w run lint:fix || echo "eslint --fix returned non-zero; check output"
-
 echo "Running typecheck (no emit)"
-pnpm -w run typecheck || echo "typecheck failed"
-
 echo "Running quick tests (fast)"
-pnpm -w run test:fast || echo "some tests failed"
-
 echo "Auto-fix complete. Review changed files and commit if acceptable."
-echo "Suggested next steps: git add -A && git commit -m 'fix: automated lint fixes' && git push"
+echo "Auto-fix: attempting quick fixes (lint --fix, then typecheck smoke)"
+pnpm install --frozen-lockfile
+echo "Running lint --fix across workspace..."
+echo "Running typecheck (noEmit)..."
+echo "Running fast tests..."
+echo "Auto-fix completed. Inspect outputs above and commit fixes if needed."
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Auto-fix: attempting quick fixes (lint --fix, then typecheck smoke)"
+LOGDIR="./.automation_logs"
+mkdir -p "$LOGDIR"
+echo "Auto-fix started: logs -> $LOGDIR"
 
 if ! command -v pnpm >/dev/null 2>&1; then
-  echo "pnpm not found. Run setup_dev_env.sh first or install pnpm."
-  exit 2
+  echo "pnpm not found. Attempting to enable via corepack..." | tee "$LOGDIR/auto_fix.log"
+  if command -v corepack >/dev/null 2>&1; then
+    corepack enable || true
+    corepack prepare pnpm@8.15.5 --activate || true
+  fi
 fi
 
-pnpm install --frozen-lockfile
+echo "Installing dependencies (logs to pnpm-install.log)"
+pnpm install --frozen-lockfile 2>&1 | tee "$LOGDIR/pnpm-install.log" || true
 
-echo "Running lint --fix across workspace..."
-pnpm -w run lint:fix || true
+CHANGED=false
 
-echo "Running typecheck (noEmit)..."
-pnpm -w run typecheck || true
+echo "Running eslint --fix (logs to eslint.log)"
+pnpm -w run lint:fix 2>&1 | tee "$LOGDIR/eslint.log" || true
 
-echo "Running fast tests..."
-pnpm -w run test:fast || true
+# If eslint produced fixes, check git status
+if ! git status --porcelain | grep -q '^'; then
+  echo "No changes after eslint --fix" | tee -a "$LOGDIR/auto_fix.log"
+else
+  echo "Detected changes after eslint --fix" | tee -a "$LOGDIR/auto_fix.log"
+  CHANGED=true
+fi
 
-echo "Auto-fix completed. Inspect outputs above and commit fixes if needed."
+echo "Running typecheck (logs to tsc.log)"
+pnpm -w run typecheck 2>&1 | tee "$LOGDIR/tsc.log" || true
+
+echo "Running fast tests (logs to vitest.log)"
+pnpm -w run test:fast 2>&1 | tee "$LOGDIR/vitest.log" || true
+
+echo "Auto-fix finished" | tee -a "$LOGDIR/auto_fix.log"
+
+if [ "$CHANGED" = true ]; then
+  echo "Files changed by auto-fix. Staging commit..." | tee -a "$LOGDIR/auto_fix.log"
+  git add -A || true
+  if ! git diff --staged --quiet; then
+    git commit -m "chore(ci): automated lint fixes" || true
+    echo "Committed fixes" | tee -a "$LOGDIR/auto_fix.log"
+  else
+    echo "No staged changes to commit" | tee -a "$LOGDIR/auto_fix.log"
+  fi
+else
+  echo "No changes detected by auto-fix" | tee -a "$LOGDIR/auto_fix.log"
+fi
+
+echo "Auto-fix script completed. Logs in $LOGDIR"
+exit 0

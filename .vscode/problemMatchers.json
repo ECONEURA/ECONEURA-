@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "problemMatchers": [
+    {
+      "owner": "vite",
+      "pattern": [
+        {
+          "regexp": ".*",
+          "message": 0
+        }
+      ],
+      "fileLocation": ["relative", "${workspaceFolder}"],
+      "background": {
+        "activeOnStart": true,
+        "beginsPattern": "Local:.*127.0.0.1:5173",
+        "endsPattern": "ready in .*"
+      }
+    }
+  ]
+}
