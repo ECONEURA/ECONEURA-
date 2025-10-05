@@ -25,8 +25,10 @@ run e2e:web
 
 5. Cobertura y gate de PR
 
-La acción de GitHub `Coverage Check` agrega reportes por paquete y publica un
-comentario en el PR. Cockpit (dev) - arranque rápido
+Nota: El workflow de cobertura a nivel de repo ha sido desactivado temporalmente
+y sustituido por un CI más simple y fiable. Si necesitas restablecer una
+política de cobertura en PRs, crea una propuesta de workflow enfocada y probada
+para incluirlo nuevamente.
 
 ---
 
@@ -66,6 +68,29 @@ $env:GITHUB_TOKEN = "<YOUR_TOKEN_HERE>"
 .
 \scripts\create-pr.ps1
 ```
+
+## Verificar entorno de desarrollo
+
+Hemos añadido un pequeño helper para comprobar que tienes instalado Node.js y pnpm antes de ejecutar los tests localmente.
+
+Linux / macOS / WSL:
+
+```bash
+./scripts/check_env.sh
+```
+
+Windows (PowerShell):
+
+```powershell
+bash .\scripts\check_env.sh
+```
+
+Si el script detecta falta de herramientas mostrará pasos rápidos para instalarlas.
+
+## Devcontainer
+
+Se incluye un DevContainer básico en `.devcontainer/` para reproducir el entorno de desarrollo (Node 20 + pnpm). Abre la carpeta en VS Code y selecciona "Reopen in Container".
+
 
 El script creará un PR draft usando los valores por defecto. Puedes editar el
 archivo `.git/PR_DRAFT_BODY.md` para personalizar el cuerpo antes de ejecutar.
