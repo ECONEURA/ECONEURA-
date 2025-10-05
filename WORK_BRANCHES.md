@@ -11,3 +11,7 @@ Generated list of local branches with last commit:
 - copilot/fix-ddcf7cbb-496c-46f8-9393-e85c2615fa63 (commit: 261168fee30ba76cde602ac315229d88383f453b, date: 2025-09-29)
 - local-wip-autosave (commit: 95c84792c7b9bd06928dd723350d6c063362797f, date: 2025-10-04)
 - main (commit: 322e6d997c5d3de08a6436b6a1e0fd7e0989dfbd, date: 2025-10-04)
+
+## Cleanup actions
+
+- Removed complex and flaky workflows and consolidated to a single minimal `.github/workflows/ci.yml` that runs lint, typecheck and fast smoke tests. This simplifies CI and reduces false negatives for contributors.
