@@ -915,3 +915,16 @@ function OrgChart() {
     if (failures.length) console.warn('[ECONEURA self-test]', failures);
   }
 })();
+
+// Export helpers for unit testing
+export {
+  cx,
+  isReactComponent,
+  hexToRgb,
+  rgba,
+  getPalette,
+  TagIcon,
+  correlationId,
+  invokeAgent,
+  readVar,
+};
