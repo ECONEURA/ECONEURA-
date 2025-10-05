@@ -1,12 +1,16 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { beforeEach, test, expect, vi } from 'vitest';
+import { beforeEach, test, vi, describe, it, expect } from 'vitest';
 import EconeuraCockpit, { OrgChart } from '../EconeuraCockpit';
 
 beforeEach(() => {
   // ensure clean globals between tests
-  try { delete (globalThis as any).__ECONEURA_BEARER; } catch {}
-  try { (globalThis as any).fetch = undefined; } catch {}
+  try {
+    delete (globalThis as any).__ECONEURA_BEARER;
+  } catch {}
+  try {
+    (globalThis as any).fetch = undefined;
+  } catch {}
 });
 
 test('login, run agent (mocked fetch) and open chat', async () => {
@@ -21,7 +25,9 @@ test('login, run agent (mocked fetch) and open chat', async () => {
   await waitFor(() => expect(screen.getByPlaceholderText('Buscar...')).toBeTruthy());
 
   // mock a successful fetch response for invokeAgent
-  (globalThis as any).fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ output: 'ok-result' }) });
+  (globalThis as any).fetch = vi
+    .fn()
+    .mockResolvedValue({ ok: true, json: async () => ({ output: 'ok-result' }) });
 
   // Find an Ejecutar button and click it to trigger runAgent
   const runButtons = screen.getAllByText('Ejecutar');
@@ -29,11 +35,16 @@ test('login, run agent (mocked fetch) and open chat', async () => {
   fireEvent.click(runButtons[0]);
 
   // activity list should eventually contain an agent id or message
-  await waitFor(() => {
-    // look for an element that contains an agent id prefix 'a-'
-    const anyAgentText = Array.from(document.querySelectorAll('li')).some(n => /a-\w+/.test(n.textContent || ''));
-    if (!anyAgentText) throw new Error('activity not populated yet');
-  }, { timeout: 3000 });
+  await waitFor(
+    () => {
+      // look for an element that contains an agent id prefix 'a-'
+      const anyAgentText = Array.from(document.querySelectorAll('li')).some(n =>
+        /a-\w+/.test(n.textContent || '')
+      );
+      if (!anyAgentText) throw new Error('activity not populated yet');
+    },
+    { timeout: 3000 }
+  );
 
   // Open chat and expect chat UI elements
   const chatBtn = screen.getByText('Abrir chat');

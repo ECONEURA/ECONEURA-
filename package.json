@@ -9,15 +9,16 @@
     "build": "pnpm run --parallel build",
     "build:web": "pnpm --filter @econeura/web build",
     "build:api": "pnpm --filter @econeura/api build",
-    "test": "vitest run --coverage",
+    "test": "node ./scripts/ensure-coverage-tmp.js && node ./scripts/run-packages-tests-serial-coverage.js",
     "test:fast": "vitest run --threads --reporter dot",
     "test:parallel": "pnpm -w -r --parallel test",
     "pretest": "node ./scripts/ensure-coverage-tmp.js && node ./scripts/ensure-local-react.js",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
-    "lint": "eslint \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\"",
-    "lint:fix": "eslint \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\" --fix",
+    "lint": "eslint --no-error-on-unmatched-pattern \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\"",
+    "lint:fix": "eslint --no-error-on-unmatched-pattern \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\" --fix",
     "ci-check": "node ./scripts/ensure-coverage-tmp.js && pnpm -w run lint && pnpm -w run typecheck && node ./scripts/run-packages-tests.js && node ./scripts/coverage-gate.js --threshold 90 --metric statements",
+    "test:coverage:ci": "node ./scripts/ensure-coverage-tmp.js && node ./scripts/run-packages-tests-serial-coverage.js",
     "typecheck": "node ./scripts/run-tsc.js --noEmit",
     "typecheck:watch": "node ./scripts/run-tsc.js --noEmit --watch",
     "clean": "pnpm run --parallel clean && rm -rf node_modules/.cache",
@@ -28,7 +29,7 @@
     "coverage:check": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\run_one_shot_check.ps1",
     "coverage:enforce": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\enforce_coverage.ps1",
     "check:forbidden": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\check_forbidden_files.ps1",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "node ./scripts/ensure-coverage-tmp.js && node ./scripts/run-packages-tests-serial-coverage.js"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "^12.0.0",
