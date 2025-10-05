@@ -73,18 +73,19 @@ jobs:
         with:
           github-token: ${{ secrets.AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
           script: |
+            function ascii(str){ return str.replace(/[–—]/g,'-').replace(/[^\x00-\x7F]/g,''); }
             const branch = process.env.GITHUB_REF.replace('refs/heads/', '');
             const base = 'main';
             const prs = await github.rest.pulls.list({ owner: context.repo.owner, repo: context.repo.repo, head: `${context.repo.owner}:${branch}`, state: 'open' });
             if (prs.data && prs.data.length > 0) {
               console.log('PR already exists for', branch);
-              return { exists: true, url: prs.data[0].html_url };
+              return JSON.stringify({ exists: true, url: prs.data[0].html_url });
             }
-            const title = `Automated PR: ${branch} -> ${base}`;
-            const body = `This PR was automatically created for branch **${branch}** after running auto-fix. Please review and run CI.`;
+            const title = ascii(`Automated PR: ${branch} -> ${base}`);
+            const body = ascii(`This PR was automatically created for branch **${branch}** after running auto-fix. Please review and run CI.`);
             const pr = await github.rest.pulls.create({ owner: context.repo.owner, repo: context.repo.repo, head: branch, base, title, body });
             console.log('Created PR:', pr.data.html_url);
-            return pr.data.html_url;
+            return JSON.stringify({ url: pr.data.html_url });
 
       - name: Upload diagnostics
         if: always()
