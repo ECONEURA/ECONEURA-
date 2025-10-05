@@ -39,6 +39,19 @@ jobs:
           # Lower threshold to 87 to match current coverage and allow the gate to pass
           node ./scripts/coverage-gate.js --threshold 87 --metric statements
 
+      - name: Archive package vitest reports
+        if: always()
+        run: |
+          set -e
+          COUNT=$(find packages -type f -path '*/reports/*.json' | wc -l)
+          if [ "${COUNT}" -gt 0 ]; then
+            echo "Found ${COUNT} report(s); archiving..."
+            find packages -type f -path '*/reports/*.json' -print0 | tar --null -czf package-reports.tar.gz --files-from -
+            echo "Archived reports to package-reports.tar.gz"
+          else
+            echo "No package reports to archive"
+          fi
+
       - name: Upload coverage artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -48,6 +61,7 @@ jobs:
             coverage/**
             coverage/coverage-gate-result.json
             packages/*/reports/**/*.json
+            package-reports.tar.gz
 
       - name: Comment PR with coverage result
         if: always() && github.event_name == 'pull_request'
@@ -64,6 +78,9 @@ jobs:
             } else {
               body = 'Coverage gate did not produce a result file. Please check the workflow logs.';
             }
+            // Add an explanatory note about the temporary threshold change and next steps
+            body += `\n\n**Nota:** El umbral de cobertura se ha reducido temporalmente a **87%** para desbloquear merges mientras trabajamos en aumentar la cobertura al 95%. Se recomienda crear tareas para incrementar las pruebas y restaurar el umbral cuando esté alcanzable.`;
+
             const pr = github.context.payload.pull_request;
             if (pr && pr.number) {
               await github.rest.issues.createComment({
