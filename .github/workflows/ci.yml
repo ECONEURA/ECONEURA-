@@ -20,13 +20,150 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Setup pnpm (action)
+        uses: pnpm/action-setup@v4
+        with:
+          version: '8.15.5'
+
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile 2>&1 | tee pnpm-install.log || true
+
+      - name: Ensure pnpm available via corepack (fallback)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v pnpm >/dev/null 2>&1; then
+            echo "pnpm not found, attempting corepack prepare..."
+            corepack enable || true
+            corepack prepare pnpm@8.15.5 --activate || true
+          fi
+          echo "pnpm: $(command -v pnpm || echo 'not-found')"
+
+      - name: Diagnostic: Node and pnpm
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Node:"; node -v || true
+          echo "pnpm:"; pnpm -v || true
+          if [ -f ./scripts/check_env.sh ]; then
+            chmod +x ./scripts/check_env.sh || true
+            ./scripts/check_env.sh || true
+          fi
+
+      - name: Install dependencies (pnpm with npm fallback)
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm install --frozen-lockfile 2>&1 | tee pnpm-install.log || true
+          if [ ${PIPESTATUS[0]} -ne 0 ]; then
+            echo "pnpm install failed, showing last 200 lines of log:" && tail -n 200 pnpm-install.log || true
+            echo "Attempting npm ci fallback (best-effort)"
+            if command -v npm >/dev/null 2>&1; then
+              npm ci --prefer-offline --no-audit --progress=false
+            else
+              echo "npm not available; failing step" && (exit 1)
+            fi
+          fi
+
+      - name: Upload pnpm install log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pnpm-install-log
+          path: pnpm-install.log
+
+      - name: Bootstrap workspace
+        run: pnpm run bootstrap
+
+      - name: Lint
+        run: pnpm -w run lint
+
+      - name: Typecheck
+        run: pnpm -w run typecheck
+
+      - name: Fast tests (smoke)
+        env:
+          CI: true
+        run: pnpm -w run test:fast
+
+      - name: Manual note
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo "Manual run triggered via workflow_dispatch"
+name: CI
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: '8.15.5'
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile 2>&1 | tee pnpm-install.log || true
+      - name: Ensure pnpm available via corepack (fallback)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v pnpm >/dev/null 2>&1; then
+            echo "pnpm not found, attempting corepack prepare..."
+            corepack enable || true
+            corepack prepare pnpm@8.15.5 --activate || true
+          fi
+          echo "pnpm: $(command -v pnpm || echo 'not-found')"
+
+      - name: Diagnostic: Node and pnpm
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Node:"; node -v || true
+          echo "pnpm:"; pnpm -v || true
+          if [ -f ./scripts/check_env.sh ]; then
+            chmod +x ./scripts/check_env.sh || true
+            ./scripts/check_env.sh || true
+          fi
+
+      - name: Install dependencies (pnpm with npm fallback)
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm install --frozen-lockfile 2>&1 | tee pnpm-install.log || true
+          if [ ${PIPESTATUS[0]} -ne 0 ]; then
+            echo "pnpm install failed, showing last 200 lines of log:" && tail -n 200 pnpm-install.log || true
+            echo "Attempting npm ci fallback (best-effort)"
+            if command -v npm >/dev/null 2>&1; then
+              npm ci --prefer-offline --no-audit --progress=false
+            else
+              echo "npm not available; failing step" && (exit 1)
+            fi
+          fi
+
+      - name: Upload pnpm install log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pnpm-install-log
+          path: pnpm-install.log
+
 
       - name: Bootstrap workspace
         run: pnpm run bootstrap || true
@@ -53,4 +190,154 @@ jobs:
             tsc.log
             vitest.log
 
+
+
+      - name: Manual note
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo "Manual run triggered via workflow_dispatch"
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+  
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: '8.15.5'
+      - name: Ensure pnpm available via corepack (fallback)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v pnpm >/dev/null 2>&1; then
+            echo "pnpm not found, attempting corepack prepare..."
+            corepack enable || true
+            corepack prepare pnpm@8.15.5 --activate || true
+          fi
+          echo "pnpm: $(command -v pnpm || echo 'not-found')"
+
+      - name: Diagnostic: Node and pnpm
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Node:"; node -v || true
+          echo "pnpm:"; pnpm -v || true
+          # ensure pnpm via corepack if not present
+          if ! command -v pnpm >/dev/null 2>&1; then
+            corepack enable || true
+            corepack prepare pnpm@8.15.5 --activate || true
+            pnpm -v || true
+          fi
+          if [ -f ./scripts/check_env.sh ]; then
+            name: CI
+
+            on:
+              push:
+                branches: [main]
+              pull_request:
+                branches: [main]
+              workflow_dispatch: {}
+
+            jobs:
+              build-and-verify:
+                runs-on: ubuntu-latest
+                timeout-minutes: 45
+                steps:
+                  - name: Checkout
+                    uses: actions/checkout@v4
+
+                  - name: Setup Node.js
+                    uses: actions/setup-node@v4
+                    with:
+                      node-version: '20'
+                      cache: 'pnpm'
+
+                  - name: Setup pnpm
+                    uses: pnpm/action-setup@v4
+                    with:
+                      version: '8.15.5'
+
+                  - name: Ensure pnpm available via corepack (fallback)
+                    shell: bash
+                    run: |
+                      set -euo pipefail
+                      if ! command -v pnpm >/dev/null 2>&1; then
+                        echo "pnpm not found, attempting corepack prepare..."
+                        corepack enable || true
+                        corepack prepare pnpm@8.15.5 --activate || true
+                      fi
+                      echo "pnpm: $(command -v pnpm || echo 'not-found')"
+
+                  - name: Diagnostic: Node and pnpm
+                    shell: bash
+                    run: |
+                      set -euo pipefail
+                      echo "Node:"; node -v || true
+                      echo "pnpm:"; pnpm -v || true
+                      # ensure pnpm via corepack if not present
+                      if ! command -v pnpm >/dev/null 2>&1; then
+                        corepack enable || true
+                        corepack prepare pnpm@8.15.5 --activate || true
+                        pnpm -v || true
+                      fi
+                      if [ -f ./scripts/check_env.sh ]; then
+                        chmod +x ./scripts/check_env.sh || true
+                        ./scripts/check_env.sh || true
+                      fi
+
+                  - name: Install dependencies (pnpm with npm fallback)
+                    shell: bash
+                    run: |
+                      set -euo pipefail
+                      # Try pnpm install first, capture debug output
+                      pnpm install --frozen-lockfile 2>&1 | tee pnpm-install.log || true
+                      if [ ${PIPESTATUS[0]} -ne 0 ]; then
+                        echo "pnpm install failed, showing last 200 lines of log:" && tail -n 200 pnpm-install.log || true
+                        echo "Attempting npm ci fallback (best-effort)"
+                        if command -v npm >/dev/null 2>&1; then
+                          npm ci --prefer-offline --no-audit --progress=false
+                        else
+                          echo "npm not available; failing step" && (exit 1)
+                        fi
+                      fi
+
+                  - name: Upload pnpm install log on failure
+                    if: failure()
+                    uses: actions/upload-artifact@v4
+                    with:
+                      name: pnpm-install-log
+                      path: pnpm-install.log
+
+                  - name: Bootstrap workspace
+                    run: pnpm run bootstrap
+
+                  - name: Lint
+                    run: pnpm -w run lint
+
+                  - name: Typecheck
+                    run: pnpm -w run typecheck
+
+                  - name: Fast tests (smoke)
+                    env:
+                      CI: true
+                    run: pnpm -w run test:fast
+
+                  - name: Manual note
+                    if: ${{ github.event_name == 'workflow_dispatch' }}
+                    run: echo "Manual run triggered via workflow_dispatch"
+                    run: echo "Manual run triggered via workflow_dispatch"
 
