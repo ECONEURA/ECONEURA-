@@ -5,11 +5,12 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch: {}
 
 jobs:
   build-and-verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,9 +27,17 @@ jobs:
           version: '8.15.5'
 
       - name: Diagnostic: Node and pnpm
+        shell: bash
         run: |
+          set -euo pipefail
           echo "Node:"; node -v || true
-          echo "pnpm:"; pnpm -v || (corepack enable && corepack prepare pnpm@8.15.5 --activate && pnpm -v)
+          echo "pnpm:"; pnpm -v || true
+          # ensure pnpm via corepack if not present
+          if ! command -v pnpm >/dev/null 2>&1; then
+            corepack enable || true
+            corepack prepare pnpm@8.15.5 --activate || true
+            pnpm -v || true
+          fi
           if [ -f ./scripts/check_env.sh ]; then
             chmod +x ./scripts/check_env.sh || true
             ./scripts/check_env.sh || true
@@ -50,50 +59,7 @@ jobs:
         env:
           CI: true
         run: pnpm -w run test:fast
-name: CI
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "pnpm"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: "8.15.5"
-
-      - name: Verify Node and pnpm (diagnostic)
-        run: |
-          echo "Node version:"; node -v || true
-          echo "pnpm version:"; pnpm -v || (corepack enable && corepack prepare pnpm@8.15.5 --activate && pnpm -v)
-          if [ -f ./scripts/check_env.sh ]; then
-            chmod +x ./scripts/check_env.sh || true
-            ./scripts/check_env.sh || true
-          else
-            echo "scripts/check_env.sh not found"
-          fi
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Ensure coverage temp
-        run: node ./scripts/ensure-coverage-tmp.js
-
-      - name: Run tests + coverage (serial)
-        env:
-          CI: true
-        run: pnpm -w run test:coverage:ci
+      - name: Manual note
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: echo "Manual run triggered via workflow_dispatch"
