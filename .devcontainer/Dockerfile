@@ -1,3 +1,11 @@
+FROM node:20-bullseye
+
+# Install pnpm globally
+RUN corepack enable && corepack prepare pnpm@8.15.5 --activate
+
+WORKDIR /workspace
+
+CMD ["/bin/bash"]
 # ECONEURA-IA Development Container
 FROM mcr.microsoft.com/devcontainers/base:ubuntu
 
