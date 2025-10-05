@@ -164,6 +164,74 @@ function main() {
     }
   }
 
+  // Additionally, aggregate any raw v8 fragments written into coverage/.tmp/<pkg>/*.json
+  try {
+    const tmpRoot = path.resolve('coverage', '.tmp');
+    if (fs.existsSync(tmpRoot)) {
+      const pkgDirs = fs.readdirSync(tmpRoot, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => path.join(tmpRoot, d.name));
+      for (const pd of pkgDirs) {
+        const files = fs.readdirSync(pd).filter(f => f.endsWith('.json')).map(f => path.join(pd, f));
+        if (files.length === 0) continue;
+        // Each file is a v8 coverage fragment; try to parse and aggregate
+        const aggregateForPkg = { statements: { total: 0, covered: 0 }, functions: { total: 0, covered: 0 }, branches: { total: 0, covered: 0 }, lines: { total: 0, covered: 0 } };
+        for (const f of files) {
+          try {
+            const frag = safeReadJson(f);
+            if (!frag || !frag.result) continue;
+            // frag.result is an array of file coverage objects
+            for (const entry of frag.result) {
+              // entries may have "funcs", "branches", "lines" depending on instrumentation
+              // We'll try to compute totals from available data
+              // lines
+              if (entry.lines && entry.lines.details) {
+                for (const d of entry.lines.details) {
+                  aggregateForPkg.lines.total++;
+                  if (d.count && d.count > 0) aggregateForPkg.lines.covered++;
+                }
+              }
+              // functions
+              if (entry.functions && entry.functions.details) {
+                for (const d of entry.functions.details) {
+                  aggregateForPkg.functions.total++;
+                  if (d.count && d.count > 0) aggregateForPkg.functions.covered++;
+                }
+              }
+              // branches
+              if (entry.branches && entry.branches.details) {
+                for (const d of entry.branches.details) {
+                  // branch detail may include counts array
+                  if (Array.isArray(d.locations)) {
+                    aggregateForPkg.branches.total += d.locations.length;
+                    for (const loc of d.locations) {
+                      if (loc && loc.count && loc.count > 0) aggregateForPkg.branches.covered++;
+                    }
+                  } else if (Array.isArray(d.counts)) {
+                    aggregateForPkg.branches.total += d.counts.length;
+                    for (const c of d.counts) if (c && c > 0) aggregateForPkg.branches.covered++;
+                  }
+                }
+              }
+              // statements fallback: if provided as 'statements' details
+              if (entry.statements && entry.statements.details) {
+                for (const d of entry.statements.details) {
+                  aggregateForPkg.statements.total++;
+                  if (d.count && d.count > 0) aggregateForPkg.statements.covered++;
+                }
+              }
+            }
+          } catch (e) {
+            // ignore parse errors per-file
+          }
+        }
+        // merge the aggregated counts from this pkg into totalCounts
+        mergeSummaryObjects(totalCounts, aggregateForPkg);
+        console.log('Merged v8 fragments from', pd);
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to aggregate v8 fragments:', e && e.message ? e.message : e);
+  }
+
   const summary = buildCoverageSummary(totalCounts);
   writeSummary(summary);
 }
