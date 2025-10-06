@@ -1,4 +1,4 @@
-# ECONEURA · Control plane de IA para empresas (GA 100 por ciento)
+# ECONEURA · Control plane de IA para empresas 
 
 **Gestiona IA sobre tu <sistema>. No sustituimos ERP/CRM.**
 
