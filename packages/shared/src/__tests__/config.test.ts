@@ -18,7 +18,7 @@ const mockEnv = {
   RATE_LIMIT_WINDOW_MS: '900000',
   RATE_LIMIT_MAX_REQUESTS: '100',
   AI_BUDGET_LIMIT_EUR: '1000',
-  AI_BUDGET_ALERT_THRESHOLD: '0.8'
+  AI_BUDGET_ALERT_THRESHOLD: '0.8',
 };
 
 describe('Config Module', () => {

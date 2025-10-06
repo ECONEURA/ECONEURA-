@@ -22,11 +22,22 @@ export const metrics = {
 };
 
 // Funciones helper simplificadas
-export const recordRequest = (_method: string, _route: string, _statusCode: number, _duration: number) => {};
+export const recordRequest = (
+  _method: string,
+  _route: string,
+  _statusCode: number,
+  _duration: number
+) => {};
 export const recordError = (_type: string, _route: string) => {};
 export const recordDatabaseQuery = (_operation: string, _table: string, _duration: number) => {};
 export const recordCacheOperation = (_cacheType: string, _hit: boolean) => {};
-export const recordAIMetrics = (_model: string, _operation: string, _duration: number, _tokensUsed?: number, _costEur?: number) => {};
+export const recordAIMetrics = (
+  _model: string,
+  _operation: string,
+  _duration: number,
+  _tokensUsed?: number,
+  _costEur?: number
+) => {};
 export const updateGauges = () => {};
 export const metricsMiddleware = (req: any, res: any, next: any) => next();
 export const getMetrics = async (): Promise<string> => '';

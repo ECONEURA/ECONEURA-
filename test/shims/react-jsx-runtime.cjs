@@ -5,5 +5,5 @@ module.exports = {
   jsx: real.jsx,
   jsxs: real.jsxs,
   Fragment: real.Fragment,
-  default: real.default || real
+  default: real.default || real,
 };

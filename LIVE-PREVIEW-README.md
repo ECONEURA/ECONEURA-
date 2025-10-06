@@ -2,7 +2,9 @@
 
 ## 🎯 Configuración Completa con Live Preview de Microsoft
 
-El proyecto está configurado para usar **Live Preview** de Microsoft, una extensión integrada de VS Code que permite previsualizar aplicaciones web directamente en el editor.
+El proyecto está configurado para usar **Live Preview** de Microsoft, una
+extensión integrada de VS Code que permite previsualizar aplicaciones web
+directamente en el editor.
 
 ## ✅ Estado Actual
 
@@ -14,23 +16,29 @@ El proyecto está configurado para usar **Live Preview** de Microsoft, una exten
 ## 🚀 Cómo Usar
 
 ### 1. Verificar Instalación
+
 Asegúrate de tener la extensión **"Live Preview"** de Microsoft instalada:
+
 - Presiona `Ctrl+Shift+P` (o `Cmd+Shift+P` en Mac)
 - Busca: "Extensions: Install Extension"
 - Instala: `ms-vscode.live-server`
 
 ### 2. Iniciar Live Preview
+
 **Opción A - Archivo específico:**
+
 - Abre `apps/web/dist/index.html` en VS Code
 - Haz clic derecho en el archivo
 - Selecciona: **"Open with Live Preview"**
 
 **Opción B - Comando:**
+
 - Presiona `Ctrl+Shift+P`
 - Busca: **"Live Preview: Start Server"**
 - Selecciona el archivo `apps/web/dist/index.html`
 
 ### 3. Ver la Interfaz
+
 - Se abrirá un panel integrado en VS Code
 - La interfaz se conectará automáticamente al API
 - Verás el estado de conexión y podrás probar agentes
@@ -75,6 +83,7 @@ pkill -f "apps/api_server.py"
 ## 🔄 Desarrollo
 
 Para desarrollo continuo:
+
 1. El API server se mantiene corriendo en background
 2. Live Preview maneja los archivos estáticos
 3. Los cambios en HTML/JS se reflejan automáticamente
@@ -83,11 +92,13 @@ Para desarrollo continuo:
 ## 🐛 Troubleshooting
 
 **Si Live Preview no funciona:**
+
 - Verifica que la extensión esté instalada
 - Reinicia VS Code
 - Ejecuta: `./live-preview-setup.sh`
 
 **Si el API no responde:**
+
 - Verifica: `ps aux | grep api_server`
 - Reinicia: `pkill -f api_server && python3 apps/api_server.py`
 

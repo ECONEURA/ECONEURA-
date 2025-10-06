@@ -1,54 +1,63 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 // This script prepends a small mock for next/server into the route.test.ts file
 // if that file exists. It's a safe, minimal script intended to avoid parse
 // errors when running linters in this repository.
 
-const targetPath = path.join("apps", "web", "src", "app", "api", "econeura", "[...path]", "route.test.ts");
+const targetPath = path.join(
+  'apps',
+  'web',
+  'src',
+  'app',
+  'api',
+  'econeura',
+  '[...path]',
+  'route.test.ts'
+);
 
 function safeRead(filePath) {
-	try {
-		return fs.readFileSync(filePath, "utf8");
-	} catch (e) {
-		void e;
-		return "";
-	}
+  try {
+    return fs.readFileSync(filePath, 'utf8');
+  } catch (e) {
+    void e;
+    return '';
+  }
 }
 
 function safeWrite(filePath, content) {
-	try {
-		fs.mkdirSync(path.dirname(filePath), { recursive: true });
-		fs.writeFileSync(filePath, content, "utf8");
-		return true;
-	} catch (e) {
-		console.error("add_mock.js: write failed:", e && e.message ? e.message : e);
-		return false;
-	}
+  try {
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, content, 'utf8');
+    return true;
+  } catch (e) {
+    console.error('add_mock.js: write failed:', e && e.message ? e.message : e);
+    return false;
+  }
 }
 
 // (file cleaned to remove duplicated sections)
 
 function safeRead(filePath) {
-	try {
-		return fs.readFileSync(filePath, "utf8");
-	} catch (err) {
-		void err;
-		// return empty if file doesn't exist or can't be read
-		return "";
-	}
+  try {
+    return fs.readFileSync(filePath, 'utf8');
+  } catch (err) {
+    void err;
+    // return empty if file doesn't exist or can't be read
+    return '';
+  }
 }
 
 function safeWrite(filePath, content) {
-	try {
-		fs.mkdirSync(path.dirname(filePath), { recursive: true });
-		fs.writeFileSync(filePath, content, "utf8");
-		return true;
-	} catch (err) {
-		void err;
-		console.error("add_mock.js: write failed");
-		return false;
-	}
+  try {
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, content, 'utf8');
+    return true;
+  } catch (err) {
+    void err;
+    console.error('add_mock.js: write failed');
+    return false;
+  }
 }
 
 const original = safeRead(targetPath);
@@ -102,11 +111,10 @@ vi.mock("next/server", () => ({
 
 `;
 
-if (original.includes("Mock next/server module (injected by add_mock.js)")) {
-	console.log("add_mock.js: mock already present in target file, no changes made.");
+if (original.includes('Mock next/server module (injected by add_mock.js)')) {
+  console.log('add_mock.js: mock already present in target file, no changes made.');
 } else {
-	const success = safeWrite(targetPath, mockCode + original);
-	if (success) console.log("add_mock.js: mock injected into", targetPath);
-	else console.log("add_mock.js: could not inject mock; repository unchanged.");
+  const success = safeWrite(targetPath, mockCode + original);
+  if (success) console.log('add_mock.js: mock injected into', targetPath);
+  else console.log('add_mock.js: could not inject mock; repository unchanged.');
 }
-

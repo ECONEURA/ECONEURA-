@@ -42,7 +42,7 @@ const proxy = new Proxy(named, {
       return t[prop as string];
     }
     return Icon;
-  }
+  },
 });
 
 export default proxy as unknown as Record<string, unknown>;

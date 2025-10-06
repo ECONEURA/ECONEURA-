@@ -25,12 +25,12 @@ export default defineConfig({
         '**/drizzle/**',
         '**/migrations/**',
         '**/seed.ts',
-        '**/seed.js'
-      ]
+        '**/seed.js',
+      ],
     },
     testTimeout: 60000,
     hookTimeout: 60000,
-    teardownTimeout: 60000
+    teardownTimeout: 60000,
   },
   resolve: {
     alias: {
@@ -39,6 +39,6 @@ export default defineConfig({
       '@econeura/sdk': resolve(__dirname, './packages/sdk/src'),
       '@econeura/api': resolve(__dirname, './apps/api/src'),
       '@econeura/web': resolve(__dirname, './apps/web/src'),
-    }
-  }
+    },
+  },
 });

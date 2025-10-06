@@ -14,11 +14,11 @@ export interface ApiResponse<T = any> {
 export const createApiResponse = <T>(data: T, message?: string): ApiResponse<T> => ({
   success: true,
   data,
-  message
+  message,
 });
 
 export const createErrorResponse = (message: string): ApiResponse<null> => ({
   success: false,
   data: null,
-  message
+  message,
 });

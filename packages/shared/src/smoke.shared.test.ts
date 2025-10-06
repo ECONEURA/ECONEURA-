@@ -44,7 +44,7 @@ describe('shared smoke test', () => {
       const user: User = {
         id: '123',
         name: 'John Doe',
-        email: 'john@example.com'
+        email: 'john@example.com',
       };
 
       expect(user.id).toBe('123');
@@ -56,7 +56,7 @@ describe('shared smoke test', () => {
       const response: ApiResponse<string> = {
         success: true,
         data: 'test data',
-        message: 'optional message'
+        message: 'optional message',
       };
 
       expect(response.success).toBe(true);
@@ -83,7 +83,7 @@ describe('shared smoke test', () => {
       };
 
       const result = await fetchSafe(mockFetch, 'http://example.com', {
-        headers: { 'custom-header': 'value' }
+        headers: { 'custom-header': 'value' },
       });
 
       expect(result.status).toBe(200);

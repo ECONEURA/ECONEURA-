@@ -35,7 +35,7 @@ export class ServiceClient {
       retryDelay: 1000,
       circuitBreakerThreshold: 5,
       loadBalancing: 'round-robin',
-      ...config
+      ...config,
     };
   }
 
@@ -46,7 +46,7 @@ export class ServiceClient {
       data: {} as T,
       serviceId: 'mock-service',
       responseTime: 100,
-      retries: 0
+      retries: 0,
     };
   }
 
@@ -55,7 +55,7 @@ export class ServiceClient {
       serviceType: this.config.serviceType,
       availableServices: 1,
       circuitBreakers: {},
-      connectionCounts: {}
+      connectionCounts: {},
     };
   }
 }

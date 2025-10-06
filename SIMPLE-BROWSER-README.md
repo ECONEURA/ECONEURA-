@@ -2,7 +2,8 @@
 
 ## 🎯 **Cockpit 1:1 en VS Code Simple Browser**
 
-Configuración completa para ejecutar el cockpit **sin build, sin Vite**, directamente en el navegador usando Babel para transpilar TSX en tiempo real.
+Configuración completa para ejecutar el cockpit **sin build, sin Vite**,
+directamente en el navegador usando Babel para transpilar TSX en tiempo real.
 
 ## ✅ **Características**
 
@@ -16,11 +17,13 @@ Configuración completa para ejecutar el cockpit **sin build, sin Vite**, direct
 ## 🚀 **Cómo Usar**
 
 ### **Ejecución Automática**
+
 ```bash
 ./cockpit-simple-browser.sh
 ```
 
 ### **Ejecución Manual**
+
 ```bash
 # 1. Ejecutar el script
 ./cockpit-simple-browser.sh
@@ -32,6 +35,7 @@ Configuración completa para ejecutar el cockpit **sin build, sin Vite**, direct
 ## 🔧 **Arquitectura**
 
 ### **HTML Generado** (`apps/web/dist/index.html`)
+
 - **Tailwind CSS** desde CDN
 - **Import Map** para React y dependencias
 - **Babel Standalone** para transpilar TSX
@@ -39,6 +43,7 @@ Configuración completa para ejecutar el cockpit **sin build, sin Vite**, direct
 - **Configuración automática** de gateway y tokens
 
 ### **API Server** (`apps/api_server.py`)
+
 - **CORS completo** para requests del navegador
 - **Endpoints**: `/api/health`, `/api/invoke/:id`
 - **Validación** de headers (Authorization, X-Route, X-Correlation-Id)
@@ -96,15 +101,18 @@ curl -X POST http://127.0.0.1:8080/api/invoke/neura-1 \
 ## 🐛 **Troubleshooting**
 
 **Si no carga el componente:**
+
 - Verifica que Babel esté cargando en Network tab
 - Revisa errores de TSX en Console
 - Confirma que el import map esté correcto
 
 **Si API no responde:**
+
 - Verifica que el servidor esté corriendo: `ps aux | grep python3`
 - Reinicia: `pkill -f api_server && ./cockpit-simple-browser.sh`
 
 **Si CORS errors:**
+
 - El API incluye headers CORS completos
 - Verifica que uses `/api` como base URL (no `http://127.0.0.1:8080/api`)
 

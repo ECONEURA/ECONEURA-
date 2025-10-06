@@ -1,3 +1,1 @@
-{ "livePreview.defaultPreviewPath": "/preview/preview.html",
-  "livePreview.openPreviewTarget": "Embedded Browser",
-  "livePreview.serverPort": 5500 }
+{ "livePreview.defaultPreviewPath": "/preview/preview.html", "livePreview.openPreviewTarget": "Embedded Browser", "livePreview.serverPort": 5500 }

@@ -71,7 +71,8 @@ $env:GITHUB_TOKEN = "<YOUR_TOKEN_HERE>"
 
 ## Verificar entorno de desarrollo
 
-Hemos añadido un pequeño helper para comprobar que tienes instalado Node.js y pnpm antes de ejecutar los tests localmente.
+Hemos añadido un pequeño helper para comprobar que tienes instalado Node.js y
+pnpm antes de ejecutar los tests localmente.
 
 Linux / macOS / WSL:
 
@@ -85,12 +86,14 @@ Windows (PowerShell):
 bash .\scripts\check_env.sh
 ```
 
-Si el script detecta falta de herramientas mostrará pasos rápidos para instalarlas.
+Si el script detecta falta de herramientas mostrará pasos rápidos para
+instalarlas.
 
 ## Devcontainer
 
-Se incluye un DevContainer básico en `.devcontainer/` para reproducir el entorno de desarrollo (Node 20 + pnpm). Abre la carpeta en VS Code y selecciona "Reopen in Container".
-
+Se incluye un DevContainer básico en `.devcontainer/` para reproducir el entorno
+de desarrollo (Node 20 + pnpm). Abre la carpeta en VS Code y selecciona "Reopen
+in Container".
 
 El script creará un PR draft usando los valores por defecto. Puedes editar el
 archivo `.git/PR_DRAFT_BODY.md` para personalizar el cuerpo antes de ejecutar.

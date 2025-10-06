@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -12,9 +12,9 @@ export default defineConfig({
         target: 'http://localhost:8787',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/dev-mock-ai/, '/')
-      }
-    }
+        rewrite: path => path.replace(/^\/dev-mock-ai/, '/'),
+      },
+    },
   },
-  preview: { host: '127.0.0.1', port: 8080 }
-})
+  preview: { host: '127.0.0.1', port: 8080 },
+});

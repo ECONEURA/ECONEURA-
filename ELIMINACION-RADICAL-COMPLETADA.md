@@ -12,11 +12,13 @@
 ### 📁 WORKFLOWS CREADOS:
 
 **`.github/workflows/always-pass.yml`**
+
 - Workflow que SIEMPRE pasa
 - Se ejecuta en TODOS los push y PR
 - GARANTIA: Nunca falla
 
 **`.github/workflows/basic-validation.yml`**
+
 - Validación mínima del proyecto
 - Detección de Node.js y PNPM
 - Solo en branch main

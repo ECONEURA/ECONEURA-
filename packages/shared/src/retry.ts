@@ -15,11 +15,13 @@ export const defaultRetryOptions: RetryOptions = {
   maxDelayMs: 30000,
   retryCondition: (error: Error) => {
     // Retry on network errors, timeouts, and 5xx status codes
-    return error.message.includes('network') ||
-           error.message.includes('timeout') ||
-           error.message.includes('ECONNRESET') ||
-           error.message.includes('ENOTFOUND');
-  }
+    return (
+      error.message.includes('network') ||
+      error.message.includes('timeout') ||
+      error.message.includes('ECONNRESET') ||
+      error.message.includes('ENOTFOUND')
+    );
+  },
 };
 
 // Sleep utility
@@ -52,7 +54,10 @@ export async function withRetry<T>(
       }
 
       // Calculate delay with exponential backoff
-      const delay = Math.min(opts.delayMs * Math.pow(opts.backoffMultiplier, attempt - 1), opts.maxDelayMs);
+      const delay = Math.min(
+        opts.delayMs * Math.pow(opts.backoffMultiplier, attempt - 1),
+        opts.maxDelayMs
+      );
 
       console.log(`Attempt ${attempt} failed, retrying in ${delay}ms:`, lastError.message);
       await sleep(delay);
@@ -64,11 +69,7 @@ export async function withRetry<T>(
 
 // Retry decorator for methods
 export function retryable(options: Partial<RetryOptions> = {}) {
-  return function (
-    _target: unknown,
-    _propertyKey: string,
-    descriptor: PropertyDescriptor
-  ) {
+  return function (_target: unknown, _propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value!;
 
     descriptor.value = async function (...args: unknown[]) {

@@ -19,7 +19,7 @@ function createMockResponse(): any {
         // Simulate finish event immediately for testing
         setTimeout(callback, 0);
       }
-    })
+    }),
   };
 }
 
@@ -34,8 +34,14 @@ describe('Middleware Module', () => {
       middleware(req, res, next);
 
       expect(res.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Origin', '*');
-      expect(res.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      expect(res.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      expect(res.setHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Methods',
+        'GET, POST, PUT, DELETE, OPTIONS'
+      );
+      expect(res.setHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization'
+      );
       expect(next).toHaveBeenCalled();
     });
 
@@ -60,7 +66,10 @@ describe('Middleware Module', () => {
 
       middleware(req, res, next);
 
-      expect(res.setHeader).toHaveBeenCalledWith('Access-Control-Allow-Origin', 'https://example.com');
+      expect(res.setHeader).toHaveBeenCalledWith(
+        'Access-Control-Allow-Origin',
+        'https://example.com'
+      );
     });
   });
 
@@ -77,9 +86,7 @@ describe('Middleware Module', () => {
       // Wait for the finish event to be processed
       await new Promise(resolve => setTimeout(resolve, 10));
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('GET /api/test')
-      );
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('GET /api/test'));
       expect(next).toHaveBeenCalled();
 
       consoleSpy.mockRestore();

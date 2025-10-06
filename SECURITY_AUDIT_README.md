@@ -2,7 +2,9 @@
 
 ## Overview
 
-ECONEURA-IA implements a comprehensive security and audit system with HMAC-SHA256 approval validation, automated evidence collection, and production-ready deployment safeguards.
+ECONEURA-IA implements a comprehensive security and audit system with
+HMAC-SHA256 approval validation, automated evidence collection, and
+production-ready deployment safeguards.
 
 ## Architecture
 
@@ -49,6 +51,7 @@ Run the complete security audit and approval process:
 ### Manual Approval Process
 
 1. **Generate Approval Request**
+
 ```bash
 # Create approval request
 cat > audit/approval_request.json << EOF
@@ -63,6 +66,7 @@ EOF
 ```
 
 2. **Sign Approval**
+
 ```bash
 # Set approval key
 export VAULT_APPROVAL_KEY="your-hex-key-here"
@@ -72,12 +76,14 @@ export VAULT_APPROVAL_KEY="your-hex-key-here"
 ```
 
 3. **Validate Signature**
+
 ```bash
 # Validate the signature
 ./scripts/vault/validate_hmac_approval.sh audit/approval_signed.json
 ```
 
 4. **Create Evidence**
+
 ```bash
 # Generate REVIEW_OK evidence
 ./scripts/automated_audit_pipeline.sh audit/approval_signed.json
@@ -273,6 +279,7 @@ export DEBUG_AUDIT=1
 ### Deployment Steps
 
 1. **Security Setup**
+
    ```bash
    # Configure approval key
    export VAULT_APPROVAL_KEY="production-key-here"
@@ -282,6 +289,7 @@ export DEBUG_AUDIT=1
    ```
 
 2. **Service Deployment**
+
    ```bash
    # Deploy controller service
    cd services/controller
@@ -293,6 +301,7 @@ export DEBUG_AUDIT=1
    ```
 
 3. **Canary Rollout**
+
    ```bash
    # Start canary deployment
    curl -X POST http://controller:8000/api/v1/canary/start

@@ -1,6 +1,7 @@
 # Configuraciones Compartidas de Dependencias
 
-Este directorio contiene configuraciones de `package.json` compartidas para mantener consistencia y reducir duplicación en el monorepo.
+Este directorio contiene configuraciones de `package.json` compartidas para
+mantener consistencia y reducir duplicación en el monorepo.
 
 ## Estructura
 
@@ -39,12 +40,14 @@ packages/configs/
 ## Configuraciones Disponibles
 
 ### Base (`package.base.json`)
+
 - **TypeScript** y tipos de Node.js
 - **ESLint** y **Prettier** para linting y formato
 - **Husky** y **lint-staged** para Git hooks
 - Scripts comunes: `typecheck`, `lint`, `format`
 
 ### API (`package.api.json`)
+
 - **Express.js** como framework web
 - **Zod** para validación de esquemas
 - **Helmet**, **CORS**, **compression** para seguridad y performance
@@ -52,12 +55,14 @@ packages/configs/
 - Scripts: `dev`, `build`, `start`, `test`
 
 ### Web (`package.web.json`)
+
 - **Next.js** como framework React
 - **Tailwind CSS** para estilos
 - **Headless UI** y **Heroicons** para componentes
 - Scripts: `dev`, `build`, `start`, `lint`, `test`
 
 ### Shared (`package.shared.json`)
+
 - **Zod** y **Joi** para validación
 - **Lodash** para utilidades
 - **date-fns** para manejo de fechas
@@ -66,10 +71,10 @@ packages/configs/
 
 ## Beneficios
 
-✅ **Consistencia**: Todas las apps usan las mismas versiones de dependencias
-✅ **Mantenimiento**: Actualizar una dependencia en un solo lugar
-✅ **Productividad**: Configuraciones probadas y optimizadas
-✅ **Seguridad**: Versiones actualizadas y auditadas
+✅ **Consistencia**: Todas las apps usan las mismas versiones de dependencias ✅
+**Mantenimiento**: Actualizar una dependencia en un solo lugar ✅
+**Productividad**: Configuraciones probadas y optimizadas ✅ **Seguridad**:
+Versiones actualizadas y auditadas
 
 ## Actualización
 
@@ -83,10 +88,14 @@ Cuando se actualice una configuración compartida:
 ## Troubleshooting
 
 ### Error: "Configuración no encontrada"
+
 Verifica que el tipo especificado existe en `packages/configs/`
 
 ### Error: "Proyecto no encontrado"
+
 Verifica que la ruta del proyecto existe y contiene un `package.json`
 
 ### Dependencias conflictivas
-Si hay conflictos, revisa las versiones en el config compartido y ajusta según sea necesario.
+
+Si hay conflictos, revisa las versiones en el config compartido y ajusta según
+sea necesario.

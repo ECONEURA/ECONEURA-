@@ -55,9 +55,9 @@
     }
   },
   "risk_levels": {
-    "critical": {"min_score": 95, "description": "Immediate action required"},
-    "high": {"min_score": 80, "description": "Action required within 24 hours"},
-    "medium": {"min_score": 45, "description": "Action required within 1 week"},
-    "low": {"min_score": 0, "description": "Monitor and review periodically"}
+    "critical": { "min_score": 95, "description": "Immediate action required" },
+    "high": { "min_score": 80, "description": "Action required within 24 hours" },
+    "medium": { "min_score": 45, "description": "Action required within 1 week" },
+    "low": { "min_score": 0, "description": "Monitor and review periodically" }
   }
 }

@@ -5,7 +5,13 @@ export type CreateCompany = Partial<Company> & { name?: string };
 export type UpdateCompany = Partial<Company>;
 export type CompanyFilter = Record<string, any>;
 
-export type Contact = { id?: string; name?: string; firstName?: string; lastName?: string; email?: string };
+export type Contact = {
+  id?: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+};
 export type CreateContact = Partial<Contact> & { name?: string };
 export type UpdateContact = Partial<Contact>;
 export type ContactFilter = Record<string, any>;
@@ -23,5 +29,5 @@ export type UpdateActivity = Partial<Activity>;
 export type PaginationResponse = { cursor?: string | null; limit?: number; total?: number };
 
 export function modelTypesAvailable() {
-	return true
+  return true;
 }

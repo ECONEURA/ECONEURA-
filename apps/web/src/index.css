@@ -1,3 +1,5 @@
+/* stylelint-disable no-unknown-animations, at-rule-no-unknown */
+/* The project uses Tailwind at-rules which stylelint may not recognize in this environment */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -9,7 +9,8 @@ export class RateLimiter {
   private maxRequests: number;
   private windowMs: number;
 
-  constructor(maxRequests = 100, windowMs = 60000) { // 100 requests per minute by default
+  constructor(maxRequests = 100, windowMs = 60000) {
+    // 100 requests per minute by default
     this.maxRequests = maxRequests;
     this.windowMs = windowMs;
   }
@@ -22,7 +23,7 @@ export class RateLimiter {
       // First request or window expired
       this.limits.set(key, {
         count: 1,
-        resetTime: now + this.windowMs
+        resetTime: now + this.windowMs,
       });
       return true;
     }
@@ -60,10 +61,12 @@ export function createRateLimitMiddleware(limiter: RateLimiter, keyFn?: (req: an
 
     if (!limiter.isAllowed(key)) {
       res.writeHead(429, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({
-        error: 'Too Many Requests',
-        retryAfter: Math.ceil((limiter.getResetTime(key) - Date.now()) / 1000)
-      }));
+      res.end(
+        JSON.stringify({
+          error: 'Too Many Requests',
+          retryAfter: Math.ceil((limiter.getResetTime(key) - Date.now()) / 1000),
+        })
+      );
       return;
     }
 

@@ -4,7 +4,7 @@ export type Placeholder = Record<string, unknown>;
 
 // Runtime helper to surface types module in coverage
 export function typesAvailable() {
-	return true
+  return true;
 }
 
 // Type exports

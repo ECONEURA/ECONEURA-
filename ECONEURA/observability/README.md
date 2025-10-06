@@ -1,15 +1,18 @@
 # ECONEURA Security Observability
 
-This directory contains the complete observability stack for the ECONEURA security system.
+This directory contains the complete observability stack for the ECONEURA
+security system.
 
 ## Components
 
 ### Metrics Collection (`metrics_lib.sh`)
+
 - Prometheus-compatible metrics in text format
 - Counters, gauges, and histograms for security events
 - Integration with existing security scripts
 
 ### Monitoring Stack
+
 - **Prometheus**: Metrics collection and alerting
 - **Alertmanager**: Alert routing and notification
 - **Grafana**: Dashboards and visualization
@@ -18,6 +21,7 @@ This directory contains the complete observability stack for the ECONEURA securi
 ## Quick Start
 
 1. **Start the monitoring stack:**
+
    ```bash
    cd /workspaces/ECONEURA-IA/ECONEURA
    docker-compose -f docker-compose.monitoring.yml up -d
@@ -35,33 +39,39 @@ This directory contains the complete observability stack for the ECONEURA securi
 ## Metrics Exposed
 
 ### Security Findings
+
 - `econeura_findings_total{tool="trufflehog|gitleaks"}` - Total findings by tool
 - `econeura_findings_high` - High risk findings
 - `econeura_findings_medium` - Medium risk findings
 - `econeura_findings_low` - Low risk findings
 
 ### Mitigation Metrics
+
 - `econeura_mitigations_executed` - Successful mitigations
 - `econeura_mitigations_blocked` - Blocked mitigations
 - `econeura_mttr_seconds` - Mean time to resolution (histogram)
 
 ### Approval Metrics
+
 - `econeura_approvals_total` - Total approval requests
 - `econeura_approvals_validated` - Validated approvals
 - `econeura_approvals_rejected` - Rejected approvals
 
 ### System Health
+
 - `econeura_up` - System health status (1=up, 0=down)
 - `econeura_scan_duration_seconds` - Scan duration (histogram)
 
 ## Alerting
 
 ### Critical Alerts
+
 - High risk findings detected
 - System health degraded
 - Security scan service down
 
 ### Warning Alerts
+
 - Low mitigation success rate (< 80%)
 - High approval rejection rate (> 30%)
 - Slow security scans (> 5 minutes)
@@ -86,16 +96,19 @@ record_approval_metrics "validated" "hmac"
 ## Configuration
 
 ### Prometheus
+
 - Scrape interval: 30s for security metrics
 - Retention: 200 hours
 - Alert rules: `prometheus/alert_rules.yml`
 
 ### Alertmanager
+
 - SMTP configuration for email alerts
 - Slack integration for notifications
 - PagerDuty for critical alerts
 
 ### Grafana
+
 - Auto-provisioned datasources and dashboards
 - Security-focused dashboard with key metrics
 - Refresh interval: 30 seconds
@@ -127,6 +140,7 @@ record_approval_metrics "validated" "hmac"
    - Verify notification channels
 
 ### Logs
+
 ```bash
 # View Prometheus logs
 docker logs econeura-prometheus

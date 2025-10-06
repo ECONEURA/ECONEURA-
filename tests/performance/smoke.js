@@ -12,12 +12,12 @@ export const options = {
 
 export default function () {
   const baseUrl = __ENV.API_URL || 'http://localhost:3001';
-  
+
   const response = http.get(`${baseUrl}/health`);
   check(response, {
-    'status is 200': (r) => r.status === 200,
-    'response time < 2000ms': (r) => r.timings.duration < 2000,
+    'status is 200': r => r.status === 200,
+    'response time < 2000ms': r => r.timings.duration < 2000,
   });
-  
+
   sleep(1);
 }

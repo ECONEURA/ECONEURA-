@@ -12,7 +12,8 @@ describe('Retry Module', () => {
     });
 
     it('should retry on failure and succeed', async () => {
-      const fn = vi.fn()
+      const fn = vi
+        .fn()
         .mockRejectedValueOnce(new Error('network error'))
         .mockResolvedValueOnce('success');
 
@@ -26,14 +27,14 @@ describe('Retry Module', () => {
       const error = new Error('network error'); // Use error that matches default retry condition
       const fn = vi.fn().mockRejectedValue(error);
 
-      await expect(withRetry(fn, { maxAttempts: 2, delayMs: 1 }))
-        .rejects.toThrow('network error');
+      await expect(withRetry(fn, { maxAttempts: 2, delayMs: 1 })).rejects.toThrow('network error');
 
       expect(fn).toHaveBeenCalledTimes(2);
     });
 
     it('should use custom retry condition', async () => {
-      const fn = vi.fn()
+      const fn = vi
+        .fn()
         .mockRejectedValueOnce(new Error('custom error'))
         .mockResolvedValueOnce('success');
 
@@ -42,7 +43,7 @@ describe('Retry Module', () => {
       const result = await withRetry(fn, {
         maxAttempts: 3,
         delayMs: 1,
-        retryCondition
+        retryCondition,
       });
 
       expect(result).toBe('success');
@@ -55,11 +56,13 @@ describe('Retry Module', () => {
 
       const retryCondition = vi.fn(() => false);
 
-      await expect(withRetry(fn, {
-        maxAttempts: 3,
-        delayMs: 1,
-        retryCondition
-      })).rejects.toThrow('non-retryable error');
+      await expect(
+        withRetry(fn, {
+          maxAttempts: 3,
+          delayMs: 1,
+          retryCondition,
+        })
+      ).rejects.toThrow('non-retryable error');
 
       expect(fn).toHaveBeenCalledTimes(1);
       expect(retryCondition).toHaveBeenCalledTimes(1);

@@ -12,12 +12,16 @@ describe('EconeuraCockpit coverage-focused tests', () => {
   afterEach(() => {
     delete (globalThis as any).__ECONEURA_BEARER;
     // restore fetch if stubbed
-    try { vi.unstubAllGlobals?.(); } catch {}
+    try {
+      vi.unstubAllGlobals?.();
+    } catch {}
   });
 
   it('invokeAgent returns body.output when fetch ok and token present (okr mapping)', async () => {
     const mockJson = { output: 'OKR result' };
-    const fetchMock = vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve(mockJson) } as any));
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve(mockJson) } as any)
+    );
     vi.stubGlobal('fetch', fetchMock);
 
     const res = await (H as any).invokeAgent('a-okr-01', { input: 'x' });
@@ -28,7 +32,9 @@ describe('EconeuraCockpit coverage-focused tests', () => {
   });
 
   it('invokeAgent returns simulated when fetch returns not ok', async () => {
-    const fetchMock = vi.fn(() => Promise.resolve({ ok: false, json: () => Promise.resolve({}) } as any));
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({ ok: false, json: () => Promise.resolve({}) } as any)
+    );
     vi.stubGlobal('fetch', fetchMock);
     (globalThis as any).__ECONEURA_BEARER = 'tok-yes';
 
@@ -49,7 +55,9 @@ describe('EconeuraCockpit coverage-focused tests', () => {
   it('runAgent flow: clicking Ejecutar creates activity entry (OK) and clears busy state', async () => {
     // mock fetch to return ok
     const mockJson = { output: 'DONE' };
-    const fetchMock = vi.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve(mockJson) } as any));
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve(mockJson) } as any)
+    );
     vi.stubGlobal('fetch', fetchMock);
 
     const { getAllByText } = render(<EconeuraCockpit />);
@@ -63,7 +71,9 @@ describe('EconeuraCockpit coverage-focused tests', () => {
   });
 
   it('runAgent flow: non-ok response creates ERROR activity', async () => {
-    const fetchMock = vi.fn(() => Promise.resolve({ ok: false, json: () => Promise.resolve({}) } as any));
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({ ok: false, json: () => Promise.resolve({}) } as any)
+    );
     vi.stubGlobal('fetch', fetchMock);
     const { getAllByText } = render(<EconeuraCockpit />);
     const btns = getAllByText('Ejecutar');
@@ -78,7 +88,9 @@ describe('EconeuraCockpit coverage-focused tests', () => {
     const openBtn = getByText('Abrir chat');
     fireEvent.click(openBtn);
     // two sample messages are added; assert that at least one is present
-    await waitFor(() => expect(screen.queryAllByText(/Lo siento, ha ocurrido un error/).length).toBeGreaterThan(0));
+    await waitFor(() =>
+      expect(screen.queryAllByText(/Lo siento, ha ocurrido un error/).length).toBeGreaterThan(0)
+    );
   });
 
   it('correlationId uses fallback when crypto missing', () => {
