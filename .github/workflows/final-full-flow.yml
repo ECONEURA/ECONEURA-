@@ -38,15 +38,18 @@ jobs:
           echo "APIAPP=$APIAPP"
 
       - name: Login to Azure
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Verify Azure login
         run: az account show --output table
 
       - name: Provision resources (Fase D)
         run: |
+          echo "Starting Fase D: Provision"
           set -euo pipefail
           az account set --subscription "$SUBSCRIPTION_ID" || (echo "Failed to set subscription"; exit 1)
           az group create -n "$RG" -l "$LOCATION" --output table || echo "RG may exist"
@@ -68,6 +71,7 @@ jobs:
 
       - name: Download publish-profiles (Fase E)
         run: |
+          echo "Starting Fase E: Download profiles"
           set -euo pipefail
           az webapp deployment list-publishing-profiles -g "$RG" -n "$WEBAPP" --output xml > publish_profile_web.xml || (echo "Failed to download web profile"; exit 1)
           az webapp deployment list-publishing-profiles -g "$RG" -n "$APIAPP" --output xml > publish_profile_api.xml || (echo "Failed to download api profile"; exit 1)
@@ -114,14 +118,16 @@ jobs:
       - name: Build Web (Fase F)
         working-directory: apps/web
         run: |
+          echo "Starting Fase F: Build Web"
           set -euo pipefail
-          pnpm install || (echo "pnpm install failed"; exit 1)
-          VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" pnpm run build || (echo "build failed"; exit 1)
+          pnpm install || npm ci || (echo "build dependencies failed"; exit 1)
+          VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" pnpm run build || npm run build || (echo "build failed"; exit 1)
           if [ ! -f server.js ]; then echo "server.js missing"; exit 2; fi
           cd dist && zip -r ../web-artifact.zip . || (echo "zip failed"; exit 1)
 
       - name: Deploy Web (Fase F)
         run: |
+          echo "Starting Deploy Web"
           set -euo pipefail
           WEB_ZIP=apps/web/web-artifact.zip
           az webapp deploy --resource-group "$RG" --name "$WEBAPP" --src-path "$WEB_ZIP" || az webapp deployment source config-zip -g "$RG" -n "$WEBAPP" --src "$WEB_ZIP" || (echo "Deploy web failed"; exit 1)
@@ -130,7 +136,7 @@ jobs:
         working-directory: services/api
         run: |
           set -euo pipefail
-          pnpm install || echo "pnpm install skipped for api"
+          pnpm install || npm ci || echo "build dependencies skipped for api"
           zip -r ../api-artifact.zip . || (echo "zip api failed"; exit 1)
 
       - name: Deploy API (Fase F)
@@ -141,6 +147,7 @@ jobs:
 
       - name: Smoke tests (Fase F)
         run: |
+          echo "Starting Smoke Tests"
           set -euo pipefail
           WEB_HOST="$WEBAPP.azurewebsites.net"
           API_HOST="$APIAPP.azurewebsites.net"
