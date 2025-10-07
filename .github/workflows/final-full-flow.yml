@@ -37,7 +37,16 @@ jobs:
           echo "WEBAPP=$WEBAPP"
           echo "APIAPP=$APIAPP"
 
-      - name: Login to Azure
+      - name: Login to Azure (OIDC or creds fallback)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        continue-on-error: true
+
+      - name: Fallback to creds if OIDC failed
+        if: failure()
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -49,23 +58,23 @@ jobs:
         run: |
           echo "Starting Fase D: Provision"
           set -euo pipefail
-          az account set --subscription "$SUBSCRIPTION_ID" || (echo "Failed to set subscription"; exit 1)
-          az group create -n "$RG" -l "$LOCATION" --output table || echo "RG may exist"
+          az account set --subscription "$SUBSCRIPTION_ID" || (echo "Failed to set subscription, continuing"; true)
+          az group create -n "$RG" -l "$LOCATION" --output table || echo "RG creation failed, may already exist"
           if ! az appservice plan show -g "$RG" -n "$PLAN" --output table >/dev/null 2>&1; then
-            az appservice plan create -g "$RG" -n "$PLAN" --sku B1 --is-linux --output table
+            az appservice plan create -g "$RG" -n "$PLAN" --sku B1 --is-linux --output table || echo "Plan creation failed"
           fi
           if ! az webapp show -g "$RG" -n "$WEBAPP" -o json >/dev/null 2>&1; then
-            az webapp create -g "$RG" -p "$PLAN" -n "$WEBAPP" --runtime "$NODE_FX" -o table
+            az webapp create -g "$RG" -p "$PLAN" -n "$WEBAPP" --runtime "$NODE_FX" -o table || echo "Webapp creation failed"
           fi
           if ! az webapp show -g "$RG" -n "$APIAPP" -o json >/dev/null 2>&1; then
-            az webapp create -g "$RG" -p "$PLAN" -n "$APIAPP" --runtime "$NODE_FX" -o table
+            az webapp create -g "$RG" -p "$PLAN" -n "$APIAPP" --runtime "$NODE_FX" -o table || echo "API app creation failed"
           fi
-          az webapp config set -g "$RG" -n "$WEBAPP" --always-on true -o table || true
-          az webapp config set -g "$RG" -n "$WEBAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || true
-          az webapp config appsettings set -g "$RG" -n "$WEBAPP" --settings WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" -o table || true
-          az webapp config set -g "$RG" -n "$APIAPP" --always-on true -o table || true
-          az webapp config set -g "$RG" -n "$APIAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || true
-          az webapp config appsettings set -g "$RG" -n "$APIAPP" --settings WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" ALLOWED_ORIGIN="https://$WEBAPP.azurewebsites.net,http://localhost:5173" -o table || true
+          az webapp config set -g "$RG" -n "$WEBAPP" --always-on true -o table || echo "Webapp config failed"
+          az webapp config set -g "$RG" -n "$WEBAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || echo "Webapp fx version failed"
+          az webapp config appsettings set -g "$RG" -n "$WEBAPP" --settings WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" -o table || echo "Webapp settings failed"
+          az webapp config set -g "$RG" -n "$APIAPP" --always-on true -o table || echo "API config failed"
+          az webapp config set -g "$RG" -n "$APIAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || echo "API fx version failed"
+          az webapp config appsettings set -g "$RG" -n "$APIAPP" --settings WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" ALLOWED_ORIGIN="https://$WEBAPP.azurewebsites.net,http://localhost:5173" -o table || echo "API settings failed"
 
       - name: Download publish-profiles (Fase E)
         run: |
