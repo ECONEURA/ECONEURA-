@@ -1,0 +1,120 @@
+name: Azure provision (Fase D)
+
+on:
+  workflow_dispatch:
+    inputs:
+      subscription_id:
+        description: 'Azure Subscription ID'
+        required: true
+        default: 'fc22ced4-6dc1-4f52-aac1-170a62f98c57'
+      resource_group:
+        description: 'Resource Group name'
+        required: true
+        default: 'appsvc_linux_northeurope_basic'
+      location:
+        description: 'Azure location'
+        required: true
+        default: 'northeurope'
+      plan:
+        description: 'App Service Plan name'
+        required: true
+        default: 'appsvc_linux_northeurope_basic'
+      webapp:
+        description: 'Web app name (frontend)'
+        required: true
+        default: 'econeura-web-dev'
+      apiapp:
+        description: 'Web app name (api)'
+        required: true
+        default: 'econeura-api-dev'
+      node_fx:
+        description: 'Linux Fx version'
+        required: true
+        default: 'NODE|20-lts'
+      port:
+        description: 'Port used by the app'
+        required: true
+        default: '3000'
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run idempotent provisioning (Fase D)
+        env:
+          SUBSCRIPTION_ID: ${{ github.event.inputs.subscription_id }}
+          RG: ${{ github.event.inputs.resource_group }}
+          LOCATION: ${{ github.event.inputs.location }}
+          PLAN: ${{ github.event.inputs.plan }}
+          WEBAPP: ${{ github.event.inputs.webapp }}
+          APIAPP: ${{ github.event.inputs.apiapp }}
+          NODE_FX: ${{ github.event.inputs.node_fx }}
+          PORT: ${{ github.event.inputs.port }}
+        run: |
+          set -euo pipefail
+          echo "▶ Comprobando az y suscripción..."
+          az account show --query "{user:user.name,subscription:id}" -o table
+          echo "▶ Estableciendo suscripción: $SUBSCRIPTION_ID"
+          az account set --subscription "$SUBSCRIPTION_ID"
+
+          echo "▶ Creando/asegurando resource group: $RG"
+          az group create -n "$RG" -l "$LOCATION" --output table
+
+          echo "▶ Creando/asegurando App Service Plan: $PLAN"
+          if ! az appservice plan show -g "$RG" -n "$PLAN" --output table >/dev/null 2>&1; then
+            az appservice plan create -g "$RG" -n "$PLAN" --sku B1 --is-linux --output table
+          fi
+
+          echo "▶ Creando/asegurando WebApp (WEB): $WEBAPP"
+          if ! az webapp show -g "$RG" -n "$WEBAPP" -o json >/dev/null 2>&1; then
+            az webapp create -g "$RG" -p "$PLAN" -n "$WEBAPP" --runtime "$NODE_FX" -o table
+          fi
+
+          echo "▶ Creando/asegurando WebApp (API): $APIAPP"
+          if ! az webapp show -g "$RG" -n "$APIAPP" -o json >/dev/null 2>&1; then
+            az webapp create -g "$RG" -p "$PLAN" -n "$APIAPP" --runtime "$NODE_FX" -o table
+          fi
+
+          echo "▶ Configurando settings para WEB"
+          az webapp config set -g "$RG" -n "$WEBAPP" --always-on true -o table || true
+          az webapp config set -g "$RG" -n "$WEBAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || true
+          az webapp config appsettings set -g "$RG" -n "$WEBAPP" --settings \
+            WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" \
+            VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" -o table || true
+
+          echo "▶ Configurando settings para API"
+          az webapp config set -g "$RG" -n "$APIAPP" --always-on true -o table || true
+          az webapp config set -g "$RG" -n "$APIAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || true
+          az webapp config appsettings set -g "$RG" -n "$APIAPP" --settings \
+            WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" \
+            ALLOWED_ORIGIN="https://$WEBAPP.azurewebsites.net,http://localhost:5173" -o table || true
+
+          echo; echo "✔ Estado final de WebApps (resumen):"
+          az webapp show -g "$RG" -n "$WEBAPP" --query "{name:name,defaultHostName:defaultHostName,state:state,resourceGroup:resourceGroup}" -o json
+          az webapp show -g "$RG" -n "$APIAPP" --query "{name:name,defaultHostName:defaultHostName,state:state,resourceGroup:resourceGroup}" -o json
+
+          echo "▶ Descargando publish-profiles y guardando como artefactos"
+          az webapp deployment list-publishing-profiles -g "$RG" -n "$WEBAPP" --output xml > publish_profile_web.xml || true
+          az webapp deployment list-publishing-profiles -g "$RG" -n "$APIAPP" --output xml > publish_profile_api.xml || true
+
+      - name: Upload publish profiles as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: publish-profiles
+          path: |
+            publish_profile_web.xml
+            publish_profile_api.xml
+
+      - name: Done
+        run: echo "Fase D completada. Descarga los artefactos y publícalos como secretos si lo deseas (Fase E)."

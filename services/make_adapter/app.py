@@ -1,6 +1,9 @@
 from fastapi import FastAPI, Request, Header, HTTPException
 import hmac, hashlib, os
+from services.middleware.cors import apply_cors
+
 app = FastAPI(title="make-adapter")
+apply_cors(app, os.environ.get('ALLOWED_ORIGIN'))
 VAULT_TOKEN = os.environ.get("VAULT_TOKEN","")
 # Replace with real Vault retrieval in production
 SCENARIOS = {}

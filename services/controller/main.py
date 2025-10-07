@@ -1,8 +1,10 @@
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 import threading, time, logging, json, os
+from services.middleware.cors import apply_cors
 
 app = FastAPI(title="econeura-controller")
+apply_cors(app, os.environ.get('ALLOWED_ORIGIN'))
 LOG = os.environ.get("CONTROLLER_LOG", "/tmp/econeura_controller.log")
 logging.basicConfig(filename=LOG, level=logging.INFO)
 

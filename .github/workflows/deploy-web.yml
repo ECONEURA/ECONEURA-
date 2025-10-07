@@ -18,11 +18,18 @@ jobs:
         with:
           node-version: "20"
       - run: npm ci
+      - name: Fail early if publish profile missing
+        run: |
+          if [ -z "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_WEB }}" ]; then echo "Missing secret: AZURE_WEBAPP_PUBLISH_PROFILE_WEB"; exit 2; fi
+
       - run: VITE_AI_ENDPOINT="${{ env.VITE_AI_ENDPOINT }}" npm run build
-      - run: node -e "require('fs').cpSync('server.js','dist/server.js')"
+      - name: Copy server.js into dist
+        run: |
+          if [ ! -f server.js ]; then echo "server.js missing"; exit 2; fi
+          node -e "require('fs').cpSync('server.js','dist/server.js')"
       - name: Sanity dist
         run: |
-          [ -f dist/index.html ] && [ -f dist/server.js ] || (echo dist incompleto; exit 2)
+          if [ ! -f dist/index.html ] || [ ! -f dist/server.js ]; then echo "dist incomplete"; ls -la dist || true; exit 2; fi
       - run: cd dist && zip -r ../web-artifact.zip .
       - uses: azure/webapps-deploy@v2
         with:
