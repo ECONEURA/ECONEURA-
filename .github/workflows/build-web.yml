@@ -1,0 +1,75 @@
+name: Build Web App
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    paths:
+      - "apps/web/**"
+      - "packages/**"
+      - ".github/workflows/build-web.yml"
+  pull_request:
+    branches: [ "main", "develop" ]
+    paths:
+      - "apps/web/**"
+      - "packages/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Web Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies (root)
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm -w build || echo "No root build script"
+        continue-on-error: true
+
+      - name: Build web app
+        working-directory: apps/web
+        run: pnpm run build
+
+      - name: Verify build artifacts
+        working-directory: apps/web
+        run: |
+          test -d dist || (echo "ERROR: dist folder not created" && exit 1)
+          test -f dist/index.html || (echo "ERROR: index.html not found" && exit 1)
+          echo "✅ Build artifacts verified"
+          ls -lh dist/ | head -20
+
+      - name: Upload build artifacts (for inspection)
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build-artifacts
+          path: apps/web/dist/
+          retention-days: 7

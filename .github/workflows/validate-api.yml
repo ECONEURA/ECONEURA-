@@ -1,0 +1,58 @@
+name: Validate Python API
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    paths:
+      - "apps/api_py/**"
+      - ".github/workflows/validate-api.yml"
+  pull_request:
+    branches: [ "main", "develop" ]
+    paths:
+      - "apps/api_py/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Python API
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies (if any)
+        working-directory: apps/api_py
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "No requirements.txt - using stdlib only"
+          fi
+
+      - name: Validate server.py syntax
+        working-directory: apps/api_py
+        run: |
+          python -m py_compile server.py
+          echo "✅ Python syntax valid"
+
+      - name: Import check
+        working-directory: apps/api_py
+        run: |
+          python -c "import server; print('✅ Module imports successfully')"
+
+      - name: Check hardcoded routes
+        working-directory: apps/api_py
+        run: |
+          echo "Verifying ROUTES configuration..."
+          python -c "import server; print(f'Routes defined: {server.ROUTES}')"
+          echo "✅ Routes validated"

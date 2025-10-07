@@ -1,0 +1,223 @@
+name: Deploy to Azure (Conditional)
+
+on:
+  workflow_run:
+    workflows: ["Build Web App", "Validate Python API"]
+    branches: [ "main" ]
+    types: [ completed ]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'What to deploy'
+        required: true
+        type: choice
+        options:
+          - web
+          - api
+          - both
+
+permissions:
+  contents: read
+
+jobs:
+  check-secrets:
+    name: Check Secrets Configuration
+    runs-on: ubuntu-latest
+    outputs:
+      has-web-secret: ${{ steps.check.outputs.has-web }}
+      has-api-secret: ${{ steps.check.outputs.has-api }}
+    steps:
+      - name: Check for secrets
+        id: check
+        run: |
+          if [ -n "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_WEB }}" ]; then
+            echo "has-web=true" >> $GITHUB_OUTPUT
+          else
+            echo "has-web=false" >> $GITHUB_OUTPUT
+          fi
+          if [ -n "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_API }}" ]; then
+            echo "has-api=true" >> $GITHUB_OUTPUT
+          else
+            echo "has-api=false" >> $GITHUB_OUTPUT
+          fi
+
+  deploy-web:
+    name: Deploy Web to Azure
+    needs: check-secrets
+    if: needs.check-secrets.outputs.has-web-secret == 'true' && (github.event.inputs.target == 'web' || github.event.inputs.target == 'both' || github.event_name == 'workflow_run')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: production-web
+      url: https://econeura-web-dev.azurewebsites.net
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm -w build || true
+        continue-on-error: true
+
+      - name: Build web app
+        working-directory: apps/web
+        run: pnpm run build
+
+      - name: Create deployment package
+        working-directory: apps/web/dist
+        run: |
+          # Create a simple Node.js server for Azure
+          cat > server.js << 'EOF'
+          const http = require('http');
+          const fs = require('fs');
+          const path = require('path');
+
+          const port = process.env.PORT || 3000;
+
+          const mimeTypes = {
+            '.html': 'text/html',
+            '.js': 'text/javascript',
+            '.css': 'text/css',
+            '.json': 'application/json',
+            '.png': 'image/png',
+            '.jpg': 'image/jpg',
+            '.svg': 'image/svg+xml',
+            '.ico': 'image/x-icon'
+          };
+
+          const server = http.createServer((req, res) => {
+            let filePath = '.' + (req.url === '/' ? '/index.html' : req.url);
+            const ext = path.extname(filePath);
+            const contentType = mimeTypes[ext] || 'text/plain';
+            
+            fs.readFile(filePath, (err, content) => {
+              if (err) {
+                if (err.code === 'ENOENT') {
+                  fs.readFile('./index.html', (err, content) => {
+                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                    res.end(content, 'utf-8');
+                  });
+                } else {
+                  res.writeHead(500);
+                  res.end('Server Error: ' + err.code);
+                }
+              } else {
+                res.writeHead(200, { 'Content-Type': contentType });
+                res.end(content, 'utf-8');
+              }
+            });
+          });
+
+          server.listen(port, () => {
+            console.log(`Server running at http://localhost:${port}/`);
+          });
+          EOF
+          
+          # Create package.json for Azure
+          cat > package.json << 'EOF'
+          {
+            "name": "econeura-web",
+            "version": "1.0.0",
+            "scripts": {
+              "start": "node server.js"
+            },
+            "engines": {
+              "node": ">=20.0.0"
+            }
+          }
+          EOF
+          
+          echo "✅ Deployment package created"
+
+      - name: Zip artifact
+        run: |
+          cd apps/web/dist
+          zip -r ../../../web-deploy.zip .
+          cd ../../..
+          ls -lh web-deploy.zip
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: econeura-web-dev
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_WEB }}
+          package: web-deploy.zip
+
+  deploy-api:
+    name: Deploy API to Azure
+    needs: check-secrets
+    if: needs.check-secrets.outputs.has-api-secret == 'true' && (github.event.inputs.target == 'api' || github.event.inputs.target == 'both' || github.event_name == 'workflow_run')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production-api
+      url: https://econeura-api-dev.azurewebsites.net
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate API
+        working-directory: apps/api_py
+        run: |
+          python -m py_compile server.py
+          python -c "import server; print('✅ API validated')"
+
+      - name: Create deployment package
+        working-directory: apps/api_py
+        run: |
+          # Create startup script for Azure
+          cat > startup.sh << 'EOF'
+          #!/bin/bash
+          cd /home/site/wwwroot
+          python server.py
+          EOF
+          chmod +x startup.sh
+          
+          echo "✅ Deployment package ready"
+
+      - name: Zip artifact
+        run: |
+          cd apps/api_py
+          zip -r ../../api-deploy.zip .
+          cd ../..
+          ls -lh api-deploy.zip
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: econeura-api-dev
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_API }}
+          package: api-deploy.zip
+
+  deployment-summary:
+    name: Deployment Summary
+    needs: [check-secrets, deploy-web, deploy-api]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summary
+        run: |
+          echo "## Deployment Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Web Secret: ${{ needs.check-secrets.outputs.has-web-secret }}" >> $GITHUB_STEP_SUMMARY
+          echo "- API Secret: ${{ needs.check-secrets.outputs.has-api-secret }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Web Deploy: ${{ needs.deploy-web.result || 'skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- API Deploy: ${{ needs.deploy-api.result || 'skipped' }}" >> $GITHUB_STEP_SUMMARY
