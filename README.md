@@ -16,6 +16,27 @@ ciento**.
 
 ---
 
+## 🚀 Quick Start (Express Velocity Mode)
+
+**Complete setup in 3 minutes:**
+```bash
+./scripts/express-velocity.sh
+```
+
+**Or just start dev environment (10 seconds):**
+```bash
+./scripts/express-dev-start.sh
+```
+
+**Check status anytime:**
+```bash
+./scripts/express-status.sh
+```
+
+📚 **Full Guide:** [Express Velocity Documentation](docs/EXPRESS-VELOCITY.md)
+
+---
+
 ## TLDR
 
 - Orquestamos IA **sobre** ERP, CRM y HRIS existentes.
