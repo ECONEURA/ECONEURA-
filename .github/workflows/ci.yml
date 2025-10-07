@@ -1,14 +1,13 @@
-name: CI
-
+name: CI (lint + test)
 on:
   push:
-    branches: [main, fix/azure-ci-20251006171711]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [main]
+    branches: [ "main", "develop" ]
   workflow_dispatch: {}
-
+permissions: { contents: read }
 jobs:
-  build-and-verify:
+  lint-test:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -26,7 +25,7 @@ jobs:
           path: |
             node_modules
             apps/*/node_modules
-            services/*/node_modules
+            packages/*/node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-
@@ -41,27 +40,19 @@ jobs:
           fi
           echo "pnpm: $(command -v pnpm || echo 'not-found')"
 
-      - name: Install dependencies (pnpm or npm fallback)
+      - name: Install dependencies
         shell: bash
         run: |
           set -euo pipefail
-          pnpm install --frozen-lockfile || {
-            echo "pnpm install failed, falling back to npm ci";
-            if command -v npm >/dev/null 2>&1; then
-              npm ci --prefer-offline --no-audit --progress=false
-            else
-              echo "npm not available; failing step"; exit 1
-            fi
-          }
+          pnpm install --frozen-lockfile
 
       - name: Typecheck
         run: pnpm -w run typecheck
 
-      - name: Lint
+      - name: Lint (strict - no warnings allowed)
         run: pnpm -w run lint
 
-      - name: Fast tests (smoke)
+      - name: Tests with coverage
         env:
           CI: true
-        run: pnpm -w run test:fast
-          pnpm install --frozen-lockfile 2>&1 | tee pnpm-install.log || true
+        run: pnpm -w run test:coverage

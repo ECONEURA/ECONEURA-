@@ -1,41 +1,38 @@
-name: Deploy API to Azure
+name: Deploy API to Azure App Service
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
+    paths:
+      - "apps/api_py/**"
+      - ".github/workflows/deploy-api.yml"
   workflow_dispatch: {}
-env:
-  AZURE_APP_NAME: "econeura-api-dev"
-  API_DIR: "apps/api_py"
+permissions:
+  contents: read
 jobs:
   deploy-api:
     runs-on: ubuntu-latest
-    defaults: { run: { shell: bash } }
+    defaults:
+      run:
+        working-directory: apps/api_py
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-      - name: Install Python deps
+      - name: Install Python deps (if requirements.txt exists)
         run: |
-          cd "$API_DIR"
-          pip install -r requirements.txt || echo "No requirements.txt found, installing minimal deps"
-          # Install minimal required packages for the Python API
-          pip install requests || true
-      - name: Sanity API dir
-        run: |
-          test -d "$API_DIR" || { echo "ERROR: falta $API_DIR"; exit 5; }
-          test -f "$API_DIR/server.py" || { echo "ERROR: falta server.py en $API_DIR"; exit 6; }
-          echo "✅ API Python detectada correctamente en $API_DIR"
-      - name: Ensure routing config exists
-        run: |
-          if [ ! -f "packages/config/agent-routing.json" ]; then
-            echo "ERROR: Falta packages/config/agent-routing.json"
-            exit 7
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "No requirements.txt found - using stdlib only API"
           fi
-          echo "✅ Configuración de routing encontrada"
-      - name: Create startup script for Azure
+      - name: Validate Python API
         run: |
-          cd "$API_DIR"
+          test -f server.py || { echo "ERROR: falta server.py"; exit 6; }
+          python -c "import server; print('✅ API Python syntax OK')"
+          echo "✅ API Python detectada correctamente"
+      - name: Create Azure startup script
+        run: |
           cat > startup.sh << 'EOF'
           #!/bin/bash
           cd /home/site/wwwroot
@@ -44,15 +41,13 @@ jobs:
           EOF
           chmod +x startup.sh
           echo "✅ Script de startup creado"
-      - name: Zip API
-        run: |
-          cd "$API_DIR"
-          # Include the entire workspace for routing config
-          zip -r ../../api-artifact.zip . ../../packages/config/agent-routing.json ../../packages/config/
-          cd - >/dev/null
+      - name: Zip artifact
+        run: zip -rq ../api-artifact.zip .
       - name: Deploy to Azure (publish profile)
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_APP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_API }}
-          package: api-artifact.zip
+          package: apps/api-artifact.zip
+    env:
+      AZURE_APP_NAME: "econeura-api-dev"

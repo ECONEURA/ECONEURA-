@@ -1,43 +1,54 @@
-name: CI Smoke
+name: CI Smoke (build web + ping api)
 on:
   push:
-    branches: [ "main", "develop", "staging" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
   workflow_dispatch: {}
+permissions:
+  contents: read
 jobs:
   smoke:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: "20", cache: "npm" }
-      - name: Install (best effort)
+        with: { node-version: "20", cache: "pnpm" }
+      - name: Install pnpm
         run: |
-          if [ -f pnpm-lock.yaml ]; then corepack enable; corepack prepare pnpm@8.15.5 --activate; pnpm -v; pnpm -r i --frozen-lockfile || pnpm -r i || true
-          elif [ -f package-lock.json ]; then npm ci || npm i
-          else npm i || true; fi
-      - name: Lint / Typecheck (best effort)
+          corepack enable
+          corepack prepare pnpm@8.15.5 --activate
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build web (fast check)
+        working-directory: apps/web
         run: |
-          npm -w run lint 2>/dev/null || npm run lint 2>/dev/null || true
-          npm -w run typecheck 2>/dev/null || npm run typecheck 2>/dev/null || true
-      - name: Build web (best effort)
-        run: |
-          if [ -d apps/web ]; then (cd apps/web && (pnpm build || npm run build || true)); fi
-      - name: Test Python API (best effort)
+          pnpm run build
+          test -f dist/index.html
+      - name: Test Python API (syntax check)
         run: |
           if [ -d apps/api_py ] && [ -f apps/api_py/server.py ]; then
             cd apps/api_py
-            python -c "import server; print('✅ Python API syntax OK')" 2>/dev/null || echo "WARN: Python API syntax issues"
-          fi
-      - name: Check agent routing config
-        run: |
-          if [ -f packages/config/agent-routing.json ]; then
-            python -c "import json; data=json.load(open('packages/config/agent-routing.json')); print(f'✅ {len(data)} agentes configurados')" 2>/dev/null || echo "WARN: Error en agent-routing.json"
+            python -c "import server; print('✅ Python API syntax OK')"
           else
-            echo "WARN: Falta packages/config/agent-routing.json"
+            echo "WARN: Python API not found"
           fi
-      - name: Artifact sanity (non-blocking)
+      - name: Check agent routing (current reality)
         run: |
-          test -d apps/web/dist && test -f apps/web/dist/index.html && echo "OK dist" || echo "WARN: no dist/index.html"
-          test -f packages/config/agent-routing.json && echo "OK routing config" || echo "WARN: no agent-routing.json"
+          echo "INFO: agent-routing.json doesn't exist in this repo (routes hardcoded in apps/api_py/server.py)"
+          if [ -f apps/api_py/server.py ]; then
+            grep -n "ROUTES=" apps/api_py/server.py || echo "WARN: ROUTES not found in server.py"
+          fi
+      - name: Ping API (remote - if deployed)
+        continue-on-error: true
+        run: |
+          URL="https://econeura-api-dev.azurewebsites.net/api/health"
+          echo "Testing remote API health endpoint: $URL"
+          curl -sS -m 10 "$URL" | tee /tmp/ping.json || echo "Remote API not available"
+          if [ -f /tmp/ping.json ]; then
+            if command -v jq >/dev/null; then
+              jq -e ".ok==true" /tmp/ping.json >/dev/null && echo "✅ API health check passed"
+            else
+              grep -q '"ok":true' /tmp/ping.json && echo "✅ API health check passed"
+            fi
+          fi
