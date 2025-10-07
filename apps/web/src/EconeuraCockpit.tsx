@@ -26,6 +26,7 @@ import {
   FileBarChart2,
   ListChecks,
   CalendarDays,
+  Copy,
 } from 'lucide-react';
 
 /**
@@ -570,6 +571,7 @@ export default function EconeuraCockpit() {
       window.removeEventListener('auth:logout', onLogout);
     };
   }, []);
+  const [departments, setDepartments] = useState<Department[]>(DATA);
   const [activeDept, setActiveDept] = useState(DATA[0].id);
   const [orgView, setOrgView] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -577,7 +579,7 @@ export default function EconeuraCockpit() {
   const [activity, setActivity] = useState<ActivityEvent[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMsgs, setChatMsgs] = useState<{ id: string; text: string }[]>([]);
-  const dept = useMemo(() => DATA.find(d => d.id === activeDept)!, [activeDept]);
+  const dept = useMemo(() => departments.find(d => d.id === activeDept)!, [departments, activeDept]);
 
   const filteredAgents = useMemo(() => {
     if (!q.trim()) return dept.agents;
@@ -648,6 +650,35 @@ export default function EconeuraCockpit() {
     ]);
   }
 
+  function cloneAgent(agent: Agent) {
+    const newAgent: Agent = {
+      ...agent,
+      id: `${agent.id}-clone-${Date.now()}`,
+      title: `${agent.title} (Copia)`,
+    };
+    
+    setDepartments(prevDepts => 
+      prevDepts.map(d => 
+        d.id === activeDept
+          ? { ...d, agents: [...d.agents, newAgent] }
+          : d
+      )
+    );
+    
+    setActivity(v => [
+      {
+        id: correlationId(),
+        ts: nowIso(),
+        agentId: newAgent.id,
+        deptId: dept.id,
+        status: 'OK',
+        message: `Agente clonado: ${agent.title}`,
+      },
+      ...v,
+    ]);
+  }
+
+
   const ChipIconHITL = UserCheck;
   const ChipIconEU = ShieldCheck;
   const DeptIconComp = getDeptIcon(dept.id);
@@ -685,7 +716,7 @@ export default function EconeuraCockpit() {
       <div className='flex'>
         {/* Sidebar departamentos */}
         <aside className='w-64 bg-white border-r p-2 space-y-1'>
-          {DATA.map(d => {
+          {departments.map(d => {
             const Ico = getDeptIcon(d.id);
             const p = getPalette(d.id);
             const active = activeDept === d.id && !orgView;
@@ -789,7 +820,7 @@ export default function EconeuraCockpit() {
                 {/* Grid de agentes */}
                 <div className='mt-4 grid gap-4 grid-cols-1 xl:grid-cols-3 lg:grid-cols-2'>
                   {filteredAgents.map(a => (
-                    <AgentCard key={a.id} a={a} busy={busyId === a.id} onRun={() => runAgent(a)} />
+                    <AgentCard key={a.id} a={a} busy={busyId === a.id} onRun={() => runAgent(a)} onClone={() => cloneAgent(a)} />
                   ))}
                 </div>
 
@@ -870,8 +901,8 @@ export default function EconeuraCockpit() {
 }
 
 // Tarjeta de agente
-type AgentCardProps = { a: Agent; busy?: boolean; onRun: () => Promise<any> | void };
-function AgentCard({ a, busy, onRun }: AgentCardProps) {
+type AgentCardProps = { a: Agent; busy?: boolean; onRun: () => Promise<any> | void; onClone: () => void };
+function AgentCard({ a, busy, onRun, onClone }: AgentCardProps) {
   const I: any = iconForAgent(a.title);
   return (
     <div className='bg-white rounded-xl border p-4 flex flex-col'>
@@ -920,6 +951,14 @@ function AgentCard({ a, busy, onRun }: AgentCardProps) {
           Ejecutar
         </button>
         <button className='h-9 px-3 rounded-md border text-sm'>Pausar</button>
+        <button
+          onClick={() => onClone()}
+          className='h-9 px-3 rounded-md border text-sm hover:bg-gray-50 flex items-center gap-1'
+          title='Clonar agente'
+        >
+          <Copy className='w-3.5 h-3.5' />
+          Clonar
+        </button>
       </div>
     </div>
   );
