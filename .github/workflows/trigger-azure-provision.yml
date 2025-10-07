@@ -1,0 +1,32 @@
+name: Trigger Azure Provision (Phase D)
+
+on:
+  push:
+    branches: [ "fix/azure-ci-20251006171711" ]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger azure-provision.yml workflow via API
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Dispatching azure-provision.yml on ref: $GITHUB_REF"
+          API_URL="https://api.github.com/repos/${{ github.repository }}/actions/workflows/azure-provision.yml/dispatches"
+          PAYLOAD=$(jq -n --arg ref "fix/azure-ci-20251006171711" \
+            '{ref:$ref, inputs: { subscription_id: "fc22ced4-6dc1-4f52-aac1-170a62f98c57", resource_group: "appsvc_linux_northeurope_basic", location: "northeurope", plan: "appsvc_linux_northeurope_basic", webapp: "econeura-web-dev", apiapp: "econeura-api-dev", node_fx: "NODE|20-lts", port: "3000" }}')
+
+          echo "Payload: $PAYLOAD"
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$API_URL" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD")
+
+          if [ "$HTTP_STATUS" -ne 204 ]; then
+            echo "Dispatch failed with status $HTTP_STATUS";
+            exit 2
+          fi
+
+          echo "Dispatch request accepted (HTTP 204). Azure provision workflow should start shortly."

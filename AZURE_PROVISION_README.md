@@ -59,3 +59,5 @@ Notas
 - Los workflows incluyen comprobaciones "fail early" para evitar despliegues silenciosos si faltan secrets o archivos `dist`.
 
 *** Fin
+ 
+# ci-trigger: force Azure provision dispatch (auto)
