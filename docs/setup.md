@@ -3,11 +3,13 @@
 ## Requisitos del Sistema
 
 ### Hardware Mínimo
+
 - RAM: 4GB
 - CPU: 2 cores
 - Disco: 2GB libre
 
 ### Software Requerido
+
 - **Docker**: 20.10+
 - **Docker Compose**: 2.0+
 - **Node.js**: 20.0+ (proporcionado por dev container)
@@ -16,6 +18,7 @@
 ## Opciones de Setup
 
 ### Opción 1: Script Automatizado (MÁS FÁCIL - RECOMENDADO)
+
 ```bash
 # Ejecutar reconstrucción completamente automatizada
 ./scripts/auto-rebuild-devcontainer.sh
@@ -32,6 +35,7 @@ rebuild-dev
 ```
 
 ### Opción 2: Dev Container (Recomendado - RECONSTRUIDO)
+
 ```bash
 # Si el contenedor actual no tiene Docker, reconstruirlo:
 ./scripts/core/rebuild-devcontainer.sh
@@ -40,6 +44,7 @@ rebuild-dev
 ```
 
 ### Opción 3: Docker Compose Manual
+
 ```bash
 # Levantar todos los servicios
 docker-compose -f docker-compose.dev.yml up -d
@@ -52,6 +57,7 @@ docker exec -it <container_id> bash
 ```
 
 ### Opción 4: Reconstruir Dev Container desde VS Code
+
 ```bash
 # Command Palette: Ctrl+Shift+P
 # Seleccionar: "Dev Containers: Rebuild Container"
@@ -61,11 +67,13 @@ docker exec -it <container_id> bash
 ## Servicios Requeridos
 
 ### Base de Datos
+
 - **PostgreSQL**: Puerto 5432
 - **Redis**: Puerto 6379
 - **PgAdmin**: Puerto 5050 (opcional)
 
 ### Aplicaciones
+
 - **API**: Puerto 3101
 - **Web**: Puerto 3000
 - **Cockpit**: Puerto variable
@@ -86,6 +94,7 @@ curl http://localhost:3101  # API
 ## Troubleshooting
 
 ### Error: "docker command not found"
+
 ```bash
 # Instalar Docker
 # Linux: https://docs.docker.com/engine/install/
@@ -94,6 +103,7 @@ curl http://localhost:3101  # API
 ```
 
 ### Error: "Permission denied"
+
 ```bash
 # Agregar usuario a grupo docker
 sudo usermod -aG docker $USER
@@ -101,6 +111,7 @@ sudo usermod -aG docker $USER
 ```
 
 ### Error: "Port already in use"
+
 ```bash
 # Verificar qué usa el puerto
 lsof -i :5432
