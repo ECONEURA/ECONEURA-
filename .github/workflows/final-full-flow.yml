@@ -80,19 +80,21 @@ jobs:
           echo "$API_PROFILE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
+      - name: Install GitHub CLI
+        run: |
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt update
+          sudo apt install gh -y
+
       - name: Create secrets (Fase E)
-        uses: peter-evans/create-or-update-secret@main
-        with:
-          token: ${{ secrets.WORKFLOW_DISPATCH_PAT || secrets.GITHUB_TOKEN }}
-          secret-name: AZURE_WEBAPP_PUBLISH_PROFILE_WEB
-          secret-value: ${{ env.WEB_PROFILE }}
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          gh secret set AZURE_WEBAPP_PUBLISH_PROFILE_WEB --body "${{ env.WEB_PROFILE }}"
 
       - name: Create secrets API (Fase E)
-        uses: peter-evans/create-or-update-secret@main
-        with:
-          token: ${{ secrets.WORKFLOW_DISPATCH_PAT || secrets.GITHUB_TOKEN }}
-          secret-name: AZURE_WEBAPP_PUBLISH_PROFILE_API
-          secret-value: ${{ env.API_PROFILE }}
+        run: |
+          gh secret set AZURE_WEBAPP_PUBLISH_PROFILE_API --body "${{ env.API_PROFILE }}"
 
       - name: Setup Node
         uses: actions/setup-node@v4
