@@ -1,0 +1,158 @@
+name: Final full Fase D→E→F
+
+on:
+  push:
+    branches: [ "fix/azure-ci-20251006171711" ]
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+  secrets: write
+  id-token: write
+
+jobs:
+  full-flow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SUBSCRIPTION_ID: 'fc22ced4-6dc1-4f52-aac1-170a62f98c57'
+      RG: 'appsvc_linux_northeurope_basic'
+      LOCATION: 'northeurope'
+      PLAN: 'appsvc_linux_northeurope_basic'
+      WEBAPP: 'econeura-web-dev'
+      APIAPP: 'econeura-api-dev'
+      NODE_FX: 'NODE|20-lts'
+      PORT: '3000'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Debug env
+        run: |
+          echo "SUBSCRIPTION_ID=$SUBSCRIPTION_ID"
+          echo "RG=$RG"
+          echo "WEBAPP=$WEBAPP"
+          echo "APIAPP=$APIAPP"
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Provision resources (Fase D)
+        run: |
+          set -euo pipefail
+          az account set --subscription "$SUBSCRIPTION_ID" || (echo "Failed to set subscription"; exit 1)
+          az group create -n "$RG" -l "$LOCATION" --output table || echo "RG may exist"
+          if ! az appservice plan show -g "$RG" -n "$PLAN" --output table >/dev/null 2>&1; then
+            az appservice plan create -g "$RG" -n "$PLAN" --sku B1 --is-linux --output table
+          fi
+          if ! az webapp show -g "$RG" -n "$WEBAPP" -o json >/dev/null 2>&1; then
+            az webapp create -g "$RG" -p "$PLAN" -n "$WEBAPP" --runtime "$NODE_FX" -o table
+          fi
+          if ! az webapp show -g "$RG" -n "$APIAPP" -o json >/dev/null 2>&1; then
+            az webapp create -g "$RG" -p "$PLAN" -n "$APIAPP" --runtime "$NODE_FX" -o table
+          fi
+          az webapp config set -g "$RG" -n "$WEBAPP" --always-on true -o table || true
+          az webapp config set -g "$RG" -n "$WEBAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || true
+          az webapp config appsettings set -g "$RG" -n "$WEBAPP" --settings WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" -o table || true
+          az webapp config set -g "$RG" -n "$APIAPP" --always-on true -o table || true
+          az webapp config set -g "$RG" -n "$APIAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || true
+          az webapp config appsettings set -g "$RG" -n "$APIAPP" --settings WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" ALLOWED_ORIGIN="https://$WEBAPP.azurewebsites.net,http://localhost:5173" -o table || true
+
+      - name: Download publish-profiles (Fase E)
+        run: |
+          set -euo pipefail
+          az webapp deployment list-publishing-profiles -g "$RG" -n "$WEBAPP" --output xml > publish_profile_web.xml || (echo "Failed to download web profile"; exit 1)
+          az webapp deployment list-publishing-profiles -g "$RG" -n "$APIAPP" --output xml > publish_profile_api.xml || (echo "Failed to download api profile"; exit 1)
+          ls -la *.xml
+
+      - name: Read profiles for secrets
+        run: |
+          set -euo pipefail
+          WEB_PROFILE=$(cat publish_profile_web.xml)
+          API_PROFILE=$(cat publish_profile_api.xml)
+          echo "WEB_PROFILE<<EOF" >> $GITHUB_ENV
+          echo "$WEB_PROFILE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "API_PROFILE<<EOF" >> $GITHUB_ENV
+          echo "$API_PROFILE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Create secrets (Fase E)
+        uses: peter-evans/create-or-update-secret@v2
+        with:
+          token: ${{ secrets.WORKFLOW_DISPATCH_PAT || secrets.GITHUB_TOKEN }}
+          secret-name: AZURE_WEBAPP_PUBLISH_PROFILE_WEB
+          secret-value: ${{ env.WEB_PROFILE }}
+
+      - name: Create secrets API (Fase E)
+        uses: peter-evans/create-or-update-secret@v2
+        with:
+          token: ${{ secrets.WORKFLOW_DISPATCH_PAT || secrets.GITHUB_TOKEN }}
+          secret-name: AZURE_WEBAPP_PUBLISH_PROFILE_API
+          secret-value: ${{ env.API_PROFILE }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build Web (Fase F)
+        working-directory: apps/web
+        run: |
+          set -euo pipefail
+          npm ci || (echo "npm ci failed"; exit 1)
+          VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" npm run build || (echo "build failed"; exit 1)
+          if [ ! -f server.js ]; then echo "server.js missing"; exit 2; fi
+          cd dist && zip -r ../web-artifact.zip . || (echo "zip failed"; exit 1)
+
+      - name: Deploy Web (Fase F)
+        run: |
+          set -euo pipefail
+          WEB_ZIP=apps/web/web-artifact.zip
+          az webapp deploy --resource-group "$RG" --name "$WEBAPP" --src-path "$WEB_ZIP" || az webapp deployment source config-zip -g "$RG" -n "$WEBAPP" --src "$WEB_ZIP" || (echo "Deploy web failed"; exit 1)
+
+      - name: Build API (Fase F)
+        working-directory: services/api
+        run: |
+          set -euo pipefail
+          npm ci || echo "npm ci skipped for api"
+          zip -r ../api-artifact.zip . || (echo "zip api failed"; exit 1)
+
+      - name: Deploy API (Fase F)
+        run: |
+          set -euo pipefail
+          API_ZIP=services/api/../api-artifact.zip
+          az webapp deploy --resource-group "$RG" --name "$APIAPP" --src-path "$API_ZIP" || az webapp deployment source config-zip -g "$RG" -n "$APIAPP" --src "$API_ZIP" || (echo "Deploy api failed"; exit 1)
+
+      - name: Smoke tests (Fase F)
+        run: |
+          set -euo pipefail
+          WEB_HOST="$WEBAPP.azurewebsites.net"
+          API_HOST="$APIAPP.azurewebsites.net"
+          echo "Checking API health: https://$API_HOST/api/ai/health"
+          curl -fsS --max-time 30 https://$API_HOST/api/ai/health -o /tmp/api-health.json || (echo "API health failed"; cat /tmp/api-health.json || true; exit 2)
+          echo "Checking Web root: https://$WEB_HOST"
+          curl -fsSI --max-time 30 https://$WEB_HOST | head -n 5 || (echo "Web check failed"; exit 3)
+          echo "Smoke checks passed"
+
+      - name: Report completion
+        env:
+          REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BODY="Fase D→E→F completada automáticamente.
+
+          - Provision: RG=$RG, web=$WEBAPP, api=$APIAPP
+          - Secrets: AZURE_WEBAPP_PUBLISH_PROFILE_WEB y AZURE_WEBAPP_PUBLISH_PROFILE_API creados
+          - Deploy: web y api desplegados
+          - Smoke: PASS
+
+          Revisa Actions logs para detalles."
+          API="https://api.github.com/repos/$REPO/issues"
+          PAYLOAD=$(jq -nc --arg title "[Final] Fase D→E→F summary" --arg body "$BODY" '{title:$title, body:$body}')
+          curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" -d "$PAYLOAD" "$API" > /tmp/issue.json || true
+          jq -r '.html_url' /tmp/issue.json || true

@@ -1,0 +1,49 @@
+name: CI - Web build (typecheck + build)
+
+on:
+  push:
+    branches: ["fix/**", "main"]
+  workflow_dispatch: {}
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies (root)
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck apps/web
+        run: pnpm -w -C apps/web typecheck
+
+      - name: Build apps/web
+        run: pnpm -w -C apps/web build
+
+      - name: Archive dist
+        if: success()
+        run: |
+          if [ -d apps/web/dist ]; then
+            cd apps/web && zip -r ../../web-dist.zip dist || true
+          else
+            echo "No dist dir found"; exit 1
+          fi
+
+      - name: Upload artifact (dist)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: web-dist.zip

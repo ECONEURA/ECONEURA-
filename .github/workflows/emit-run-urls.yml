@@ -1,0 +1,43 @@
+name: Emit run URLs (helper)
+
+on:
+  push:
+    branches: [ "fix/azure-ci-20251006171711" ]
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+
+jobs:
+  emit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: List recent runs and open issue with URLs
+        env:
+          REPO: ${{ github.repository }}
+          PAT: ${{ secrets.WORKFLOW_DISPATCH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          AUTH="-H \"Authorization: Bearer $PAT\""
+          API_BASE="https://api.github.com/repos/$REPO/actions/workflows"
+          declare -a WF_NAMES=("force-provision-postprocess.yml" "report-fase-e.yml" "orchestrate-fase-f.yml" "trigger-azure-provision.yml" "azure-provision.yml")
+          BODY="Runs found:\n"
+          for wf in "${WF_NAMES[@]}"; do
+            RESP=$(eval curl -sS $AUTH "$API_BASE/$wf/runs?per_page=5") || true
+            URLS=$(echo "$RESP" | jq -r '.workflow_runs[]?.html_url' | sed -n '1,3p' || true)
+            if [ -n "$URLS" ]; then
+              BODY+="\n$wf:\n$URLS\n"
+            else
+              BODY+="\n$wf: (no runs)\n"
+            fi
+          done
+          ISSUE_API="https://api.github.com/repos/$REPO/issues"
+          echo -e "$BODY" > /tmp/body.txt
+          PAYLOAD=$(jq -Rs '{title: "[helper] Run URLs for Fase E/F", body: .}' /tmp/body.txt)
+          curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" -d "$PAYLOAD" "$ISSUE_API" > /tmp/issue.json
+          jq -r '.html_url' /tmp/issue.json || true

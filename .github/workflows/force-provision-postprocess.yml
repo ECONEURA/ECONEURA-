@@ -1,0 +1,125 @@
+name: Force Provision postprocess (Fase E) - run-once helper
+
+on:
+  push:
+    branches: [ "fix/azure-ci-20251006171711" ]
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+  secrets: write
+
+jobs:
+  force-postprocess:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (for workspace)
+        uses: actions/checkout@v4
+
+      - name: Find latest successful azure-provision run
+        env:
+          REPO: ${{ github.repository }}
+          PAT: ${{ secrets.WORKFLOW_DISPATCH_PAT }}
+        run: |
+          set -euo pipefail
+          API="https://api.github.com/repos/$REPO/actions/workflows/azure-provision.yml/runs?per_page=50"
+          if [ -n "${PAT:-}" ]; then
+            AUTH_HEADER="-H \"Authorization: Bearer $PAT\""
+          else
+            AUTH_HEADER=""
+          fi
+          echo "Querying runs for azure-provision.yml..."
+          # shellcheck disable=SC2086
+          eval curl -sS $AUTH_HEADER "$API" > /tmp/runs.json
+          RUN_ID=$(jq -r '.workflow_runs[] | select(.conclusion=="success") | .id' /tmp/runs.json | head -n1 || true)
+          if [ -z "$RUN_ID" ]; then
+            echo "No successful azure-provision run found. Bailing out." >&2
+            exit 2
+          fi
+          echo "Found run id: $RUN_ID"
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+
+      - name: Download publish-profiles artifact from run
+        env:
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ env.RUN_ID }}
+          PAT: ${{ secrets.WORKFLOW_DISPATCH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          ARTIFACTS_API="https://api.github.com/repos/$REPO/actions/runs/$RUN_ID/artifacts"
+          if [ -n "${PAT:-}" ]; then
+            curl -sS -H "Authorization: Bearer $PAT" -H "Accept: application/vnd.github+json" "$ARTIFACTS_API" > /tmp/artifacts.json
+          else
+            curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" "$ARTIFACTS_API" > /tmp/artifacts.json
+          fi
+          P_URL=$(jq -r '.artifacts[] | select(.name=="publish-profiles") | .archive_download_url' /tmp/artifacts.json || true)
+          if [ -z "$P_URL" ] || [ "$P_URL" = "null" ]; then
+            echo "publish-profiles artifact not found in run $RUN_ID" >&2
+            exit 2
+          fi
+          echo "Downloading artifact from $P_URL"
+          if [ -n "${PAT:-}" ]; then
+            curl -L -sS -H "Authorization: Bearer $PAT" -o /tmp/publish_profiles.zip "$P_URL"
+          else
+            curl -L -sS -H "Authorization: Bearer $GITHUB_TOKEN" -o /tmp/publish_profiles.zip "$P_URL"
+          fi
+          unzip -o /tmp/publish_profiles.zip -d /tmp/publish_profiles
+          ls -la /tmp/publish_profiles || true
+
+      - name: Load publish profiles into env
+        run: |
+          set -euo pipefail
+          if [ -f /tmp/publish_profiles/publish_profile_web.xml ]; then
+            echo "WEB_PROFILE<<'EOF'" >> $GITHUB_ENV
+            cat /tmp/publish_profiles/publish_profile_web.xml >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          else
+            echo "publish_profile_web.xml not found" >&2
+            exit 2
+          fi
+          if [ -f /tmp/publish_profiles/publish_profile_api.xml ]; then
+            echo "API_PROFILE<<'EOF'" >> $GITHUB_ENV
+            cat /tmp/publish_profiles/publish_profile_api.xml >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          else
+            echo "publish_profile_api.xml not found" >&2
+            exit 2
+          fi
+
+      - name: Create/update secret: AZURE_WEBAPP_PUBLISH_PROFILE_WEB
+        uses: peter-evans/create-or-update-secret@v2
+        with:
+          secret-name: AZURE_WEBAPP_PUBLISH_PROFILE_WEB
+          secret-value: ${{ env.WEB_PROFILE }}
+
+      - name: Create/update secret: AZURE_WEBAPP_PUBLISH_PROFILE_API
+        uses: peter-evans/create-or-update-secret@v2
+        with:
+          secret-name: AZURE_WEBAPP_PUBLISH_PROFILE_API
+          secret-value: ${{ env.API_PROFILE }}
+
+      - name: Open a confirmation issue with details
+        env:
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ env.RUN_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BODY=$(cat <<EOF
+Fase E completada por workflow `force-provision-postprocess.yml`.
+
+Detalles:
+- azure-provision run id: $RUN_ID
+- Se crearon/actualizaron los secretos: AZURE_WEBAPP_PUBLISH_PROFILE_WEB, AZURE_WEBAPP_PUBLISH_PROFILE_API
+
+Revisa Actions logs del run $RUN_ID para más detalles.
+EOF
+)
+          API="https://api.github.com/repos/$REPO/issues"
+          curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" -H "Accept: application/vnd.github+json" -d "{\"title\": \"[Fase E] publish-profiles -> secrets (run $RUN_ID)\", \"body\": $(jq -Rs . <<< "$BODY") }" "$API" > /tmp/issue.json
+          jq -r '.html_url' /tmp/issue.json || true
+
+      - name: Done
+        run: echo "Fase E job complete. If successful, secrets were created and an issue was opened."

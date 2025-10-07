@@ -1,4 +1,105 @@
+name: Azure provision (Fase D) - inline trigger
+
+on:
+  push:
+    branches: [ "fix/azure-ci-20251006171711" ]
+  workflow_dispatch: {}
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    env:
+      SUBSCRIPTION_ID: 'fc22ced4-6dc1-4f52-aac1-170a62f98c57'
+      RG: 'appsvc_linux_northeurope_basic'
+      LOCATION: 'northeurope'
+      PLAN: 'appsvc_linux_northeurope_basic'
+      WEBAPP: 'econeura-web-dev'
+      APIAPP: 'econeura-api-dev'
+      NODE_FX: 'NODE|20-lts'
+      PORT: '3000'
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run idempotent provisioning (Fase D)
+        env:
+          SUBSCRIPTION_ID: ${{ env.SUBSCRIPTION_ID }}
+          RG: ${{ env.RG }}
+          LOCATION: ${{ env.LOCATION }}
+          PLAN: ${{ env.PLAN }}
+          WEBAPP: ${{ env.WEBAPP }}
+          APIAPP: ${{ env.APIAPP }}
+          NODE_FX: ${{ env.NODE_FX }}
+          PORT: ${{ env.PORT }}
+        run: |
+          set -euo pipefail
+          echo "\u25b6 Comprobando az y suscripción..."
+          az account show --query "{user:user.name,subscription:id}" -o table
+          echo "\u25b6 Estableciendo suscripción: $SUBSCRIPTION_ID"
+          az account set --subscription "$SUBSCRIPTION_ID"
+
+          echo "\u25b6 Creando/asegurando resource group: $RG"
+          az group create -n "$RG" -l "$LOCATION" --output table
+
+          echo "\u25b6 Creando/asegurando App Service Plan: $PLAN"
+          if ! az appservice plan show -g "$RG" -n "$PLAN" --output table >/dev/null 2>&1; then
+            az appservice plan create -g "$RG" -n "$PLAN" --sku B1 --is-linux --output table
+          fi
+
+          echo "\u25b6 Creando/asegurando WebApp (WEB): $WEBAPP"
+          if ! az webapp show -g "$RG" -n "$WEBAPP" -o json >/dev/null 2>&1; then
+            az webapp create -g "$RG" -p "$PLAN" -n "$WEBAPP" --runtime "$NODE_FX" -o table
+          fi
+
+          echo "\u25b6 Creando/asegurando WebApp (API): $APIAPP"
+          if ! az webapp show -g "$RG" -n "$APIAPP" -o json >/dev/null 2>&1; then
+            az webapp create -g "$RG" -p "$PLAN" -n "$APIAPP" --runtime "$NODE_FX" -o table
+          fi
+
+          echo "\u25b6 Configurando settings para WEB"
+          az webapp config set -g "$RG" -n "$WEBAPP" --always-on true -o table || true
+          az webapp config set -g "$RG" -n "$WEBAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || true
+          az webapp config appsettings set -g "$RG" -n "$WEBAPP" --settings \
+            WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" \
+            VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" -o table || true
+
+          echo "\u25b6 Configurando settings para API"
+          az webapp config set -g "$RG" -n "$APIAPP" --always-on true -o table || true
+          az webapp config set -g "$RG" -n "$APIAPP" --set siteConfig.linuxFxVersion="$NODE_FX" -o table || true
+          az webapp config appsettings set -g "$RG" -n "$APIAPP" --settings \
+            WEBSITE_NODE_DEFAULT_VERSION="20-lts" WEBSITES_PORT="$PORT" \
+            ALLOWED_ORIGIN="https://$WEBAPP.azurewebsites.net,http://localhost:5173" -o table || true
+
+          echo; echo "\u2714 Estado final de WebApps (resumen):"
+          az webapp show -g "$RG" -n "$WEBAPP" --query "{name:name,defaultHostName:defaultHostName,state:state,resourceGroup:resourceGroup}" -o json
+          az webapp show -g "$RG" -n "$APIAPP" --query "{name:name,defaultHostName:defaultHostName,state:state,resourceGroup:resourceGroup}" -o json
+
+          echo "\u25b6 Descargando publish-profiles y guardando como artefactos"
+          az webapp deployment list-publishing-profiles -g "$RG" -n "$WEBAPP" --output xml > publish_profile_web.xml || true
+          az webapp deployment list-publishing-profiles -g "$RG" -n "$APIAPP" --output xml > publish_profile_api.xml || true
+
+      - name: Upload publish profiles as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: publish-profiles
+          path: |
+            publish_profile_web.xml
+            publish_profile_api.xml
+
+      - name: Done
+        run: echo "Fase D completada. Descarga los artefactos y publícalos como secretos si lo deseas (Fase E)."
 name: Trigger Azure Provision (Phase D)
+
+permissions:
+  actions: write
 
 on:
   push:
@@ -8,25 +109,18 @@ jobs:
   dispatch:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger azure-provision.yml workflow via API
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Dispatching azure-provision.yml on ref: $GITHUB_REF"
-          API_URL="https://api.github.com/repos/${{ github.repository }}/actions/workflows/azure-provision.yml/dispatches"
-          PAYLOAD=$(jq -n --arg ref "fix/azure-ci-20251006171711" \
-            '{ref:$ref, inputs: { subscription_id: "fc22ced4-6dc1-4f52-aac1-170a62f98c57", resource_group: "appsvc_linux_northeurope_basic", location: "northeurope", plan: "appsvc_linux_northeurope_basic", webapp: "econeura-web-dev", apiapp: "econeura-api-dev", node_fx: "NODE|20-lts", port: "3000" }}')
-
-          echo "Payload: $PAYLOAD"
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$API_URL" \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "$PAYLOAD")
-
-          if [ "$HTTP_STATUS" -ne 204 ]; then
-            echo "Dispatch failed with status $HTTP_STATUS";
-            exit 2
-          fi
-
-          echo "Dispatch request accepted (HTTP 204). Azure provision workflow should start shortly."
+      - name: Dispatch azure-provision.yml via action
+        uses: peter-evans/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: azure-provision.yml
+          ref: fix/azure-ci-20251006171711
+          inputs: |
+            subscription_id: fc22ced4-6dc1-4f52-aac1-170a62f98c57
+            resource_group: appsvc_linux_northeurope_basic
+            location: northeurope
+            plan: appsvc_linux_northeurope_basic
+            webapp: econeura-web-dev
+            apiapp: econeura-api-dev
+            node_fx: 'NODE|20-lts'
+            port: '3000'
