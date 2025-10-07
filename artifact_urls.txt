@@ -1,1 +1,0 @@
-https://api.github.com/repos/ECONEURA/ECONEURA-/actions/artifacts/4186835919/zip
