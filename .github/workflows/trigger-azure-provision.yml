@@ -3,44 +3,20 @@ name: Azure provision (Fase D) - inline trigger
 on:
   push:
     branches: [ "fix/azure-ci-20251006171711" ]
-  workflow_dispatch:
-    inputs:
-      subscription_id:
-        description: 'Azure Subscription ID'
-        required: true
-        default: 'fc22ced4-6dc1-4f52-aac1-170a62f98c57'
-      resource_group:
-        description: 'Resource Group name'
-        required: true
-        default: 'appsvc_linux_northeurope_basic'
-      location:
-        description: 'Azure location'
-        required: true
-        default: 'northeurope'
-      plan:
-        description: 'App Service Plan name'
-        required: true
-        default: 'appsvc_linux_northeurope_basic'
-      webapp:
-        description: 'Web app name (frontend)'
-        required: true
-        default: 'econeura-web-dev'
-      apiapp:
-        description: 'Web app name (api)'
-        required: true
-        default: 'econeura-api-dev'
-      node_fx:
-        description: 'Linux Fx version'
-        required: true
-        default: 'NODE|20-lts'
-      port:
-        description: 'Port used by the app'
-        required: true
-        default: '3000'
+  workflow_dispatch: {}
 
 jobs:
   provision:
     runs-on: ubuntu-latest
+    env:
+      SUBSCRIPTION_ID: 'fc22ced4-6dc1-4f52-aac1-170a62f98c57'
+      RG: 'appsvc_linux_northeurope_basic'
+      LOCATION: 'northeurope'
+      PLAN: 'appsvc_linux_northeurope_basic'
+      WEBAPP: 'econeura-web-dev'
+      APIAPP: 'econeura-api-dev'
+      NODE_FX: 'NODE|20-lts'
+      PORT: '3000'
     permissions:
       contents: read
       id-token: write
@@ -55,14 +31,14 @@ jobs:
 
       - name: Run idempotent provisioning (Fase D)
         env:
-          SUBSCRIPTION_ID: ${{ github.event.inputs.subscription_id || 'fc22ced4-6dc1-4f52-aac1-170a62f98c57' }}
-          RG: ${{ github.event.inputs.resource_group || 'appsvc_linux_northeurope_basic' }}
-          LOCATION: ${{ github.event.inputs.location || 'northeurope' }}
-          PLAN: ${{ github.event.inputs.plan || 'appsvc_linux_northeurope_basic' }}
-          WEBAPP: ${{ github.event.inputs.webapp || 'econeura-web-dev' }}
-          APIAPP: ${{ github.event.inputs.apiapp || 'econeura-api-dev' }}
-          NODE_FX: ${{ github.event.inputs.node_fx || 'NODE|20-lts' }}
-          PORT: ${{ github.event.inputs.port || '3000' }}
+          SUBSCRIPTION_ID: ${{ env.SUBSCRIPTION_ID }}
+          RG: ${{ env.RG }}
+          LOCATION: ${{ env.LOCATION }}
+          PLAN: ${{ env.PLAN }}
+          WEBAPP: ${{ env.WEBAPP }}
+          APIAPP: ${{ env.APIAPP }}
+          NODE_FX: ${{ env.NODE_FX }}
+          PORT: ${{ env.PORT }}
         run: |
           set -euo pipefail
           echo "\u25b6 Comprobando az y suscripción..."
