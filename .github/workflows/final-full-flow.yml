@@ -1,5 +1,7 @@
 name: Final full Fase D→E→F
 
+# Trigger test
+
 on:
   push:
     branches: [fix/azure-ci-20251006171711]
