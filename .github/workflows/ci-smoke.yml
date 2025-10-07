@@ -1,0 +1,43 @@
+name: CI Smoke
+on:
+  push:
+    branches: [ "main", "develop", "staging" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: {}
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20", cache: "npm" }
+      - name: Install (best effort)
+        run: |
+          if [ -f pnpm-lock.yaml ]; then corepack enable; corepack prepare pnpm@8.15.5 --activate; pnpm -v; pnpm -r i --frozen-lockfile || pnpm -r i || true
+          elif [ -f package-lock.json ]; then npm ci || npm i
+          else npm i || true; fi
+      - name: Lint / Typecheck (best effort)
+        run: |
+          npm -w run lint 2>/dev/null || npm run lint 2>/dev/null || true
+          npm -w run typecheck 2>/dev/null || npm run typecheck 2>/dev/null || true
+      - name: Build web (best effort)
+        run: |
+          if [ -d apps/web ]; then (cd apps/web && (pnpm build || npm run build || true)); fi
+      - name: Test Python API (best effort)
+        run: |
+          if [ -d apps/api_py ] && [ -f apps/api_py/server.py ]; then
+            cd apps/api_py
+            python -c "import server; print('✅ Python API syntax OK')" 2>/dev/null || echo "WARN: Python API syntax issues"
+          fi
+      - name: Check agent routing config
+        run: |
+          if [ -f packages/config/agent-routing.json ]; then
+            python -c "import json; data=json.load(open('packages/config/agent-routing.json')); print(f'✅ {len(data)} agentes configurados')" 2>/dev/null || echo "WARN: Error en agent-routing.json"
+          else
+            echo "WARN: Falta packages/config/agent-routing.json"
+          fi
+      - name: Artifact sanity (non-blocking)
+        run: |
+          test -d apps/web/dist && test -f apps/web/dist/index.html && echo "OK dist" || echo "WARN: no dist/index.html"
+          test -f packages/config/agent-routing.json && echo "OK routing config" || echo "WARN: no agent-routing.json"

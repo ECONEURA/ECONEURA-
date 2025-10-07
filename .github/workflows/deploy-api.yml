@@ -1,25 +1,58 @@
 name: Deploy API to Azure
 on:
   push:
-    branches: ["main", "fix/**", "release/**"]
+    branches: [ "main" ]
   workflow_dispatch: {}
 env:
   AZURE_APP_NAME: "econeura-api-dev"
+  API_DIR: "apps/api_py"
 jobs:
-  api:
+  deploy-api:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: services/api
+    defaults: { run: { shell: bash } }
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v4
         with:
-          node-version: "20"
-      - run: npm ci || true
-      - run: zip -r ../api-artifact.zip .
-      - uses: azure/webapps-deploy@v2
+          python-version: "3.11"
+      - name: Install Python deps
+        run: |
+          cd "$API_DIR"
+          pip install -r requirements.txt || echo "No requirements.txt found, installing minimal deps"
+          # Install minimal required packages for the Python API
+          pip install requests || true
+      - name: Sanity API dir
+        run: |
+          test -d "$API_DIR" || { echo "ERROR: falta $API_DIR"; exit 5; }
+          test -f "$API_DIR/server.py" || { echo "ERROR: falta server.py en $API_DIR"; exit 6; }
+          echo "✅ API Python detectada correctamente en $API_DIR"
+      - name: Ensure routing config exists
+        run: |
+          if [ ! -f "packages/config/agent-routing.json" ]; then
+            echo "ERROR: Falta packages/config/agent-routing.json"
+            exit 7
+          fi
+          echo "✅ Configuración de routing encontrada"
+      - name: Create startup script for Azure
+        run: |
+          cd "$API_DIR"
+          cat > startup.sh << 'EOF'
+          #!/bin/bash
+          cd /home/site/wwwroot
+          export PYTHONPATH=/home/site/wwwroot
+          python server.py
+          EOF
+          chmod +x startup.sh
+          echo "✅ Script de startup creado"
+      - name: Zip API
+        run: |
+          cd "$API_DIR"
+          # Include the entire workspace for routing config
+          zip -r ../../api-artifact.zip . ../../packages/config/agent-routing.json ../../packages/config/
+          cd - >/dev/null
+      - name: Deploy to Azure (publish profile)
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_APP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_API }}
-          package: services/api/../api-artifact.zip
+          package: api-artifact.zip

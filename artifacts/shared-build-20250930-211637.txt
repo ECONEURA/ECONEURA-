@@ -1,4 +1,0 @@
-
-> @econeura/shared@1.0.0 build C:\Users\Usuario\ECONEURA-\ECONEURA-\packages\shared
-> tsc -p tsconfig.json
-
