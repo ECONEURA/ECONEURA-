@@ -101,12 +101,17 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
       - name: Build Web (Fase F)
         working-directory: apps/web
         run: |
           set -euo pipefail
-          npm ci || (echo "npm ci failed"; exit 1)
-          VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" npm run build || (echo "build failed"; exit 1)
+          pnpm install || (echo "pnpm install failed"; exit 1)
+          VITE_AI_ENDPOINT="https://$APIAPP.azurewebsites.net/api/ai" pnpm run build || (echo "build failed"; exit 1)
           if [ ! -f server.js ]; then echo "server.js missing"; exit 2; fi
           cd dist && zip -r ../web-artifact.zip . || (echo "zip failed"; exit 1)
 
@@ -120,7 +125,7 @@ jobs:
         working-directory: services/api
         run: |
           set -euo pipefail
-          npm ci || echo "npm ci skipped for api"
+          pnpm install || echo "pnpm install skipped for api"
           zip -r ../api-artifact.zip . || (echo "zip api failed"; exit 1)
 
       - name: Deploy API (Fase F)
