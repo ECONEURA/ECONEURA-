@@ -68,7 +68,7 @@ type ActivityEvent = {
 };
 
 // Logo oficial (inline, exacto)
-function LogoEconeura(): JSX.Element {
+function LogoEconeura() {
   // Logo ECONEURA exacto (círculo + árbol electrónico + nodos dorados)
   const svg = `<svg width="200" height="200" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t a">
   <title id="t">Logo de ECONEURA</title>

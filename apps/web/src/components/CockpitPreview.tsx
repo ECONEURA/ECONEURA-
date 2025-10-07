@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const AI_ENDPOINT = (globalThis as any)?.ECONEURA_AI_ENDPOINT || '/api/ai';
 
-export default function CockpitPreview(): JSX.Element {
+export default function CockpitPreview() {
   const theme = {
     bg: '#f8fafc',
     surface: '#ffffff',
