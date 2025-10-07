@@ -83,57 +83,21 @@ jobs:
           echo "$API_PROFILE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
+      - name: Install GitHub CLI
+        run: |
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt update
+          sudo apt install gh -y
+
       - name: Create secrets (Fase E)
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const crypto = require('crypto');
-            const keyResponse = await github.rest.actions.getRepoPublicKey({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            const key = keyResponse.data.key;
-            const key_id = keyResponse.data.key_id;
-            const encrypted = crypto.publicEncrypt(
-              {
-                key: Buffer.from(key, 'base64'),
-                padding: crypto.constants.RSA_PKCS1_PADDING
-              },
-              Buffer.from(process.env.WEB_PROFILE)
-            );
-            await github.rest.actions.createOrUpdateRepoSecret({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              secret_name: 'AZURE_WEBAPP_PUBLISH_PROFILE_WEB',
-              encrypted_value: encrypted.toString('base64'),
-              key_id: key_id
-            });
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          gh secret set AZURE_WEBAPP_PUBLISH_PROFILE_WEB --body "${{ env.WEB_PROFILE }}"
 
       - name: Create secrets API (Fase E)
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const crypto = require('crypto');
-            const keyResponse = await github.rest.actions.getRepoPublicKey({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            const key = keyResponse.data.key;
-            const key_id = keyResponse.data.key_id;
-            const encrypted = crypto.publicEncrypt(
-              {
-                key: Buffer.from(key, 'base64'),
-                padding: crypto.constants.RSA_PKCS1_PADDING
-              },
-              Buffer.from(process.env.API_PROFILE)
-            );
-            await github.rest.actions.createOrUpdateRepoSecret({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              secret_name: 'AZURE_WEBAPP_PUBLISH_PROFILE_API',
-              encrypted_value: encrypted.toString('base64'),
-              key_id: key_id
-            });
+        run: |
+          gh secret set AZURE_WEBAPP_PUBLISH_PROFILE_API --body "${{ env.API_PROFILE }}"
 
       - name: Setup Node
         uses: actions/setup-node@v4
