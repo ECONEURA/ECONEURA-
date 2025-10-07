@@ -15,6 +15,12 @@ importers:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
+
+
+      '@vitest/coverage-v8':
+        specifier: ^3.2.4
+        version: 3.2.4(vitest@3.2.4)
+
       eslint:
         specifier: ^9.36.0
         version: 9.36.0
@@ -24,6 +30,11 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(jsdom@27.0.0)
+
 
   apps/cockpit:
     dependencies:
@@ -1063,6 +1074,7 @@ packages:
   /@esbuild/win32-arm64@0.21.5:
     resolution: {integrity: sha512-Z0gOTd75VvXqyq7nsl93zwahcTROgqvuAcYDUr+vOv8uHhNSKROyU961kgtCD1e95IqPKSQKH7tBTslnS3tA8A==}
     engines: {node: '>=12'}
+
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
@@ -1072,11 +1084,23 @@ packages:
   /@esbuild/win32-arm64@0.25.0:
     resolution: {integrity: sha512-ZUAc2YK6JW89xTbXvftxdnYy3m4iHIkDtK3CLce8wg8M2L+YZhIvO1DKpxrd0Yr59AeNNkTiic9YLf6FTtXWMw==}
     engines: {node: '>=18'}
+
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
+
+
+  /@esbuild/win32-arm64@0.25.0:
+    resolution: {integrity: sha512-ZUAc2YK6JW89xTbXvftxdnYy3m4iHIkDtK3CLce8wg8M2L+YZhIvO1DKpxrd0Yr59AeNNkTiic9YLf6FTtXWMw==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    dev: true
+    optional: true
+
 
   /@esbuild/win32-ia32@0.21.5:
     resolution: {integrity: sha512-SWXFF1CL2RVNMaVs+BBClwtfZSvDgtL//G/smwAc5oVK/UPu2Gu9tIaRgFmYFFKrmg3SyAjSrElf0TiJ1v8fYA==}
