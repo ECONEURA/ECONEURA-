@@ -1,0 +1,78 @@
+name: CI Full Test Suite
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: {}
+
+jobs:
+  test-full:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@8.15.5 --activate
+
+      - name: Install workspace deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint workspace
+        run: pnpm lint
+
+      - name: Typecheck workspace
+        run: pnpm typecheck
+
+      - name: Test workspace
+        run: pnpm test:coverage
+
+      - name: Build web
+        run: cd apps/web && pnpm build
+
+      - name: Test Python API syntax
+        run: |
+          cd apps/api_py
+          python -m py_compile server.py
+          echo "✅ Python API syntax OK"
+
+      - name: Validate agent routing
+        run: |
+          python -c "
+          import json, sys
+          with open('packages/config/agent-routing.json', 'r') as f:
+              data = json.load(f)
+          if len(data) < 60:
+              print(f'ERROR: Solo {len(data)} agentes, se esperan 60')
+              sys.exit(1)
+          print(f'✅ {len(data)} agentes validados')
+          # Check for required departments
+          depts = set()
+          for agent in data.values():
+              if 'department' in agent:
+                  depts.add(agent['department'])
+          if len(depts) < 10:
+              print(f'WARN: Solo {len(depts)} departamentos detectados')
+          "
+
+      - name: Coverage gate
+        run: |
+          # Extract coverage from vitest output
+          if [ -f coverage/coverage-final.json ]; then
+            statements=$(jq '.total.statements.pct' coverage/coverage-final.json 2>/dev/null || echo "0")
+            functions=$(jq '.total.functions.pct' coverage/coverage-final.json 2>/dev/null || echo "0")
+            echo "Coverage - Statements: $statements%, Functions: $functions%"
+            if (( $(echo "$statements < 90" | bc -l) )) || (( $(echo "$functions < 80" | bc -l) )); then
+              echo "ERROR: Coverage insuficiente (Statements ≥90%, Functions ≥80%)"
+              exit 1
+            fi
+          else
+            echo "WARN: No coverage report found"
+          fi
