@@ -21,13 +21,13 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "red", "value": 10}
+                { "color": "green", "value": null },
+                { "color": "red", "value": 10 }
               ]
             }
           }
         },
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 }
       },
       {
         "id": 2,
@@ -45,14 +45,14 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "orange", "value": 1},
-                {"color": "red", "value": 5}
+                { "color": "green", "value": null },
+                { "color": "orange", "value": 1 },
+                { "color": "red", "value": 5 }
               ]
             }
           }
         },
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 }
       },
       {
         "id": 3,
@@ -70,14 +70,14 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "green", "value": null},
-                {"color": "yellow", "value": 5},
-                {"color": "red", "value": 20}
+                { "color": "green", "value": null },
+                { "color": "yellow", "value": 5 },
+                { "color": "red", "value": 20 }
               ]
             }
           }
         },
-        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 }
       },
       {
         "id": 4,
@@ -97,7 +97,7 @@
             "legendFormat": "Low Risk"
           }
         ],
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 }
       },
       {
         "id": 5,
@@ -115,15 +115,15 @@
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "yellow", "value": 50},
-                {"color": "green", "value": 80}
+                { "color": "red", "value": null },
+                { "color": "yellow", "value": 50 },
+                { "color": "green", "value": 80 }
               ]
             },
             "unit": "percent"
           }
         },
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 }
       },
       {
         "id": 6,
@@ -141,7 +141,7 @@
             "unit": "s"
           }
         },
-        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24}
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 }
       },
       {
         "id": 7,
@@ -159,7 +159,7 @@
             "unit": "s"
           }
         },
-        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24}
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 }
       },
       {
         "id": 8,
@@ -175,7 +175,7 @@
             "legendFormat": "Approvals Rejected"
           }
         ],
-        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 32}
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 32 }
       },
       {
         "id": 9,
@@ -189,19 +189,17 @@
         ],
         "fieldConfig": {
           "defaults": {
-            "mappings": [
-              {"options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}, "type": "value"}
-            ],
+            "mappings": [{ "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } }, "type": "value" }],
             "thresholds": {
               "mode": "absolute",
               "steps": [
-                {"color": "red", "value": null},
-                {"color": "green", "value": 1}
+                { "color": "red", "value": null },
+                { "color": "green", "value": 1 }
               ]
             }
           }
         },
-        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 40}
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 40 }
       }
     ],
     "time": {

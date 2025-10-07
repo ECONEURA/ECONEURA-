@@ -1,4 +1,5 @@
 # 🎯 MANUAL DE ELIMINACIÓN RADICAL - GITHUB ACTIONS
+
 # Guía paso a paso para eliminar TODO lo rojo y mantener solo lo verde
 
 ## 🚨 OBJETIVO: ELIMINAR TODO LO ROJO, MANTENER SOLO LO VERDE
@@ -29,11 +30,13 @@
 ### 🛠️ SCRIPTS AUTOMATIZADOS
 
 **Windows PowerShell:**
+
 ```powershell
 .\scripts\eliminate-red-actions.ps1
 ```
 
 **Linux/Mac Bash:**
+
 ```bash
 chmod +x scripts/eliminate-red-actions.sh
 ./scripts/eliminate-red-actions.sh
@@ -63,15 +66,17 @@ gh workflow disable [WORKFLOW_ID] --repo ECONEURA/ECONEURA-IA
 **Para máxima rapidez, ejecutar en orden:**
 
 1. **Eliminar masivamente por estado:**
+
    ```bash
    # Fallidos
    gh api repos/ECONEURA/ECONEURA-IA/actions/runs --paginate | jq '.workflow_runs[] | select(.conclusion=="failure") | .id' | xargs -I {} gh api repos/ECONEURA/ECONEURA-IA/actions/runs/{} -X DELETE
-   
+
    # Cancelados
    gh api repos/ECONEURA/ECONEURA-IA/actions/runs --paginate | jq '.workflow_runs[] | select(.conclusion=="cancelled") | .id' | xargs -I {} gh api repos/ECONEURA/ECONEURA-IA/actions/runs/{} -X DELETE
    ```
 
-2. **Deshabilitar todos los workflows activos (luego reactivar solo los necesarios):**
+2. **Deshabilitar todos los workflows activos (luego reactivar solo los
+   necesarios):**
    ```bash
    gh workflow list --repo ECONEURA/ECONEURA-IA --json id | jq '.[].id' | xargs -I {} gh workflow disable {} --repo ECONEURA/ECONEURA-IA
    ```
@@ -79,6 +84,7 @@ gh workflow disable [WORKFLOW_ID] --repo ECONEURA/ECONEURA-IA
 ### 🎯 RESULTADO ESPERADO
 
 Después de la limpieza:
+
 - ✅ Solo runs VERDES (exitosos) visibles
 - ❌ Cero runs ROJOS (fallidos)
 - 🚫 Workflows problemáticos deshabilitados
@@ -87,6 +93,7 @@ Después de la limpieza:
 ### 🔗 VERIFICACIÓN FINAL
 
 Visitar: https://github.com/ECONEURA/ECONEURA-IA/actions
+
 - Debe mostrar solo checks verdes ✅
 - Sin runs rojos ❌
 - Sin runs cancelados 🚫

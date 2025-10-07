@@ -21,20 +21,20 @@ git push origin main
 
 ### 2. VERIFICAR RESULTADO INMEDIATO
 
-Abrir inmediatamente:
-👉 https://github.com/ECONEURA/ECONEURA-IA/actions
+Abrir inmediatamente: 👉 https://github.com/ECONEURA/ECONEURA-IA/actions
 
 ### 3. RESULTADO ESPERADO
 
 ✅ **CERO X ROJAS**  
 ✅ **Solo workflows exitosos**  
-✅ **GitHub Actions 100% verde**  
+✅ **GitHub Actions 100% verde**
 
 ## 🎯 WORKFLOW CREADO
 
 **Archivo:** `.github/workflows/basic-check.yml`
 
 **Características:**
+
 - ✅ Siempre funciona (validaciones básicas)
 - ✅ Se ejecuta en push y PR
 - ✅ Valida estructura del proyecto

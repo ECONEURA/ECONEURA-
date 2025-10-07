@@ -38,9 +38,7 @@
   "paths": {
     "/auth/login": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "User login",
         "description": "Authenticate user and return access token",
         "operationId": "login",
@@ -90,9 +88,7 @@
     },
     "/auth/refresh": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "Refresh access token",
         "description": "Get new access token using refresh token",
         "operationId": "refreshToken",
@@ -132,9 +128,7 @@
     },
     "/auth/logout": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "User logout",
         "description": "Logout user and invalidate session",
         "operationId": "logout",
@@ -168,9 +162,7 @@
     },
     "/auth/me": {
       "get": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "summary": "Get current user",
         "description": "Get current authenticated user information",
         "operationId": "getCurrentUser",
@@ -205,9 +197,7 @@
     },
     "/users": {
       "get": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "List users",
         "description": "Get paginated list of users",
         "operationId": "listUsers",
@@ -258,9 +248,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Create user",
         "description": "Create a new user",
         "operationId": "createUser",
@@ -305,9 +293,7 @@
     },
     "/users/{id}": {
       "get": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Get user by ID",
         "description": "Get user information by ID",
         "operationId": "getUser",
@@ -351,9 +337,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Update user",
         "description": "Update user information",
         "operationId": "updateUser",
@@ -407,9 +391,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Delete user",
         "description": "Delete user by ID",
         "operationId": "deleteUser",
@@ -448,9 +430,7 @@
     },
     "/contacts": {
       "get": {
-        "tags": [
-          "CRM"
-        ],
+        "tags": ["CRM"],
         "summary": "List contacts",
         "description": "Get paginated list of contacts",
         "operationId": "listContacts",
@@ -501,9 +481,7 @@
         }
       },
       "post": {
-        "tags": [
-          "CRM"
-        ],
+        "tags": ["CRM"],
         "summary": "Create contact",
         "description": "Create a new contact",
         "operationId": "createContact",
@@ -538,9 +516,7 @@
     },
     "/contacts/{id}": {
       "get": {
-        "tags": [
-          "CRM"
-        ],
+        "tags": ["CRM"],
         "summary": "Get contact by ID",
         "description": "Get contact information by ID",
         "operationId": "getContact",
@@ -574,9 +550,7 @@
         }
       },
       "put": {
-        "tags": [
-          "CRM"
-        ],
+        "tags": ["CRM"],
         "summary": "Update contact",
         "description": "Update contact information",
         "operationId": "updateContact",
@@ -620,9 +594,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "CRM"
-        ],
+        "tags": ["CRM"],
         "summary": "Delete contact",
         "description": "Delete contact by ID",
         "operationId": "deleteContact",
@@ -651,9 +623,7 @@
     },
     "/deals": {
       "get": {
-        "tags": [
-          "CRM"
-        ],
+        "tags": ["CRM"],
         "summary": "List deals",
         "description": "Get paginated list of deals",
         "operationId": "listDeals",
@@ -704,9 +674,7 @@
         }
       },
       "post": {
-        "tags": [
-          "CRM"
-        ],
+        "tags": ["CRM"],
         "summary": "Create deal",
         "description": "Create a new deal",
         "operationId": "createDeal",
@@ -741,9 +709,7 @@
     },
     "/products": {
       "get": {
-        "tags": [
-          "ERP"
-        ],
+        "tags": ["ERP"],
         "summary": "List products",
         "description": "Get paginated list of products",
         "operationId": "listProducts",
@@ -794,9 +760,7 @@
         }
       },
       "post": {
-        "tags": [
-          "ERP"
-        ],
+        "tags": ["ERP"],
         "summary": "Create product",
         "description": "Create a new product",
         "operationId": "createProduct",
@@ -831,9 +795,7 @@
     },
     "/orders": {
       "get": {
-        "tags": [
-          "ERP"
-        ],
+        "tags": ["ERP"],
         "summary": "List orders",
         "description": "Get paginated list of orders",
         "operationId": "listOrders",
@@ -867,13 +829,7 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "enum": [
-                "pending",
-                "processing",
-                "shipped",
-                "delivered",
-                "cancelled"
-              ]
+              "enum": ["pending", "processing", "shipped", "delivered", "cancelled"]
             }
           }
         ],
@@ -891,9 +847,7 @@
         }
       },
       "post": {
-        "tags": [
-          "ERP"
-        ],
+        "tags": ["ERP"],
         "summary": "Create order",
         "description": "Create a new order",
         "operationId": "createOrder",
@@ -928,9 +882,7 @@
     },
     "/ai/chat": {
       "post": {
-        "tags": [
-          "AI"
-        ],
+        "tags": ["AI"],
         "summary": "AI Chat",
         "description": "Send message to AI and get response",
         "operationId": "aiChat",
@@ -965,9 +917,7 @@
     },
     "/webhooks": {
       "get": {
-        "tags": [
-          "Webhooks"
-        ],
+        "tags": ["Webhooks"],
         "summary": "List webhooks",
         "description": "Get paginated list of webhooks",
         "operationId": "listWebhooks",
@@ -1011,9 +961,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Webhooks"
-        ],
+        "tags": ["Webhooks"],
         "summary": "Create webhook",
         "description": "Create a new webhook",
         "operationId": "createWebhook",
@@ -1048,9 +996,7 @@
     },
     "/health": {
       "get": {
-        "tags": [
-          "System"
-        ],
+        "tags": ["System"],
         "summary": "Health check",
         "description": "Check system health",
         "operationId": "healthCheck",
@@ -1070,9 +1016,7 @@
     },
     "/metrics": {
       "get": {
-        "tags": [
-          "System"
-        ],
+        "tags": ["System"],
         "summary": "System metrics",
         "description": "Get system metrics",
         "operationId": "getMetrics",
@@ -1136,11 +1080,7 @@
             "type": "number"
           }
         },
-        "required": [
-          "success",
-          "requestId",
-          "timestamp"
-        ]
+        "required": ["success", "requestId", "timestamp"]
       },
       "ErrorResponse": {
         "allOf": [
@@ -1189,10 +1129,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "page",
-          "limit"
-        ]
+        "required": ["page", "limit"]
       },
       "LoginRequest": {
         "type": "object",
@@ -1217,10 +1154,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "email",
-          "password"
-        ]
+        "required": ["email", "password"]
       },
       "LoginResponse": {
         "allOf": [
@@ -1247,9 +1181,7 @@
                   },
                   "tokenType": {
                     "type": "string",
-                    "enum": [
-                      "Bearer"
-                    ]
+                    "enum": ["Bearer"]
                   }
                 }
               }
@@ -1265,9 +1197,7 @@
             "minLength": 1
           }
         },
-        "required": [
-          "refreshToken"
-        ]
+        "required": ["refreshToken"]
       },
       "RefreshTokenResponse": {
         "allOf": [
@@ -1291,9 +1221,7 @@
                   },
                   "tokenType": {
                     "type": "string",
-                    "enum": [
-                      "Bearer"
-                    ]
+                    "enum": ["Bearer"]
                   }
                 }
               }
@@ -1355,17 +1283,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "id",
-          "email",
-          "name",
-          "organizationId",
-          "roles",
-          "permissions",
-          "isActive",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["id", "email", "name", "organizationId", "roles", "permissions", "isActive", "createdAt", "updatedAt"]
       },
       "UserResponse": {
         "allOf": [
@@ -1430,12 +1348,7 @@
             "default": []
           }
         },
-        "required": [
-          "email",
-          "name",
-          "password",
-          "organizationId"
-        ]
+        "required": ["email", "name", "password", "organizationId"]
       },
       "UpdateUserRequest": {
         "type": "object",
@@ -1509,14 +1422,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "id",
-          "firstName",
-          "lastName",
-          "organizationId",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["id", "firstName", "lastName", "organizationId", "createdAt", "updatedAt"]
       },
       "ContactResponse": {
         "allOf": [
@@ -1590,10 +1496,7 @@
             "default": {}
           }
         },
-        "required": [
-          "firstName",
-          "lastName"
-        ]
+        "required": ["firstName", "lastName"]
       },
       "UpdateContactRequest": {
         "type": "object",
@@ -1685,15 +1588,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "id",
-          "title",
-          "value",
-          "stage",
-          "organizationId",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["id", "title", "value", "stage", "organizationId", "createdAt", "updatedAt"]
       },
       "DealResponse": {
         "allOf": [
@@ -1772,11 +1667,7 @@
             "default": {}
           }
         },
-        "required": [
-          "title",
-          "value",
-          "stage"
-        ]
+        "required": ["title", "value", "stage"]
       },
       "Product": {
         "type": "object",
@@ -1826,16 +1717,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "id",
-          "name",
-          "sku",
-          "price",
-          "organizationId",
-          "isActive",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["id", "name", "sku", "price", "organizationId", "isActive", "createdAt", "updatedAt"]
       },
       "ProductResponse": {
         "allOf": [
@@ -1903,11 +1785,7 @@
             "default": {}
           }
         },
-        "required": [
-          "name",
-          "sku",
-          "price"
-        ]
+        "required": ["name", "sku", "price"]
       },
       "Order": {
         "type": "object",
@@ -1929,13 +1807,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "pending",
-              "processing",
-              "shipped",
-              "delivered",
-              "cancelled"
-            ]
+            "enum": ["pending", "processing", "shipped", "delivered", "cancelled"]
           },
           "total": {
             "type": "number",
@@ -2002,17 +1874,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "id",
-          "orderNumber",
-          "customerId",
-          "organizationId",
-          "status",
-          "total",
-          "items",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["id", "orderNumber", "customerId", "organizationId", "status", "total", "items", "createdAt", "updatedAt"]
       },
       "OrderResponse": {
         "allOf": [
@@ -2075,11 +1937,7 @@
                   "minimum": 0
                 }
               },
-              "required": [
-                "productId",
-                "quantity",
-                "price"
-              ]
+              "required": ["productId", "quantity", "price"]
             },
             "minItems": 1
           },
@@ -2113,10 +1971,7 @@
             "default": {}
           }
         },
-        "required": [
-          "customerId",
-          "items"
-        ]
+        "required": ["customerId", "items"]
       },
       "AIRequest": {
         "type": "object",
@@ -2152,11 +2007,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "prompt",
-          "organizationId",
-          "userId"
-        ]
+        "required": ["prompt", "organizationId", "userId"]
       },
       "AIResponse": {
         "allOf": [
@@ -2257,16 +2108,7 @@
             "format": "date-time"
           }
         },
-        "required": [
-          "id",
-          "name",
-          "url",
-          "events",
-          "organizationId",
-          "isActive",
-          "createdAt",
-          "updatedAt"
-        ]
+        "required": ["id", "name", "url", "events", "organizationId", "isActive", "createdAt", "updatedAt"]
       },
       "WebhookResponse": {
         "allOf": [
@@ -2327,11 +2169,7 @@
             "default": {}
           }
         },
-        "required": [
-          "name",
-          "url",
-          "events"
-        ]
+        "required": ["name", "url", "events"]
       },
       "HealthResponse": {
         "allOf": [
@@ -2346,11 +2184,7 @@
                 "properties": {
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "healthy",
-                      "degraded",
-                      "unhealthy"
-                    ]
+                    "enum": ["healthy", "degraded", "unhealthy"]
                   },
                   "version": {
                     "type": "string"
@@ -2363,24 +2197,15 @@
                     "properties": {
                       "database": {
                         "type": "string",
-                        "enum": [
-                          "up",
-                          "down"
-                        ]
+                        "enum": ["up", "down"]
                       },
                       "redis": {
                         "type": "string",
-                        "enum": [
-                          "up",
-                          "down"
-                        ]
+                        "enum": ["up", "down"]
                       },
                       "ai": {
                         "type": "string",
-                        "enum": [
-                          "up",
-                          "down"
-                        ]
+                        "enum": ["up", "down"]
                       }
                     }
                   }

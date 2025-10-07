@@ -1,7 +1,11 @@
 {
+  "css.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "css.validate": true,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "eslint.packageManager": "pnpm",
   "eslint.validate": [
@@ -17,9 +21,7 @@
     "**/.turbo/**": true
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "git.enableSmartCommit": true
-}
-{
+  "git.enableSmartCommit": true,
   "livePreview.defaultPreviewPath": "apps/web/preview/preview.html",
   "livePreview.openPreviewTarget": "Embedded Preview",
   "livePreview.serverKeepAliveAfterEmbeddedPreviewClose": true,

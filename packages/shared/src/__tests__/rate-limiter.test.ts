@@ -127,7 +127,7 @@ describe('createRateLimitMiddleware', () => {
     mockRes = {
       writeHead: vi.fn(),
       end: vi.fn(),
-      setHeader: vi.fn()
+      setHeader: vi.fn(),
     };
     next = vi.fn();
   });
@@ -155,13 +155,11 @@ describe('createRateLimitMiddleware', () => {
 
     expect(next).not.toHaveBeenCalled();
     expect(mockRes.writeHead).toHaveBeenCalledWith(429, { 'Content-Type': 'application/json' });
-    expect(mockRes.end).toHaveBeenCalledWith(
-      expect.stringContaining('Too Many Requests')
-    );
+    expect(mockRes.end).toHaveBeenCalledWith(expect.stringContaining('Too Many Requests'));
   });
 
   it('should use custom key function', () => {
-    const keyFn = vi.fn((req) => req.ip);
+    const keyFn = vi.fn(req => req.ip);
     const middleware = createRateLimitMiddleware(limiter, keyFn);
 
     middleware(mockReq, mockRes, next);

@@ -3,6 +3,7 @@
 ## 🚀 **Despliegue y Configuración**
 
 ### **Despliegue Inicial**
+
 ```bash
 # 1. Despliegue a Azure App Services
 ./deploy_azure.sh
@@ -18,6 +19,7 @@
 ```
 
 ### **Despliegue en Kubernetes (Opcional)**
+
 ```bash
 # Despliegue completo en AKS
 ./k8s_deploy.sh
@@ -26,6 +28,7 @@
 ## 🧪 **Testing y Validación**
 
 ### **Testing Básico**
+
 ```bash
 # Health check
 curl -f http://localhost:8080/health
@@ -39,6 +42,7 @@ done
 ```
 
 ### **Testing Avanzado**
+
 ```bash
 # Testing completo (health, integration, performance, load)
 ./test_advanced.sh
@@ -47,16 +51,20 @@ done
 ## 📊 **Monitoreo y Alertas**
 
 ### **Monitoreo 24/7**
+
 ```bash
 # Iniciar monitoreo continuo
 ./monitor_production.sh
 ```
 
 ### **Dashboard Ejecutivo**
-- **URL**: https://portal.azure.com/#dashboard/arm/subscriptions/{subscription-id}/resourceGroups/ECONEURA-RG/providers/Microsoft.Portal/dashboards/ECONEURA-Dashboard
+
+- **URL**:
+  https://portal.azure.com/#dashboard/arm/subscriptions/{subscription-id}/resourceGroups/ECONEURA-RG/providers/Microsoft.Portal/dashboards/ECONEURA-Dashboard
 - **Métricas**: CPU, Memoria, HTTP Responses, Latencia, Solicitudes
 
 ### **Alertas Configuradas**
+
 - **CPU > 80%**: Escalado automático
 - **Memoria > 85%**: Notificación al equipo
 - **HTTP 5xx > 10**: Alerta crítica
@@ -67,6 +75,7 @@ done
 ## 🔧 **Mantenimiento y Troubleshooting**
 
 ### **Logs de Aplicación**
+
 ```bash
 # Ver logs en App Service
 az webapp log tail --name ECONEURA-API --resource-group ECONEURA-RG
@@ -76,6 +85,7 @@ kubectl logs -n econeura deployment/ECONEURA-API
 ```
 
 ### **Reinicio de Servicios**
+
 ```bash
 # Reiniciar App Service
 az webapp restart --name ECONEURA-API --resource-group ECONEURA-RG
@@ -85,6 +95,7 @@ kubectl rollout restart deployment/ECONEURA-API -n econeura
 ```
 
 ### **Backup y Recovery**
+
 ```bash
 # Backup de configuración
 az webapp config backup create \
@@ -102,12 +113,14 @@ az webapp config backup restore \
 ## 📈 **Escalado y Performance**
 
 ### **Auto-Scaling Rules**
+
 - **Mínimo**: 1 instancia
 - **Máximo**: 10 instancias
 - **CPU Threshold**: >70% (escala arriba), <30% (escala abajo)
 - **Memoria Threshold**: >80% (escala arriba)
 
 ### **Optimización de Performance**
+
 ```bash
 # Ver métricas de performance
 az monitor metrics list \
@@ -125,6 +138,7 @@ az webapp config set \
 ## 🚨 **Respuesta a Incidentes**
 
 ### **Protocolo de Alerta**
+
 1. **Recibir alerta** por email/SMS
 2. **Verificar dashboard** ejecutivo
 3. **Revisar logs** de aplicación
@@ -133,6 +147,7 @@ az webapp config set \
 6. **Documentar** incidente y resolución
 
 ### **Escalado Manual**
+
 ```bash
 # Escalar App Service Plan
 az appservice plan update \
@@ -144,17 +159,20 @@ az appservice plan update \
 ## 👥 **Equipo de Soporte**
 
 ### **Roles y Responsabilidades**
+
 - **DevOps Lead**: Despliegues y infraestructura
 - **Backend Developer**: API y lógica de negocio
 - **QA Engineer**: Testing y validación
 - **Product Owner**: Requisitos y prioridades
 
 ### **Contactos de Emergencia**
+
 - **DevOps On-Call**: devops@econeura.com
 - **Backend On-Call**: backend@econeura.com
 - **Soporte General**: support@econeura.com
 
 ### **Horarios de Cobertura**
+
 - **Diurno**: 9:00 - 18:00 CET (L-V)
 - **Nocturno**: 18:00 - 9:00 CET (Rotativo semanal)
 - **Fines de semana**: Soporte limitado
@@ -162,11 +180,13 @@ az appservice plan update \
 ## 📚 **Recursos Adicionales**
 
 ### **Documentación Técnica**
+
 - [Azure App Services](https://docs.microsoft.com/azure/app-service/)
 - [Azure Monitor](https://docs.microsoft.com/azure/azure-monitor/)
 - [Kubernetes en Azure](https://docs.microsoft.com/azure/aks/)
 
 ### **Herramientas de Desarrollo**
+
 - **CI/CD**: GitHub Actions
 - **Testing**: Scripts bash + k6
 - **Monitoreo**: Azure Monitor + Dashboards

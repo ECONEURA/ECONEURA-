@@ -12,25 +12,28 @@ const React = require('react');
 
 // Helpers to read potential locations (top-level or default)
 const getReal = (obj, name) => {
-	if (!obj) return undefined;
-	if (typeof obj[name] === 'function') return obj[name];
-	if (obj.default && typeof obj.default[name] === 'function') return obj.default[name];
-	return undefined;
+  if (!obj) return undefined;
+  if (typeof obj[name] === 'function') return obj[name];
+  if (obj.default && typeof obj.default[name] === 'function') return obj.default[name];
+  return undefined;
 };
 
 // Export real function declarations so consumers receive actual function identities.
 export function jsx(type, props, key) {
-	const fn = getReal(realRuntime, 'jsx');
-	if (typeof fn === 'function') return fn(type, props, key);
-	return React.createElement(type, props);
+  const fn = getReal(realRuntime, 'jsx');
+  if (typeof fn === 'function') return fn(type, props, key);
+  return React.createElement(type, props);
 }
 
 export function jsxs(type, props, key) {
-	const fn = getReal(realRuntime, 'jsxs') || getReal(realRuntime, 'jsx');
-	if (typeof fn === 'function') return fn(type, props, key);
-	return React.createElement(type, props);
+  const fn = getReal(realRuntime, 'jsxs') || getReal(realRuntime, 'jsx');
+  if (typeof fn === 'function') return fn(type, props, key);
+  return React.createElement(type, props);
 }
 
-export const Fragment = realRuntime && (realRuntime.Fragment || (realRuntime.default && realRuntime.default.Fragment)) || React.Fragment;
+export const Fragment =
+  (realRuntime &&
+    (realRuntime.Fragment || (realRuntime.default && realRuntime.default.Fragment))) ||
+  React.Fragment;
 
 export default realRuntime;

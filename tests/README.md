@@ -1,6 +1,7 @@
 # Guía de Testing - ECONEURA-IA
 
-Esta guía establece las convenciones y mejores prácticas para escribir y organizar tests en el proyecto ECONEURA-IA.
+Esta guía establece las convenciones y mejores prácticas para escribir y
+organizar tests en el proyecto ECONEURA-IA.
 
 ## 📁 Estructura de Tests
 
@@ -18,6 +19,7 @@ tests/
 ### Archivos de Test
 
 **Unit Tests:**
+
 ```
 [nombre].test.ts          # Test básico
 [nombre].spec.ts          # Test de especificación
@@ -25,12 +27,14 @@ tests/
 ```
 
 **Integration Tests:**
+
 ```
 [nombre].integration.test.ts
 [nombre].integration.spec.ts
 ```
 
 **E2E Tests:**
+
 ```
 [nombre].e2e.test.ts
 [nombre].e2e.spec.ts
@@ -72,6 +76,7 @@ tests/
 ## 🧪 Tipos de Tests
 
 ### Unit Tests
+
 - **Propósito**: Probar unidades individuales de código
 - **Alcance**: Funciones, métodos, clases
 - **Dependencias**: Mocks/stubs para dependencias externas
@@ -79,6 +84,7 @@ tests/
 - **Coverage**: >85%
 
 **Ejemplo:**
+
 ```typescript
 // tests/unit/auth.service.test.ts
 import { describe, it, expect, vi } from 'vitest';
@@ -104,14 +110,16 @@ describe('AuthService', () => {
       const invalidToken = 'invalid.token';
 
       // Act & Assert
-      expect(() => service.validateToken(invalidToken))
-        .toThrow('Invalid token');
+      expect(() => service.validateToken(invalidToken)).toThrow(
+        'Invalid token'
+      );
     });
   });
 });
 ```
 
 ### Integration Tests
+
 - **Propósito**: Probar integración entre componentes
 - **Alcance**: APIs, base de datos, servicios externos
 - **Dependencias**: Base de datos de test, servicios mockeados
@@ -119,6 +127,7 @@ describe('AuthService', () => {
 - **Coverage**: >80%
 
 **Ejemplo:**
+
 ```typescript
 // tests/integration/auth.integration.test.ts
 import { describe, it, expect } from 'vitest';
@@ -140,13 +149,11 @@ describe('Auth Integration', () => {
       // Arrange
       const credentials = {
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
 
       // Act
-      const response = await request(app)
-        .post('/auth/login')
-        .send(credentials);
+      const response = await request(app).post('/auth/login').send(credentials);
 
       // Assert
       expect(response.status).toBe(200);
@@ -158,6 +165,7 @@ describe('Auth Integration', () => {
 ```
 
 ### E2E Tests
+
 - **Propósito**: Probar flujo completo de usuario
 - **Alcance**: De extremo a extremo
 - **Dependencias**: Aplicación completa corriendo
@@ -165,6 +173,7 @@ describe('Auth Integration', () => {
 - **Coverage**: >70%
 
 **Ejemplo:**
+
 ```typescript
 // tests/e2e/user-registration.e2e.test.ts
 import { describe, it, expect } from 'vitest';
@@ -194,8 +203,9 @@ describe('User Registration E2E', () => {
     await page.click('[data-testid="register-button"]');
 
     // Assert
-    await expect(page.locator('[data-testid="success-message"]'))
-      .toContainText('Registration successful');
+    await expect(page.locator('[data-testid="success-message"]')).toContainText(
+      'Registration successful'
+    );
     await expect(page).toHaveURL('/dashboard');
   });
 });
@@ -206,6 +216,7 @@ describe('User Registration E2E', () => {
 ### Setup Files
 
 **Unit Setup:**
+
 ```typescript
 // tests/utils/unit-setup.ts
 import { beforeAll, afterAll } from 'vitest';
@@ -221,6 +232,7 @@ afterAll(() => {
 ```
 
 **Integration Setup:**
+
 ```typescript
 // tests/utils/integration-setup.ts
 import { beforeAll, afterAll } from 'vitest';
@@ -243,21 +255,21 @@ export const createMockUser = (overrides = {}) => ({
   id: 'user-123',
   email: 'test@example.com',
   name: 'Test User',
-  ...overrides
+  ...overrides,
 });
 
 export const createMockRequest = (body = {}) => ({
   body,
   params: {},
   query: {},
-  headers: {}
+  headers: {},
 });
 
 export const createMockResponse = () => {
   const res = {
     status: vi.fn().mockReturnThis(),
     json: vi.fn().mockReturnThis(),
-    send: vi.fn().mockReturnThis()
+    send: vi.fn().mockReturnThis(),
   };
   return res;
 };
@@ -313,15 +325,16 @@ pnpm test:unit:watch
 
 ### Umbrales por Tipo
 
-| Tipo | Branches | Functions | Lines | Statements |
-|------|----------|-----------|-------|------------|
-| Unit | 85% | 85% | 85% | 85% |
-| Integration | 80% | 80% | 80% | 80% |
-| E2E | 70% | 70% | 70% | 70% |
+| Tipo        | Branches | Functions | Lines | Statements |
+| ----------- | -------- | --------- | ----- | ---------- |
+| Unit        | 85%      | 85%       | 85%   | 85%        |
+| Integration | 80%      | 80%       | 80%   | 80%        |
+| E2E         | 70%      | 70%       | 70%   | 70%        |
 
 ### Reportes
 
 Los reportes de coverage se generan en:
+
 - `coverage/unit/` - Coverage de unit tests
 - `coverage/integration/` - Coverage de integration tests
 - `coverage/e2e/` - Coverage de E2E tests
@@ -330,6 +343,7 @@ Los reportes de coverage se generan en:
 ## 🔧 Mejores Prácticas
 
 ### 1. AAA Pattern
+
 ```typescript
 describe('Feature', () => {
   it('should work correctly', () => {
@@ -347,26 +361,29 @@ describe('Feature', () => {
 ```
 
 ### 2. Test Data Builders
+
 ```typescript
 const createUser = (overrides = {}) => ({
   id: faker.string.uuid(),
   email: faker.internet.email(),
   name: faker.person.fullName(),
-  ...overrides
+  ...overrides,
 });
 ```
 
 ### 3. Descriptive Test Names
+
 ```typescript
 // ✅ Bueno
-it('should throw ValidationError when email is invalid')
+it('should throw ValidationError when email is invalid');
 
 // ❌ Malo
-it('should work')
-it('test email validation')
+it('should work');
+it('test email validation');
 ```
 
 ### 4. Isolated Tests
+
 ```typescript
 // ✅ Aislar estado entre tests
 beforeEach(() => {
@@ -376,18 +393,20 @@ beforeEach(() => {
 ```
 
 ### 5. Mock External Dependencies
+
 ```typescript
 // ✅ Mockear servicios externos
 vi.mock('../services/api', () => ({
   apiService: {
-    getUser: vi.fn()
-  }
+    getUser: vi.fn(),
+  },
 }));
 ```
 
 ## 🐛 Debugging Tests
 
 ### Ejecutar Test Específico
+
 ```bash
 # Por nombre
 pnpm test -t "should validate email"
@@ -400,6 +419,7 @@ pnpm test --reporter=verbose
 ```
 
 ### Inspeccionar Estado
+
 ```typescript
 it('should debug state', () => {
   console.log('Current state:', state);

@@ -3,7 +3,11 @@ import { IncomingMessage, ServerResponse } from 'http';
 // Middleware types
 export type Middleware = (req: IncomingMessage, res: ServerResponse, next: () => void) => void;
 
-export type AsyncMiddleware = (req: IncomingMessage, res: ServerResponse, next: () => Promise<void>) => Promise<void>;
+export type AsyncMiddleware = (
+  req: IncomingMessage,
+  res: ServerResponse,
+  next: () => Promise<void>
+) => Promise<void>;
 
 // CORS middleware
 export function corsMiddleware(origin = '*'): Middleware {
@@ -66,7 +70,7 @@ export function errorHandler(): Middleware {
   return (_req: IncomingMessage, res: ServerResponse, next: () => void) => {
     // Simplified error handling - just log errors
     const originalWriteHead = res.writeHead;
-    res.writeHead = function(statusCode: number) {
+    res.writeHead = function (statusCode: number) {
       if (statusCode >= 400 && !res.headersSent) {
         res.setHeader('Content-Type', 'application/json');
       }

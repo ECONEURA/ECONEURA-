@@ -29,9 +29,9 @@ module.exports = [
       '**/out/**',
       // optionally ignore generated coverage artifacts in disabled-packages
       '.disabled-packages/**/web/coverage/**',
-  // ignore a few known root scripts that are not valid JS for ESLint
-  'add_mock.js',
-  'scripts/release/**',
+      // ignore a few known root scripts that are not valid JS for ESLint
+      'add_mock.js',
+      'scripts/release/**',
     ],
   },
 ];

@@ -5,7 +5,7 @@ const port = process.env.PORT || 8787;
 const server = http.createServer((req, res) => {
   if (req.method === 'POST') {
     let body = '';
-    req.on('data', chunk => body += chunk);
+    req.on('data', chunk => (body += chunk));
     req.on('end', () => {
       try {
         const j = JSON.parse(body || '{}');
@@ -20,8 +20,14 @@ const server = http.createServer((req, res) => {
           created: Date.now(),
           model: j.model || 'gpt-4o-mini',
           choices: [
-            { index: 0, message: { role: 'assistant', content: `Mock reply to: ${String(j.prompt||j.message||'').slice(0,200)}` } }
-          ]
+            {
+              index: 0,
+              message: {
+                role: 'assistant',
+                content: `Mock reply to: ${String(j.prompt || j.message || '').slice(0, 200)}`,
+              },
+            },
+          ],
         };
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(out));

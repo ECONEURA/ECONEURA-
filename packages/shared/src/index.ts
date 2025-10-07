@@ -9,15 +9,42 @@ export default { logger: _logger, apiLogger: _apiLogger };
 
 // Compatibility helper used across the workspace
 export function env() {
-	try {
-		return (require('./config.js').config) as any;
-	} catch {
-		// Fallback to process.env in environments where config parsing isn't possible
-		return process.env as any;
-	}
+  try {
+    return require('./config.js').config as any;
+  } catch {
+    // Fallback to process.env in environments where config parsing isn't possible
+    return process.env as any;
+  }
 }
 
 // Re-export minimal type modules used by the SDK. Export explicit names to
 // avoid duplicate symbol collisions during isolated module checks.
-export type { LoginRequest, LoginResponse, RefreshTokenRequest, RefreshTokenResponse, LogoutRequest, MeResponse, SessionsResponse, PaginationResponse as PaginationResponseApi } from './types/api/index.js';
-export type { Company, CreateCompany, UpdateCompany, CompanyFilter, Contact, CreateContact, UpdateContact, ContactFilter, Deal, CreateDeal, UpdateDeal, DealFilter, MoveDealStage, Activity, CreateActivity, UpdateActivity, PaginationResponse as PaginationResponseModel } from './types/models/index.js';
+export type {
+  LoginRequest,
+  LoginResponse,
+  RefreshTokenRequest,
+  RefreshTokenResponse,
+  LogoutRequest,
+  MeResponse,
+  SessionsResponse,
+  PaginationResponse as PaginationResponseApi,
+} from './types/api/index.js';
+export type {
+  Company,
+  CreateCompany,
+  UpdateCompany,
+  CompanyFilter,
+  Contact,
+  CreateContact,
+  UpdateContact,
+  ContactFilter,
+  Deal,
+  CreateDeal,
+  UpdateDeal,
+  DealFilter,
+  MoveDealStage,
+  Activity,
+  CreateActivity,
+  UpdateActivity,
+  PaginationResponse as PaginationResponseModel,
+} from './types/models/index.js';

@@ -16,7 +16,7 @@ export default defineConfig({
       '.next/',
       'coverage/',
       '**/*.config.ts',
-      '**/*.config.js'
+      '**/*.config.js',
     ],
     coverage: {
       provider: 'v8',
@@ -34,19 +34,19 @@ export default defineConfig({
         '**/*.config.js',
         '**/types/**',
         '**/generated/**',
-        'tests/**'
+        'tests/**',
       ],
       thresholds: {
         global: {
           branches: 80,
           functions: 80,
           lines: 80,
-          statements: 80
-        }
-      }
+          statements: 80,
+        },
+      },
     },
     testTimeout: 15000,
-    hookTimeout: 10000
+    hookTimeout: 10000,
   },
   resolve: {
     alias: {
@@ -55,6 +55,6 @@ export default defineConfig({
       '@econeura/sdk': resolve(__dirname, './packages/sdk/src'),
       '@econeura/api': resolve(__dirname, './apps/api/src'),
       '@econeura/web': resolve(__dirname, './apps/web/src'),
-    }
-  }
+    },
+  },
 });

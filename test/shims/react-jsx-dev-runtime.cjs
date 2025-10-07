@@ -4,5 +4,5 @@ const real = require('react/jsx-dev-runtime');
 module.exports = {
   jsxDEV: real.jsxDEV,
   Fragment: real.Fragment,
-  default: real.default || real
+  default: real.default || real,
 };

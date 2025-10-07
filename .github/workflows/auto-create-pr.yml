@@ -3,7 +3,7 @@ name: Auto-create PR for work branches
 on:
   push:
     branches:
-      - 'work/**'
+      - "work/**"
 
 permissions:
   contents: read

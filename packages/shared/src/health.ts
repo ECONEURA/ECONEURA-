@@ -32,7 +32,7 @@ export class HealthChecker {
 
         services[name] = {
           status: isHealthy ? 'up' : 'down',
-          responseTime
+          responseTime,
         };
 
         if (!isHealthy) {
@@ -41,7 +41,7 @@ export class HealthChecker {
       } catch (error) {
         services[name] = {
           status: 'down',
-          error: error instanceof Error ? error.message : 'Unknown error'
+          error: error instanceof Error ? error.message : 'Unknown error',
         };
         overallStatus = 'unhealthy';
       }
@@ -52,7 +52,7 @@ export class HealthChecker {
       timestamp: new Date().toISOString(),
       version: process.env.npm_package_version || '1.0.0',
       uptime: Date.now() - this.startTime,
-      services
+      services,
     };
   }
 

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from 'vitest';
 
 const modulesToCheck = [
   '../ai/cost-utils',
@@ -19,14 +19,14 @@ const modulesToCheck = [
   '../types/system',
   '../validation/crm',
   '../validation/erp',
-]
+];
 
 describe('coverage smoke 2', () => {
   for (const modPath of modulesToCheck) {
     it(`imports ${modPath}`, async () => {
       // @ts-ignore - algunos módulos son placeholders o pueden no exportar nada
-      const mod = await import(modPath)
-      expect(mod).toBeTruthy()
-    })
+      const mod = await import(modPath);
+      expect(mod).toBeTruthy();
+    });
   }
-})
+});

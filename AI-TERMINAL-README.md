@@ -1,6 +1,7 @@
 # 🤖 IA Terminal Assistant Pro
 
-Tu terminal ahora tiene inteligencia artificial integrada para ayudarte con comandos de Linux y desarrollo.
+Tu terminal ahora tiene inteligencia artificial integrada para ayudarte con
+comandos de Linux y desarrollo.
 
 ## 🚀 Instalación Rápida
 
@@ -29,28 +30,33 @@ ai --version
 ## 🧠 Lo que sabe la IA
 
 ### Sistema de Archivos
+
 - Listar archivos (`ls`, `tree`, `find`)
 - Navegación de directorios (`cd`, `pwd`)
 - Crear y editar archivos (`touch`, `nano`, `vim`)
 - Gestión de permisos (`chmod`, `chown`)
 
 ### Gestión de Procesos
+
 - Ver procesos corriendo (`ps`, `top`, `htop`)
 - Terminar procesos (`kill`, `killall`)
 - Monitoreo de sistema
 
 ### Redes y Conectividad
+
 - Verificar conectividad (`ping`, `curl`, `wget`)
 - Configuración de red (`ifconfig`, `ip`)
 - Puertos y servicios (`netstat`, `ss`)
 
 ### Gestión de Paquetes
+
 - Ubuntu/Debian: `apt`
 - CentOS/RHEL: `yum`, `dnf`
 - Alpine: `apk`
 - macOS: `brew`
 
 ### Desarrollo y Programación
+
 - Bash scripting
 - Python, Node.js
 - Git y control de versiones
@@ -71,16 +77,19 @@ ai "optimiza este comando: find . -name '*.txt' -exec grep 'error' {} \;"
 Para que la IA esté disponible en todas las sesiones de terminal:
 
 ### Opción 1: Agregar al ~/.bashrc
+
 ```bash
 echo 'source /workspaces/ECONEURA-IA/setup-ai.sh' >> ~/.bashrc
 ```
 
 ### Opción 2: Agregar al ~/.zshrc (si usas zsh)
+
 ```bash
 echo 'source /workspaces/ECONEURA-IA/setup-ai.sh' >> ~/.zshrc
 ```
 
 ### Opción 3: Ejecutar manualmente
+
 ```bash
 source /workspaces/ECONEURA-IA/setup-ai.sh
 ```
@@ -104,6 +113,7 @@ source /workspaces/ECONEURA-IA/setup-ai.sh
 
 ## 🤝 Contribuir
 
-¿Quieres agregar más conocimientos a la IA? Edita el archivo `ai-terminal-pro.sh` y agrega nuevos casos en la función `ask_ai()`.
+¿Quieres agregar más conocimientos a la IA? Edita el archivo
+`ai-terminal-pro.sh` y agrega nuevos casos en la función `ask_ai()`.
 
 ¡Tu terminal ahora es inteligente! 🚀
