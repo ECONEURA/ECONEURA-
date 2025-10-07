@@ -3,8 +3,8 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "workspaceFolder": "/workspace",
-  "remoteUser": "node",
+  "workspaceFolder": "/workspaces",
+  "remoteUser": "vscode",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -12,7 +12,8 @@
         "esbenp.prettier-vscode",
         "eamodio.gitlens",
         "GitHub.vscode-pull-request-github",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "ms-vscode.vscode-docker"
       ],
       "settings": {
         "terminal.integrated.shell.linux": "/bin/bash",
@@ -20,46 +21,15 @@
       }
     }
   },
-  "forwardPorts": [5173],
-  "postCreateCommand": "pnpm -w install --frozen-lockfile || true"
+  "forwardPorts": [3000, 3101, 3102, 5432, 6379],
+  "postCreateCommand": "echo 'Dev container listo. Ejecutar: ./scripts/start-dev.sh'",
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    }
+  }
 }
-{
-  "name": "ECONEURA Dev Container",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "workspaceFolder": "/workspace",
-  "remoteUser": "node",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "eamodio.gitlens",
-        "GitHub.vscode-pull-request-github",
-        {
-          "name": "ECONEURA Dev Container",
-          "build": {
-            "dockerfile": "Dockerfile"
-          },
-          "workspaceFolder": "/workspace",
-          "remoteUser": "node",
-          "customizations": {
-            "vscode": {
-              "extensions": [
-                "dbaeumer.vscode-eslint",
-                "esbenp.prettier-vscode",
-                "eamodio.gitlens",
-                "GitHub.vscode-pull-request-github",
-                "redhat.vscode-yaml"
-              ],
-              "settings": {
-                "terminal.integrated.shell.linux": "/bin/bash",
-                "editor.formatOnSave": true
-              }
-            }
-          },
-          "forwardPorts": [5173],
-          "postCreateCommand": "pnpm -w install --frozen-lockfile || true"
-        }
-      "customizations": {
