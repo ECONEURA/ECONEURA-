@@ -53,7 +53,7 @@ export default defineConfig({
     globals: true,
     // Note: `deps.inline` at test-level is deprecated; server.deps.inline + optimizeDeps.include
     // already cover the needed inlining for react runtimes.
-    setupFiles: [path.resolve(__dirname, 'test/setup.ts')],
+    setupFiles: [path.resolve(__dirname, 'tests/setup.ts')],
     // Use an absolute path for the custom reporter so Vite/Vitest won't attempt to bundle
     // via require.resolve which can trigger static-analysis warnings on some systems.
     reporters: [

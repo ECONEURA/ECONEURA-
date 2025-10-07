@@ -1,5 +1,6 @@
 import { beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
 import { fetch, Headers, Request, Response } from 'undici';
+import '@testing-library/jest-dom/vitest';
 
 // Setup global test environment
 // Tell React testing utilities that we're running in a React act()-capable environment

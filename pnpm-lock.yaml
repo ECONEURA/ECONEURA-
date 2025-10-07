@@ -15,6 +15,9 @@ importers:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
     devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.0.0
+        version: 6.9.1
       '@vitest/coverage-v8':
         specifier: ^3.2.4
         version: 3.2.4(vitest@3.2.4)
@@ -27,9 +30,12 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      undici:
+        specifier: ^7.16.0
+        version: 7.16.0
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@vitest/ui@3.2.4)
+        version: 3.2.4(jsdom@27.0.0)
 
   apps/cockpit:
     dependencies:
@@ -4230,7 +4236,7 @@ packages:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@vitest/ui@3.2.4)
+      vitest: 3.2.4(jsdom@27.0.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7505,6 +7511,11 @@ packages:
     dependencies:
       '@fastify/busboy': 2.1.1
     dev: false
+
+  /undici@7.16.0:
+    resolution: {integrity: sha512-QEg3HPMll0o3t2ourKwOeUAZ159Kn9mx5pnzHRQO8+Wixmh88YdZRiIwat0iNzNNXn0yoEtXJqFpyW7eM8BV7g==}
+    engines: {node: '>=20.18.1'}
+    dev: true
 
   /universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
