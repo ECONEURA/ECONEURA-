@@ -1,25 +1,38 @@
 name: Deploy API to Azure
 on:
   push:
-    branches: ["main", "fix/**", "release/**"]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch: {}
 env:
   AZURE_APP_NAME: "econeura-api-dev"
+  API_DIR: "services/api"
 jobs:
-  api:
+  deploy-api:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: services/api
+    defaults: { run: { shell: bash } }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - run: npm ci || true
-      - run: zip -r ../api-artifact.zip .
-      - uses: azure/webapps-deploy@v2
+        with: { node-version: "20", cache: "npm" }
+      - name: Install deps (best effort)
+        run: |
+          if [ -f pnpm-lock.yaml ]; then corepack enable; corepack prepare pnpm@8.15.5 --activate; pnpm -v; pnpm -r i --frozen-lockfile || pnpm -r i
+          elif [ -f package-lock.json ]; then npm ci || true
+          else npm i || true; fi
+      - name: Sanity API dir
+        run: |
+          test -d "$API_DIR" || { echo "ERROR: falta $API_DIR"; exit 5; }
+          test -f "$API_DIR/index.js" -o -f "$API_DIR/server.js" || echo "WARN: no se detectó entry (index.js/server.js)"
+      - name: Zip API
+        run: |
+          cd "$API_DIR"
+          zip -r ../../api-artifact.zip .
+          cd - >/dev/null
+      - name: Deploy to Azure (publish profile)
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_APP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_API }}
-          package: services/api/../api-artifact.zip
+          package: api-artifact.zip

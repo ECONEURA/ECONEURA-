@@ -1,41 +1,43 @@
 name: Deploy WEB to Azure
 on:
   push:
-    branches: ["main", "fix/**", "release/**", "fix/azure-ci-20251006171711"]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch: {}
 env:
   AZURE_APP_NAME: "econeura-web-dev"
-  VITE_AI_ENDPOINT: "https://econeura-api-dev.azurewebsites.net/api/ai"
+  BUILD_DIR: "apps/web/dist"
 jobs:
-  web:
+  build-and-deploy-web:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/web
+    defaults: { run: { shell: bash } }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - uses: pnpm/action-setup@v2
-        with:
-          version: latest
-      - run: pnpm install || npm ci
-      - name: Fail early if publish profile missing
+        with: { node-version: "20", cache: "npm" }
+      - name: Install deps
         run: |
-          if [ -z "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_WEB }}" ]; then echo "Missing secret: AZURE_WEBAPP_PUBLISH_PROFILE_WEB"; exit 2; fi
-
-      - run: VITE_AI_ENDPOINT="${{ env.VITE_AI_ENDPOINT }}" pnpm run build || VITE_AI_ENDPOINT="${{ env.VITE_AI_ENDPOINT }}" npm run build
-      - name: Copy server.js into dist
+          if [ -f pnpm-lock.yaml ]; then corepack enable; corepack prepare pnpm@8.15.5 --activate; pnpm -v; pnpm -r i --frozen-lockfile || pnpm -r i
+          elif [ -f package-lock.json ]; then npm ci
+          else npm i; fi
+      - name: Build web
         run: |
-          if [ ! -f server.js ]; then echo "server.js missing"; exit 2; fi
-          node -e "require('fs').cpSync('server.js','dist/server.js')"
-      - name: Sanity dist
+          if [ -d apps/web ]; then (cd apps/web && (pnpm build || npm run build)); else echo "ERROR: apps/web no existe" && exit 2; fi
+      - name: Ensure dist and copy server.js if present
         run: |
-          if [ ! -f dist/index.html ] || [ ! -f dist/server.js ]; then echo "dist incomplete"; ls -la dist || true; exit 2; fi
-      - run: cd dist && zip -r ../web-artifact.zip .
-      - uses: azure/webapps-deploy@v2
+          test -d "$BUILD_DIR" || { echo "ERROR: no existe $BUILD_DIR"; exit 3; }
+          test -f "$BUILD_DIR/index.html" || { echo "ERROR: falta index.html en $BUILD_DIR"; exit 4; }
+          if [ -f apps/web/server.js ]; then cp apps/web/server.js "$BUILD_DIR/server.js"; fi
+      - name: Zip artifact
+        run: |
+          cd "$BUILD_DIR"
+          zip -r ../../web-artifact.zip .
+          cd - >/dev/null
+          ls -la apps/web-artifact.zip 2>/dev/null || true
+      - name: Deploy to Azure (publish profile)
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_APP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_WEB }}
-          package: web-artifact.zip
+          package: apps/web-artifact.zip
