@@ -1,7 +1,7 @@
 name: Deploy WEB to Azure
 on:
   push:
-    branches: ["main", "fix/**", "release/**"]
+    branches: ["main", "fix/**", "release/**", "fix/azure-ci-20251006171711"]
   workflow_dispatch: {}
 env:
   AZURE_APP_NAME: "econeura-web-dev"
@@ -17,12 +17,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - run: npm ci
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - run: pnpm install || npm ci
       - name: Fail early if publish profile missing
         run: |
           if [ -z "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_WEB }}" ]; then echo "Missing secret: AZURE_WEBAPP_PUBLISH_PROFILE_WEB"; exit 2; fi
 
-      - run: VITE_AI_ENDPOINT="${{ env.VITE_AI_ENDPOINT }}" npm run build
+      - run: VITE_AI_ENDPOINT="${{ env.VITE_AI_ENDPOINT }}" pnpm run build || VITE_AI_ENDPOINT="${{ env.VITE_AI_ENDPOINT }}" npm run build
       - name: Copy server.js into dist
         run: |
           if [ ! -f server.js ]; then echo "server.js missing"; exit 2; fi
