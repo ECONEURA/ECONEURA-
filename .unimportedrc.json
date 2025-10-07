@@ -1,0 +1,32 @@
+{
+  "entry": [
+    "apps/web/src/main.tsx",
+    "apps/cockpit/src/main.tsx",
+    "packages/shared/src/index.ts",
+    "apps/api_py/server.py"
+  ],
+  "extensions": [".ts", ".tsx", ".js", ".jsx"],
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/vitest.setup.ts",
+    "**/vitest.config.ts",
+    "**/test/**",
+    "**/tests/**",
+    "**/__mocks__/**",
+    "**/scripts/**",
+    "**/*.d.ts"
+  ],
+  "ignoreUnresolved": [
+    "lucide-react",
+    "@testing-library/jest-dom",
+    "@testing-library/react",
+    "vitest",
+    "react",
+    "react-dom"
+  ]
+}

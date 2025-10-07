@@ -18,11 +18,11 @@ import {
 
 const cx = (...cls: (string | boolean | undefined)[]) => cls.filter(Boolean).join(' ');
 
-function isReactComponent(x: any): x is React.ElementType {
+export function isReactComponent(x: any): x is React.ElementType {
   return !!x && (typeof x === 'function' || typeof x === 'object');
 }
 
-function iconForAgent(title: string): React.ElementType {
+export function iconForAgent(title: string): React.ElementType {
   const t = title.toLowerCase();
   let Icon: any = ClipboardList;
   if (t.includes('agenda')) Icon = CalendarDays;

@@ -27,7 +27,7 @@ import {
   ListChecks,
   CalendarDays,
 } from 'lucide-react';
-import AgentCard from './components/AgentCard';
+import AgentCard, { iconForAgent, isReactComponent } from './components/AgentCard';
 
 /**
  * ECONEURA — Cockpit Completo 1:1
@@ -42,11 +42,6 @@ import AgentCard from './components/AgentCard';
 
 // Utilidades básicas
 const cx = (...cls: (string | boolean | undefined)[]) => cls.filter(Boolean).join(' ');
-
-// Utilidad para verificar si un valor es un componente React válido
-function isReactComponent(x: any): x is React.ElementType {
-  return !!x && (typeof x === 'function' || typeof x === 'object');
-}
 
 // Tipos
 export type Agent = { id: string; title: string; desc: string; pills?: string[] };
@@ -537,26 +532,6 @@ const DATA: Department[] = [
     ],
   },
 ];
-
-// Icono según agente
-function iconForAgent(title: string): React.ElementType {
-  const t = title.toLowerCase();
-  let Icon: any = ClipboardList;
-  if (t.includes('agenda')) Icon = CalendarDays;
-  else if (t.includes('anuncio') || t.includes('comunicado')) Icon = Megaphone;
-  else if (t.includes('resumen') || t.includes('registro')) Icon = FileText;
-  else if (t.includes('okr') || t.includes('score')) Icon = Gauge;
-  else if (t.includes('salud') || t.includes('health')) Icon = Activity;
-  else if (t.includes('cost') || t.includes('gasto')) Icon = FileBarChart2;
-  else if (t.includes('prompts')) Icon = MessageCircle;
-  else if (t.includes('cuotas')) Icon = ListChecks;
-  else if (t.includes('incidenc')) Icon = Bug;
-  else if (t.includes('observabilidad') || t.includes('slo')) Icon = Radar;
-  else if (t.includes('phishing')) Icon = Inbox;
-  else if (t.includes('email')) Icon = Mail;
-  else if (t.includes('tendencias')) Icon = TrendingUp;
-  return isReactComponent(Icon) ? Icon : ClipboardList;
-}
 
 function TagIcon({ text }: { text: string }) {
   const s = text.toLowerCase();
