@@ -5,6 +5,7 @@ on:
     workflows: ["Deploy WEB to Azure"]
     types:
       - completed
+  workflow_dispatch: {}
 
 jobs:
   smoke:

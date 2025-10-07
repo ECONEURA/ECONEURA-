@@ -1,6 +1,39 @@
 {
   "version": "2.0.0",
   "tasks": [
+    {
+      "label": "web:dev",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "apps/web" },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "VITE.*ready in",
+          "endsPattern": "Local:.*127\\.0\\.0\\.1:8080"
+        }
+      }
+    },
+    {
+      "label": "Reparar y validar Cockpit ECONEURA",
+      "type": "shell",
+      "command": "bash",
+      "args": ["-lc", "./.vscode/tasks_run_repair.sh"],
+      "problemMatcher": []
+    }
+  ]
+}
+{
+  "version": "2.0.0",
+  "tasks": [
 
     {
       "label": "web:dev",
