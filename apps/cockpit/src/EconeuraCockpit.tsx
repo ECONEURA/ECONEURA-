@@ -27,7 +27,7 @@ import {
   ListChecks,
   CalendarDays,
 } from 'lucide-react';
-import AgentCard from './components/AgentCard';
+import AgentCard, { iconForAgent, isReactComponent } from './components/AgentCard';
 
 /**
  * ECONEURA — Cockpit Completo 1:1
@@ -42,11 +42,6 @@ import AgentCard from './components/AgentCard';
 
 // Utilidades básicas
 const cx = (...cls: (string | boolean | undefined)[]) => cls.filter(Boolean).join(' ');
-
-// Utilidad para verificar si un valor es un componente React válido
-function isReactComponent(x: any): x is React.ElementType {
-  return !!x && (typeof x === 'function' || typeof x === 'object');
-}
 
 // Tipos
 export type Agent = { id: string; title: string; desc: string; pills?: string[] };
@@ -537,9 +532,6 @@ const DATA: Department[] = [
     ],
   },
 ];
-
-// Import AgentCard utilities (iconForAgent moved to AgentCard.tsx)
-import AgentCard, { iconForAgent, isReactComponent } from './components/AgentCard';
 
 function TagIcon({ text }: { text: string }) {
   const s = text.toLowerCase();

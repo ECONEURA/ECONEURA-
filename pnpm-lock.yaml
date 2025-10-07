@@ -35,7 +35,7 @@ importers:
         version: 7.16.0
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@vitest/ui@3.2.4)
+        version: 3.2.4(jsdom@27.0.0)
 
   apps/cockpit:
     dependencies:
@@ -55,6 +55,12 @@ importers:
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.3.1(@types/react@18.3.26)(react-dom@18.3.1)(react@18.3.1)
+      '@types/react':
+        specifier: ^18.3.26
+        version: 18.3.26
+      '@types/react-dom':
+        specifier: ^18.3.7
+        version: 18.3.7(@types/react@18.3.26)
       '@vitest/coverage-v8':
         specifier: ^3.2.4
         version: 3.2.4(vitest@3.2.4)
@@ -4239,7 +4245,7 @@ packages:
       std-env: 3.9.0
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@vitest/ui@3.2.4)
+      vitest: 3.2.4(jsdom@27.0.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
