@@ -5,12 +5,14 @@ productivo de inmediato en este monorepo ECONEURA-. Incluye arquitectura
 principal, comandos de desarrollo, convenciones del proyecto y ejemplos
 concretos.
 
+⚠️ **IMPORTANTE:** El README.md describe el estado OBJETIVO (100% GA). Este documento describe la REALIDAD ACTUAL del código. Ver `docs/ARCHITECTURE_REALITY.md` para detalles completos de las diferencias.
+
 Resumen rápido
-- Monorepo pnpm (workspace). Código en `apps/` (p.ej. `apps/web`, `apps/api_py`) y
-  paquetes reutilizables en `packages/` (p.ej. `packages/shared`, `packages/config`).
-- Servicios dev comunes: Cockpit web (puerto 3000), NEURA API (3101), Agents API (3102).
+- Monorepo pnpm (workspace). Código en `apps/` (p.ej. `apps/web`, `apps/cockpit`, `apps/api_py`) y
+  paquetes reutilizables en `packages/` (p.ej. `packages/shared`, `packages/configs`).
+- Servicios dev: Cockpit web (puerto 3000), Python proxy API (puerto 8080), 11 servicios FastAPI en `services/neuras/`.
 - Convenciones clave: TypeScript estricto, vitest para tests, cobertura mínima CI
-  (Statements ≥ 90%, Functions ≥ 80%).
+  (Statements ≥ 50%, Functions ≥ 75%, temporalmente relajado según vitest.config.ts).
 
 Comandos útiles (ejecutables desde la raíz)
 - Instalar dependencias: `pnpm install` (o `pnpm -w i`).
@@ -23,36 +25,46 @@ Comandos útiles (ejecutables desde la raíz)
   - `pnpm -w test:coverage` (Vitest con cobertura)
   - `pnpm -w build` para compilar paquetes cuando sea necesario.
 
-Puntos arquitectónicos imprescindibles
-- Flow de alto nivel: `apps/web (React+Vite) -> apps/api_py (Python proxy) -> Make.com`.
-  - Observabilidad OTLP integrada en `packages/shared` (OpenTelemetry, Winston, Redis).
-- Enrutado de agentes: canonical source `packages/config/agent-routing.json` (generado dinámicamente).
-  - `apps/api_py/server.py` hace forwarding a Make.com basado en rutas.
-  - 60 agentes generados por `scripts/ensure-sixty.ts`: 10 deptos × 6 agentes (1 orquestador + 5 especializados).
+Puntos arquitectónicos imprescindibles (REALIDAD ACTUAL)
+- Flow de alto nivel: `apps/web (React+Vite) -> apps/api_py/server.py (Python proxy puerto 8080) -> Make.com`.
+  - `apps/api_py/server.py`: Proxy HTTP simple (~65 líneas Python stdlib) sin dependencias externas.
+  - Con `MAKE_FORWARD=1`: enruta a Make.com webhooks. Sin flag: modo simulación (echo).
+  - Observabilidad OTLP: código stub en `packages/shared`, no completamente integrado.
+- Enrutado de agentes: 
+  - ❌ NO existe `packages/config/agent-routing.json` en el repo.
+  - ✅ `apps/api_py/server.py` hardcodea 10 rutas: `neura-1` a `neura-10` (línea 4).
+  - ❌ `scripts/ensure-sixty.ts` NO está implementado.
+  - ✅ 11 servicios FastAPI en `services/neuras/`: analytics, cdo, cfo, chro, ciso, cmo, cto, legal, reception, research, support.
+- Aplicaciones frontend:
+  - `apps/web/`: Cockpit principal React+Vite (puerto 3000 en dev).
+  - `apps/cockpit/`: Segundo cockpit (propósito sin documentar claramente).
 - Código de agentes y utilidades de IA:
-  - `packages/shared/src/ai/agents` contiene arquitectura de agentes autónomos.
-  - Sistema de aprendizaje continuo, evaluación de confianza, workflows automatizados.
-  - Agentes especializados: Sales, Operations, Compliance con capacidades específicas.
+  - `packages/shared/src/ai/agents`: Código de arquitectura de agentes autónomos (parcialmente implementado).
 
-API y convenciones de request
-- Endpoints importantes (ejemplos detectables en el repo):
-  - `/api/health`, `/api/invoke/:agentId` (Python API)
-  - Headers: `Authorization: Bearer <token>`, `X-Route: <route>`, `X-Correlation-Id: <id>`
-- Arquitectura multi-API: Python (api_py) para forwarding, potenciales APIs Node.js
-- Agentes identificados por `agent_key` (ej: `ceo_orquestador`, `ia_a1`, `cfo_doctor_coach`)
+API y convenciones de request (REALIDAD ACTUAL)
+- Endpoints en `apps/api_py/server.py`:
+  - `GET /api/health`: Devuelve `{"ok":True,"mode":"forward"|"sim","ts":"..."}`
+  - `POST /api/invoke/:agentId`: Enruta a Make.com o simula. Acepta: `neura-1` a `neura-10`.
+  - Headers requeridos: `Authorization: Bearer <token>`, `X-Route: <route>`, `X-Correlation-Id: <id>`
+- Sin `Authorization` o headers: devuelve 401/400.
+- AgentId no en lista: devuelve 404.
+- Variables de entorno: `MAKE_FORWARD=1` (activa forwarding), `MAKE_TOKEN` (auth), `PORT` (default 8080).
 
 Dónde buscar patrones y código de referencia
-- Arquitectura y políticas generales: `README.md`, `DETALLE_ECONEURA.md`.
-- Librerías AI / agentes: `packages/shared/src/ai/agents/README.md` y arquitectura de agentes.
-- Scripts dev y de arranque: `scripts/start-dev.sh`, `scripts/setup-dev.sh`.
-- Seeds y validaciones de entorno: `scripts/ensure-sixty.ts`, `seed/agents_master.json`.
-- Automatización / generación de manifiestos: `scripts/generate-manifests.sh`, `f7-seal-ultra.ps1`.
+- **Arquitectura real vs documentada**: `docs/ARCHITECTURE_REALITY.md` (LEER PRIMERO).
+- Arquitectura objetivo: `README.md` (describe visión 100% GA, no estado actual).
+- Librerías AI / agentes: `packages/shared/src/ai/agents/README.md` (parcialmente implementado).
+- Servicios FastAPI: `services/neuras/*/app.py` (11 microservicios independientes).
+- Proxy Python: `apps/api_py/server.py` (simple, sin frameworks, stdlib only).
+- Frontend: `apps/web/` (Cockpit principal) y `apps/cockpit/` (propósito TBD).
 
 Reglas prácticas al editar
-- No modificar directamente archivos generados por scripts (ej: `agent-routing.json`).
+- ⚠️ `packages/config/` NO existe. El directorio correcto es `packages/configs/` (con 's').
+- ⚠️ NO hay `agent-routing.json` generado. Las rutas están hardcoded en `apps/api_py/server.py`.
 - Mantén linter y typecheck limpios antes de abrir PRs. CI falla si hay warnings/lint o cobertura insuficiente.
+- Coverage actual: statements ≥ 50%, functions ≥ 75% (temporalmente relajado, ver vitest.config.ts).
 - Usa pnpm workspace commands (`pnpm -w`) para operaciones multi-paquete.
-- Archivos críticos: `packages/shared` para utilidades compartidas, `apps/web` para UI, `apps/api_py` para backend.
+- Archivos críticos: `packages/shared` para utilidades compartidas, `apps/web` para UI, `apps/api_py` para backend proxy.
 
 Contrato mínimo para cambios propuestos por un agente
 - Entrada: Path(s) afectados y una breve razón (bugfix/feature/refactor).
@@ -60,21 +72,27 @@ Contrato mínimo para cambios propuestos por un agente
 - Errores comunes: falta de seed (menos de 60 agentes), fallos de tipado TS, imports relativos incorrectos.
 
 Casos borde (edge cases) a detectar automáticamente
-1. agentId no presente en `packages/config/agent-routing.json` → devolver 404.
-2. Hooks CI: cambios que reduzcan cobertura por debajo de 90/80 → requerir tests adicionales.
+1. agentId no en lista `neura-1` a `neura-10` en `apps/api_py/server.py` → devolver 404.
+2. Hooks CI: cambios que reduzcan cobertura por debajo de 50/75 → requerir tests adicionales.
 3. Archivos con permisos world-writable detectados en auditoría → no tocar sin autorización humana.
 4. Secrets/credentials impresos en código → detener y reportar al canal de seguridad.
+5. Referencias a `packages/config` (singular) → corregir a `packages/configs` (plural).
 
 Ejemplos concretos (rápidos)
-- Iniciar entorno completo: `./scripts/start-dev.sh` → servicios en 3000, 3101, 3102.
-- Probar invoke de agente: `curl -H "Authorization: Bearer $TOKEN" -H "X-Route: azure" -H "X-Correlation-Id: c-1" -d '{"input":"test"}' http://localhost:3102/api/invoke/ceo_orquestador`
-- Generar agentes: `tsx scripts/ensure-sixty.ts` → crea `seed/agents_master.json` con 60 agentes.
+- Iniciar frontend: `pnpm -C apps/web dev` → http://localhost:3000
+- Iniciar proxy Python: `cd apps/api_py && PORT=8080 python server.py` → http://localhost:8080
+- Probar health: `curl http://localhost:8080/api/health`
+- Probar invoke (modo sim): `curl -H "Authorization: Bearer test123" -H "X-Route: azure" -H "X-Correlation-Id: c-1" -H "Content-Type: application/json" -d '{"input":"test"}' http://localhost:8080/api/invoke/neura-1`
+- Probar invoke (forward a Make): `MAKE_FORWARD=1 MAKE_TOKEN=xxx python apps/api_py/server.py` luego curl igual.
 - Build workspace: `pnpm -w build` → compila todos los paquetes TypeScript.
+- Tests: `pnpm -w test` o `pnpm -w test:coverage`.
 
 Dónde preguntar si algo no está claro
-- Si hay dudas sobre ruteo de agentes, referenciar `packages/config/agent-routing.json` y `f7-seal-ultra.ps1`.
-- Para dudas sobre CI/coverage, revisar `.github/workflows/ci.yml` y scripts de CI.
-- Arquitectura de agentes: `packages/shared/src/ai/agents/README.md`.
+- **SIEMPRE LEER PRIMERO:** `docs/ARCHITECTURE_REALITY.md` para entender qué existe vs qué es visión.
+- Si hay dudas sobre ruteo de agentes, revisar `apps/api_py/server.py` líneas 1-15.
+- Para dudas sobre CI/coverage, revisar `.github/workflows/ci.yml` y `vitest.config.ts`.
+- Arquitectura de agentes: `packages/shared/src/ai/agents/README.md` (implementación parcial).
+- Servicios FastAPI: explorar `services/neuras/` directamente.
 
 Contacto y feedback
 - Después de aplicar cambios no triviales, añade un comentario corto en el PR con: comando(s) para reproducir localmente, tests ejecutados y archivos modificados.
