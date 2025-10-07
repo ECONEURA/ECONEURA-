@@ -6,40 +6,43 @@ principal, comandos de desarrollo, convenciones del proyecto y ejemplos
 concretos.
 
 Resumen rápido
-- Monorepo pnpm (workspace). Código en `apps/` (p.ej. `apps/web`, `apps/api_py`) y
-  paquetes reutilizables en `packages/` (p.ej. `packages/shared`, `packages/config`).
-- Servicios dev comunes: Cockpit web (puerto 3000), NEURA API (3101), Agents API (3102).
-- Convenciones clave: TypeScript estricto, vitest para tests, cobertura mínima CI
-  (Statements ≥ 90%, Functions ≥ 80%).
+- Monorepo pnpm (workspace). Código en `apps/` (p.ej. `apps/web`, `apps/cockpit`, `apps/api_py`) y
+  paquetes reutilizables en `packages/` (p.ej. `packages/shared`, `packages/configs`).
+- Servicios principales: Cockpit React (puerto 3000), API Python proxy (`apps/api_py/server.py`).
+- Convenciones clave: TypeScript estricto, Vitest para tests, cobertura variable por módulo 
+  (ver `vitest.config.ts` para umbrales actuales: statements ≥ 50%, functions ≥ 75%).
 
 Comandos útiles (ejecutables desde la raíz)
 - Instalar dependencias: `pnpm install` (o `pnpm -w i`).
-- Arrancar todo en dev (script de conveniencia): `./scripts/start-dev.sh`.
-  - Observa health checks en: `http://localhost:3000`, `http://localhost:3101`, `http://localhost:3102`.
-- Arrancar solo web: `pnpm -C apps/web dev` (Vite + React).
-- Lint / typecheck / tests (ejemplos):
+- Arrancar todo en dev: `./scripts/start-dev.sh` (referencia servicios que pueden no existir aún).
+- Arrancar solo web: `pnpm -C apps/web dev` (Vite + React en puerto 3000).
+- Arrancar solo cockpit: `pnpm -C apps/cockpit dev` (esbuild + React).
+- Python API server: `cd apps/api_py && python server.py` (puerto 8080 por defecto).
+- Lint / typecheck / tests:
   - `pnpm -w lint` (ESLint workspace-wide)
-  - `pnpm -w typecheck` (TypeScript no-emit)
+  - `pnpm -w typecheck` (script personalizado `scripts/run-tsc.js`)
   - `pnpm -w test:coverage` (Vitest con cobertura)
-  - `pnpm -w build` para compilar paquetes cuando sea necesario.
+  - Tests por app: `pnpm -C apps/web test:coverage` o `pnpm -C apps/cockpit test`.
 
 Puntos arquitectónicos imprescindibles
-- Flow de alto nivel: `apps/web (React+Vite) -> apps/api_py (Python proxy) -> Make.com`.
-  - Observabilidad OTLP integrada en `packages/shared` (OpenTelemetry, Winston, Redis).
-- Enrutado de agentes: canonical source `packages/config/agent-routing.json` (generado dinámicamente).
-  - `apps/api_py/server.py` hace forwarding a Make.com basado en rutas.
-  - 60 agentes generados por `scripts/ensure-sixty.ts`: 10 deptos × 6 agentes (1 orquestador + 5 especializados).
-- Código de agentes y utilidades de IA:
-  - `packages/shared/src/ai/agents` contiene arquitectura de agentes autónomos.
-  - Sistema de aprendizaje continuo, evaluación de confianza, workflows automatizados.
-  - Agentes especializados: Sales, Operations, Compliance con capacidades específicas.
+- Flow principal: `apps/web` (React+Vite) y `apps/cockpit` (React+esbuild) → `apps/api_py` (Python proxy) → Make.com.
+  - Observabilidad básica en `packages/shared` (Winston logging, config management).
+- API Python simplificada: `apps/api_py/server.py` forwarding a Make.com cuando `MAKE_FORWARD=1`.
+  - Rutas fijas: `neura-1` a `neura-10` (ver ROUTES en `server.py`).
+  - Headers requeridos: `Authorization: Bearer <token>`, `X-Route`, `X-Correlation-Id`.
+- Estructura de archivos:
+  - `packages/shared/src`: utilidades compartidas (logging, config, types, clients).
+  - `apps/web/src`: Cockpit React principal con `EconeuraCockpit.tsx`.
+  - `apps/cockpit/src`: Cockpit alternativo más simple con esbuild.
+  - Docker setup: `docker-compose.dev.yml` con Postgres, Redis.
 
 API y convenciones de request
-- Endpoints importantes (ejemplos detectables en el repo):
-  - `/api/health`, `/api/invoke/:agentId` (Python API)
-  - Headers: `Authorization: Bearer <token>`, `X-Route: <route>`, `X-Correlation-Id: <id>`
-- Arquitectura multi-API: Python (api_py) para forwarding, potenciales APIs Node.js
-- Agentes identificados por `agent_key` (ej: `ceo_orquestador`, `ia_a1`, `cfo_doctor_coach`)
+- Endpoints principales:
+  - `/api/health` (API Python server)
+  - `/api/invoke/:agentId` (POST con auth headers)
+- Headers: `Authorization: Bearer <token>`, `X-Route: <route>`, `X-Correlation-Id: <id>`
+- Agentes fijos: `neura-1` hasta `neura-10` (ver ROUTES en `apps/api_py/server.py`)
+- Modo desarrollo: `MAKE_FORWARD=1` para proxy real, sin él simula respuestas
 
 Dónde buscar patrones y código de referencia
 - Arquitectura y políticas generales: `README.md`, `DETALLE_ECONEURA.md`.
@@ -66,9 +69,9 @@ Casos borde (edge cases) a detectar automáticamente
 4. Secrets/credentials impresos en código → detener y reportar al canal de seguridad.
 
 Ejemplos concretos (rápidos)
-- Iniciar entorno completo: `./scripts/start-dev.sh` → servicios en 3000, 3101, 3102.
-- Probar invoke de agente: `curl -H "Authorization: Bearer $TOKEN" -H "X-Route: azure" -H "X-Correlation-Id: c-1" -d '{"input":"test"}' http://localhost:3102/api/invoke/ceo_orquestador`
-- Generar agentes: `tsx scripts/ensure-sixty.ts` → crea `seed/agents_master.json` con 60 agentes.
+- Iniciar entorno completo: `./scripts/start-dev.sh` → servicios en 3000, 8080.
+- Probar API Python directamente: `curl -H "Authorization: Bearer test" -H "X-Route: azure" -H "X-Correlation-Id: c-1" -d '{"input":"test"}' http://localhost:8080/api/invoke/neura-1`
+- Probar health: `curl http://localhost:8080/api/health`
 - Build workspace: `pnpm -w build` → compila todos los paquetes TypeScript.
 
 Dónde preguntar si algo no está claro
