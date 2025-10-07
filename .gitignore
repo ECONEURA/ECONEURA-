@@ -46,3 +46,16 @@ apps/web/src/**/*.js
  
 # Coverage/diagnostics artifacts created by scripts (should not be tracked)
 .artifacts/
+
+# Temporary files and session artifacts (never commit)
+tmp_*
+*.tmp
+*.bak
+.ai_*
+cleanup_backup_*
+lib/*.backup
+*.backup
+
+# Session and runtime artifacts
+.automation-trigger
+.vitest_mode
