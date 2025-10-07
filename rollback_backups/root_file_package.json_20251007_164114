@@ -1,0 +1,19 @@
+{
+  "name": "econeura-ia",
+  "private": true,
+  "packageManager": "pnpm@8.15.5",
+  "scripts": {
+    "typecheck": "node ./scripts/run-tsc.js --noEmit",
+    "lint": "eslint --no-error-on-unmatched-pattern \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\"",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "eslint": "^9.36.0",
+    "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

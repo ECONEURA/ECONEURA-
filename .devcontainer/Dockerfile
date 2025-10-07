@@ -1,26 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/node:20-bullseye
-
-# Install common build tools and git
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-  && apt-get install -y --no-install-recommends curl ca-certificates git build-essential python3 make gnupg2 \
-  && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Ensure corepack is available and prepare pnpm
-RUN corepack enable || true
-RUN corepack prepare pnpm@8.15.5 --activate || npm i -g pnpm@8.15.5 || true
-
-WORKDIR /workspace
-
-CMD ["sleep", "infinity"]
-FROM node:20-bullseye
-
-# Install pnpm globally
-RUN corepack enable && corepack prepare pnpm@8.15.5 --activate
-
-WORKDIR /workspace
-
-CMD ["/bin/bash"]
-# ECONEURA-IA Development Container
+# ECONEURA Development Container with Docker support
 FROM mcr.microsoft.com/devcontainers/base:ubuntu
 
 # Install system dependencies
@@ -30,9 +8,19 @@ RUN apt-get update && apt-get install -y \
     git \
     python3 \
     python3-pip \
+    ca-certificates \
+    gnupg \
+    lsb-release \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js and pnpm
+# Install Docker CLI
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y docker-ce-cli docker-compose-plugin \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20
 ENV NODE_VERSION=20.10.0
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs

@@ -4,23 +4,32 @@
     {
       "label": "web:dev",
       "type": "shell",
-      "command": "npm run dev",
-      "options": { "cwd": "apps/web" },
+      "command": "pnpm",
+      "args": ["-C", "apps/web", "dev"],
       "isBackground": true,
-      "problemMatcher": {
-        "owner": "vite",
-        "pattern": {
-          "regexp": ".",
-          "file": 1,
-          "location": 2,
-          "message": 3
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "VITE.*ready in",
-          "endsPattern": "Local:.*127\\.0\\.0\\.1:8080"
-        }
-      }
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "web:lint",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["-C", "apps/web", "lint", "--max-warnings", "0"],
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "web:type",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["-C", "apps/web", "typecheck"],
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "web:test:cov-fast",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["-C", "apps/web", "test:coverage", "--", "--threads", "1"],
+      "problemMatcher": []
     },
     {
       "label": "Reparar y validar Cockpit ECONEURA",
@@ -28,77 +37,66 @@
       "command": "bash",
       "args": ["-lc", "./.vscode/tasks_run_repair.sh"],
       "problemMatcher": []
-    }
-  ]
-}
-{
-  "version": "2.0.0",
-  "tasks": [
-
+    },
     {
-      "label": "web:dev",
+      "label": "Reconstruir Dev Container (Completo)",
       "type": "shell",
-      "command": "npm run dev",
-      "options": { "cwd": "apps/web" },
+      "command": "./scripts/auto-rebuild-devcontainer.sh",
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Reconstruir Dev Container (Rápido)",
+      "type": "shell",
+      "command": "./scripts/rebuild-dev-quick.sh",
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Validar Entorno ECONEURA",
+      "type": "shell",
+      "command": "./scripts/core/validate-environment.sh",
+      "problemMatcher": [],
+      "group": "test"
+    },
+    {
+      "label": "Iniciar Servicios ECONEURA",
+      "type": "shell",
+      "command": "./scripts/start-dev.sh",
       "isBackground": true,
-      "problemMatcher": {
-        "owner": "vite",
-        "pattern": {
-          "regexp": ".",
-          "file": 1,
-          "location": 2,
-          "message": 3
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "VITE.*ready in",
-          "endsPattern": "Local:.*127\\.0\\.0\\.1:8080"
-        }
-      }
+      "problemMatcher": [],
+      "group": "build"
     },
     {
-      "label": "livePreview:start",
+      "label": "Limpiar Repositorio (Dry Run)",
       "type": "shell",
-      "command": "echo start",
-      "problemMatcher": [],
-      "options": { "env": {} },
-      "inputs": []
+      "command": "./scripts/core/prioritized-cleanup.sh",
+      "args": ["--dry-run"],
+      "problemMatcher": []
     },
     {
-      "label": "livePreview:open",
+      "label": "Limpiar Repositorio (Completo)",
       "type": "shell",
-      "command": "echo open",
+      "command": "./scripts/core/prioritized-cleanup.sh",
       "problemMatcher": [],
-      "options": { "env": {} }
-    },
-    {
-      "label": "ECONEURA: Dev + LivePreview",
-      "dependsOn": [
-        "web:dev",
-        "livePreview:open"
-      ]
-    }
-    ,
-    {
-      "label": "Cockpit: Dev",
-      "type": "shell",
-      "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File .\\.dev\\cockpit\\setup-cockpit.ps1",
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": false
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
       }
     }
-  ],
-  "inputs": [
-    { "id": "lpStart", "type": "command", "command": "livePreview.startServer" },
-    { "id": "lpOpen",  "type": "command", "command": "livePreview.openPreview",
-      "args": { "path": "/preview/preview.html" } }
-
-    { "label": "web:dev", "type": "shell", "command": "pnpm -C apps/web dev", "isBackground": true, "problemMatcher": [] },
-    { "label": "web:lint", "type": "shell", "command": "pnpm -C apps/web lint --max-warnings 0" },
-    { "label": "web:type", "type": "shell", "command": "pnpm -C apps/web typecheck" },
-  { "label": "web:test:cov-fast", "type": "shell", "command": "pnpm -C apps/web test:coverage -- --threads 1" }
-
   ]
 }
