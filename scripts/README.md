@@ -27,11 +27,13 @@ Este directorio contiene scripts de automatización para desarrollo, testing, de
 
 | Script | Propósito | Uso |
 |--------|-----------|-----|
-| `clean.sh` | **Limpieza rápida** (dist, .next, .cache, coverage, tsbuildinfo) | `./scripts/clean.sh` |
-| `clean-cache.sh` | Limpieza específica de cachés | `./scripts/clean-cache.sh` |
+| `clean-all.sh` | **Limpieza completa consolidada** (dist, .next, cache, logs, tsbuildinfo) | `./scripts/clean-all.sh` |
 | `core/prioritized-cleanup.sh` | **Limpieza priorizada** (dry-run y completa) | `./scripts/core/prioritized-cleanup.sh [--dry-run]` |
 
-**Nota:** Limpieza NO destructiva. No elimina `node_modules/`. Para reinstalar dependencias: `pnpm install --force`.
+**Nota:** 
+- `clean-all.sh` combina funcionalidad de build outputs, caches y logs cleanup
+- Limpieza NO destructiva. No elimina `node_modules/`
+- Para reinstalar dependencias: `pnpm install --force`
 
 ---
 
