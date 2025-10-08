@@ -1,0 +1,137 @@
+# ECONEURA - Docker Compose Development Stack
+# Incluye: Postgres, Auth, Jaeger, Prometheus, Grafana
+
+version: '3.9'
+
+services:
+  # === BASE DE DATOS ===
+  postgres:
+    image: postgres:16-alpine
+    container_name: econeura-postgres
+    environment:
+      POSTGRES_USER: econeura
+      POSTGRES_PASSWORD: dev_password
+      POSTGRES_DB: econeura_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+      - ./db/seeds:/seeds:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U econeura"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - econeura-net
+
+  # === AUTENTICACIÓN ===
+  auth:
+    build: ./services/auth
+    container_name: econeura-auth
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=econeura_dev
+      - DB_USER=econeura
+      - DB_PASSWORD=dev_password
+      - JWT_SECRET=dev-jwt-secret-CHANGE-IN-PROD
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
+      - ENV=dev
+      - ALLOW_REGISTRATION=1
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - econeura-net
+
+  # === OBSERVABILIDAD - JAEGER ===
+  jaeger:
+    image: jaegertracing/all-in-one:1.60
+    container_name: econeura-jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "4317:4317"    # OTLP gRPC
+      - "4318:4318"    # OTLP HTTP
+      - "14268:14268"  # Jaeger collector
+    networks:
+      - econeura-net
+
+  # === OBSERVABILIDAD - PROMETHEUS ===
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: econeura-prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    networks:
+      - econeura-net
+
+  # === OBSERVABILIDAD - GRAFANA ===
+  grafana:
+    image: grafana/grafana:11.3.1
+    container_name: econeura-grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - econeura-net
+
+  # === API PROXY (opcional, si se quiere en Docker) ===
+  # api-proxy:
+  #   build:
+  #     context: ./apps/api_py
+  #     dockerfile: Dockerfile
+  #   container_name: econeura-api-proxy
+  #   environment:
+  #     - HOST=0.0.0.0
+  #     - PORT=8080
+  #     - MAKE_FORWARD=0
+  #     - USE_AUTH=1
+  #     - AUTH_SERVICE_URL=http://auth:5000
+  #     - OTLP_ENDPOINT=http://jaeger:4317
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - auth
+  #     - jaeger
+  #   networks:
+  #     - econeura-net
+
+volumes:
+  postgres_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  econeura-net:
+    driver: bridge
