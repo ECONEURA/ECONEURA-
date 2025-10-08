@@ -1,0 +1,72 @@
+[
+  {
+    "id": "neura-1",
+    "dept": "analytics",
+    "title": "Analytics Agent",
+    "url": "https://hook.make.com/analytics",
+    "auth": "header"
+  },
+  {
+    "id": "neura-2",
+    "dept": "cdo",
+    "title": "Chief Data Officer Agent",
+    "url": "https://hook.make.com/cdo",
+    "auth": "header"
+  },
+  {
+    "id": "neura-3",
+    "dept": "cfo",
+    "title": "Chief Financial Officer Agent",
+    "url": "https://hook.make.com/cfo",
+    "auth": "header"
+  },
+  {
+    "id": "neura-4",
+    "dept": "chro",
+    "title": "Chief Human Resources Officer Agent",
+    "url": "https://hook.make.com/chro",
+    "auth": "header"
+  },
+  {
+    "id": "neura-5",
+    "dept": "ciso",
+    "title": "Chief Information Security Officer Agent",
+    "url": "https://hook.make.com/ciso",
+    "auth": "header"
+  },
+  {
+    "id": "neura-6",
+    "dept": "cmo",
+    "title": "Chief Marketing Officer Agent",
+    "url": "https://hook.make.com/cmo",
+    "auth": "header"
+  },
+  {
+    "id": "neura-7",
+    "dept": "cto",
+    "title": "Chief Technology Officer Agent",
+    "url": "https://hook.make.com/cto",
+    "auth": "header"
+  },
+  {
+    "id": "neura-8",
+    "dept": "legal",
+    "title": "Legal Agent",
+    "url": "https://hook.make.com/legal",
+    "auth": "header"
+  },
+  {
+    "id": "neura-9",
+    "dept": "reception",
+    "title": "Reception Agent",
+    "url": "https://hook.make.com/reception",
+    "auth": "header"
+  },
+  {
+    "id": "neura-10",
+    "dept": "research",
+    "title": "Research Agent",
+    "url": "https://hook.make.com/research",
+    "auth": "header"
+  }
+]

@@ -3,6 +3,10 @@
   "private": true,
   "packageManager": "pnpm@8.15.5",
   "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
     "typecheck": "node ./scripts/run-tsc.js --noEmit",
     "lint": "eslint --no-error-on-unmatched-pattern \"packages/**/src/**\" \"apps/**/src/**\" \"scripts/**\"",
     "format": "prettier --write ."
