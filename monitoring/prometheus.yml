@@ -1,0 +1,151 @@
+# Prometheus Configuration for ECONEURA
+# Scrapes metrics from all microservices
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'econeura-dev'
+    environment: 'development'
+
+# Alertmanager configuration (optional)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+# rule_files:
+#   - "/etc/prometheus/rules/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'prometheus'
+
+  # Auth Service
+  - job_name: 'auth-service'
+    static_configs:
+      - targets: ['auth:5000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'auth'
+
+  # Microservicios Neura (cuando estén implementados)
+  - job_name: 'neura-analytics'
+    static_configs:
+      - targets: ['neura-analytics:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-analytics'
+
+  - job_name: 'neura-cdo'
+    static_configs:
+      - targets: ['neura-cdo:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-cdo'
+
+  - job_name: 'neura-cfo'
+    static_configs:
+      - targets: ['neura-cfo:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-cfo'
+
+  - job_name: 'neura-chro'
+    static_configs:
+      - targets: ['neura-chro:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-chro'
+
+  - job_name: 'neura-ciso'
+    static_configs:
+      - targets: ['neura-ciso:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-ciso'
+
+  - job_name: 'neura-cmo'
+    static_configs:
+      - targets: ['neura-cmo:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-cmo'
+
+  - job_name: 'neura-cto'
+    static_configs:
+      - targets: ['neura-cto:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-cto'
+
+  - job_name: 'neura-legal'
+    static_configs:
+      - targets: ['neura-legal:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-legal'
+
+  - job_name: 'neura-reception'
+    static_configs:
+      - targets: ['neura-reception:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-reception'
+
+  - job_name: 'neura-research'
+    static_configs:
+      - targets: ['neura-research:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-research'
+
+  - job_name: 'neura-support'
+    static_configs:
+      - targets: ['neura-support:8000']
+    metrics_path: '/metrics'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: service
+        replacement: 'neura-support'
+
+  # PostgreSQL Exporter (si se agrega)
+  # - job_name: 'postgres'
+  #   static_configs:
+  #     - targets: ['postgres-exporter:9187']
+
+  # Node Exporter (para métricas del host, si se agrega)
+  # - job_name: 'node'
+  #   static_configs:
+  #     - targets: ['node-exporter:9100']
