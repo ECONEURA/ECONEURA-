@@ -70,7 +70,13 @@ class UserCreate(BaseModel):
 # Utilidades DB
 def get_db_connection():
     """Crea conexión a Postgres"""
-    return psycopg2.connect(**DB_CONFIG, cursor_factory=RealDictCursor)
+    try:
+        return psycopg2.connect(**DB_CONFIG, cursor_factory=RealDictCursor)
+    except psycopg2.OperationalError as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Database connection failed: {str(e)}"
+        )
 
 # Utilidades JWT
 def create_access_token(data: dict) -> str:
